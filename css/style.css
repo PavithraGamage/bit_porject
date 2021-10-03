@@ -1,0 +1,291 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 17, 2021, 1:12:14 PM
+    Author     : Pavithra
+*/
+
+/* home page */
+
+.nav_logo {
+    max-width: 250px;
+}
+
+.navbar-expand-lg .navbar-collapse {
+    display: flex!important;
+    flex-basis: auto;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.bg-light {
+    background-color: #f8f9fa00!important;
+    z-index: 5;
+}
+
+
+.carousel_cus{
+    padding-bottom: 40px;
+    margin-top: -90px;
+}
+
+.navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .show>.nav-link {
+    color: rgb(242 242 242 / 90%);
+    font-weight: 300;
+    font-size: 14px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: rgb(255 255 255 / 55%);
+    font-weight: 300;
+    font-size: 14px;
+}
+
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover {
+    color: rgba(0,0,0,.7);
+    color: rgb(242 242 242 / 90%);
+}
+
+.catagory_row{
+    padding: 0px 0px 40px 0px 
+}
+
+.card_styles{
+    box-shadow: 2px 34.8034px 19px rgba(7, 27, 81, 0.09);
+    border: 0px solid;
+    border-radius: 5px;
+    margin-top: 25px;
+}
+
+.card_title{
+    font-size: 25px;
+    color: graytext;
+    font-weight: 300;
+}
+.card_discription{
+    font-size: 13px;
+    font-weight: 300;
+}
+
+.card_button{
+    font-size: 12px;
+    font-weight: 300;
+    color: graytext;
+    background-color: white;
+}
+
+footer{
+    background-color: black;
+    padding: 40px;
+}
+
+.footer_logo{
+    max-width: 20%;
+    padding-bottom: 10px;
+}
+
+.footer_company{
+    color: white;
+    font-size: 13px;
+    font-weight: 300;
+    margin-right: 350px;
+}
+
+.footer_hr{
+    color: white;
+    margin-right: 300px;
+}
+
+.footer_title{
+    color: white;
+    font-size: 18px;
+    font-weight: 300;
+
+}
+
+.footer_hr_2{
+    color: white;
+    margin-right: 30px;
+
+}
+
+.footer_items{
+    color: white;
+    font-size: 12px;
+    font-weight: 200;
+}
+
+
+/* Conatct Page */
+
+.hero {
+    background:linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9)), url("http://localhost/bootstrap/images/155802.jpg");
+    padding: 135px 0px 100px 0px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    margin-top: -90px;
+}
+
+.hero_headding{
+    color: white;
+    font-weight: 300;
+    font-size: 35px;
+}
+
+.hero_para{
+    color: white;
+    font-weight: 300;
+    font-size: 14px;
+    margin-right: 650px;
+}
+.hero_hr{
+    color: white;
+    margin-right: 550px;
+}
+
+.contact_row {
+    padding: 80px 20px 80px 20px;
+    margin: 80px 0px 80px 0px;
+    box-shadow: 2px 34.8034px 19px rgb(7 27 81 / 9%);
+    border: 0px solid;
+    border-radius: 25px;
+}
+
+.contact_col {
+    padding-left: 40px;
+    padding-right: 40px;
+    border-right: 1px solid gray;
+}
+
+.map_col{
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+label {
+    display: inline-block;
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+
+.form_btn{
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 300;
+    color: graytext;
+    background-color: white;
+    border-color: graytext;
+}
+
+.form_btn:hover{
+    background-color: graytext;
+    color: white;
+    border-color: graytext;
+}
+
+/*catogry page*/
+
+.shop_row{
+    margin: 40px 0px 80px 0px;
+}
+
+.wig_bar{
+
+    border-right: 1px solid rgb(7 27 81 / 15%);
+}
+
+.wig{
+    background-color: white;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    border: 0px solid;
+    border-radius: 5px;
+    box-shadow: 2px 4.8034px 19px rgb(7 27 81 / 9%);
+}
+
+.shop_main_row {
+    margin-left: 1px;
+}
+
+.wig_title{
+    color:graytext;
+    font-weight: 400;
+
+}
+
+.wig_hr{
+    color: graytext;
+    margin: 0px;
+     margin-bottom: 10px;
+}
+
+.wig_items{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    color: graytext;
+}
+
+.wig_lable{
+    padding-top: 0px;
+    padding-bottom: 10px;
+    margin-left: 10px;
+    font-size: 14px;
+    
+}
+
+.wig_input{
+    margin-top: -10px;
+    background-color: white;
+}
+
+.wig_input:checked{
+    background-color: graytext;
+    border-color:  white;
+}
+
+.catagory_card_title {
+    font-size: 20px;
+    color: graytext;
+    font-weight: 300;
+}
+
+/* single item page */
+
+.item_row_main{
+    margin-top: 80px;
+    margin-bottom: 80px;
+    border: 0px solid;
+    border-radius: 5px;
+    box-shadow: 2px 4.8034px 19px rgb(7 27 81 / 9%);
+    padding: 60px;
+    
+}
+
+/* cart page */
+
+.empty_cart{
+    background-color: #ff3333;
+    padding: 15px;
+    font-size: 20px;
+    font-weight: 400;
+    color: white;
+    border: 0px solid;
+    border-radius: 10px;
+    box-shadow: 2px 4.8034px 19px rgb(7 27 81 / 9%);
+}
+
+.empry_cart_btn_col {
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
