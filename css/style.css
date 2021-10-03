@@ -270,6 +270,45 @@ label {
     
 }
 
+.item_table_col{
+    width: 20%;
+}
+
+.item_price{
+    font-size: 38px;
+    font-weight: 300;
+}
+
+.item_table{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.item_btn{
+    background-color: white;
+    color: black;
+    font-size: 20px;
+    border-width: 1px;
+    font-weight: 300;
+    padding: 10px 30px 10px 30px;
+}
+
+.item_stock{
+   
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+}
+
+.cart_button{
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+}
+
 /* cart page */
 
 .empty_cart{
