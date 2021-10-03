@@ -27,7 +27,10 @@
                     <h3 class="item_price">Price - Rs: 125,000</h3>
                 </div>
                 <div class="col cart_button">
-                    <button type="button" class="btn btn-secondary item_btn">Add to Cart <i class="fas fa-cart-arrow-down"></i></button>
+                    <a href="cart.php">
+                        <button type="button" class="btn btn-secondary item_btn">Add to Cart <i class="fas fa-cart-arrow-down"></i></button>
+                    </a>
+                    
                 </div>
 
             </div>
