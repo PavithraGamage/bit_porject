@@ -329,6 +329,14 @@ label {
     justify-content: flex-end;
 }
 
+.cart_remove_all{
+   
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+}
+
 .cart_items{  
   
     border-bottom: 1px solid rgb(7 27 81 / 9%);
@@ -356,4 +364,19 @@ label {
 .cart_total{
     margin-top: 40px;
   
+}
+
+.cart_checkout_button{
+   
+    background-color: white;
+    color: gray;
+    margin-top: 20px;
+    padding: 8px 50px;
+    font-size: 18px;
+
+}
+
+.cart_summary{
+    
+    margin-bottom: 20px;
 }
