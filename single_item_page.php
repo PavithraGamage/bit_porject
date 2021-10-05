@@ -15,7 +15,7 @@
 <div class="container">
     <div class="row item_row_main">
         <div class="row">
-            <img src="images/ezgif.com-gif-maker.png" alt="" >
+            <img src="images/amd_ryzen_r9_3900x.png" alt="" >
 
 
             <div class="row">

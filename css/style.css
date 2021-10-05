@@ -328,3 +328,32 @@ label {
     flex-direction: row;
     justify-content: flex-end;
 }
+
+.cart_items{  
+  
+    border-bottom: 1px solid rgb(7 27 81 / 9%);
+    padding-top: 40px;
+    padding-bottom: 40px;
+    
+}
+
+.cart_item_count{
+    padding-bottom: 20px;
+}
+
+.cart_item_image{
+    width: 120px;
+}
+
+.cart_price{
+    
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+}
+
+.cart_total{
+    margin-top: 40px;
+  
+}
