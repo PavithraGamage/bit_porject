@@ -144,10 +144,8 @@
                                 <h6>Warranty & Service:</h6>  
                             </div>
                             <hr>
-                            <div>
-                                <h6>Est. Delivery:</h6>
-                            </div>
-                            <hr>
+                           
+                          
                             <div>
                                 <h4>Est. Total:</h4>
                             </div>
@@ -161,10 +159,8 @@
                                 <h6>8,000 LKR</h6>
                             </div>
                             <hr>
-                            <div>
-                                <h6>1,500 LKR</h6>
-                            </div>
-                            <hr>
+                          
+                           
                             <div>
                                 <h4>267,500 LKR</h4>
                             </div>

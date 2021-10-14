@@ -223,7 +223,7 @@ label {
 .wig_hr{
     color: graytext;
     margin: 0px;
-     margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .wig_items{
@@ -239,7 +239,7 @@ label {
     padding-bottom: 10px;
     margin-left: 10px;
     font-size: 14px;
-    
+
 }
 
 .wig_input{
@@ -267,7 +267,7 @@ label {
     border-radius: 5px;
     box-shadow: 2px 4.8034px 19px rgb(7 27 81 / 9%);
     padding: 60px;
-    
+
 }
 
 .item_table_col{
@@ -294,7 +294,7 @@ label {
 }
 
 .item_stock{
-   
+
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -302,7 +302,7 @@ label {
 }
 
 .cart_button{
-    
+
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -323,14 +323,14 @@ label {
 }
 
 .empry_cart_btn_col {
-    
+
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
 }
 
 .cart_remove_all{
-   
+
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -338,11 +338,11 @@ label {
 }
 
 .cart_items{  
-  
+
     border-bottom: 1px solid rgb(7 27 81 / 9%);
     padding-top: 40px;
     padding-bottom: 40px;
-    
+
 }
 
 .cart_item_count{
@@ -354,7 +354,7 @@ label {
 }
 
 .cart_price{
-    
+
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -363,11 +363,11 @@ label {
 
 .cart_total{
     margin-top: 40px;
-  
+
 }
 
 .cart_checkout_button{
-   
+
     background-color: white;
     color: gray;
     margin-top: 20px;
@@ -377,6 +377,15 @@ label {
 }
 
 .cart_summary{
-    
+
     margin-bottom: 20px;
+}
+
+/*checkout page*/
+
+.checkout_sec_box{
+    padding: 50px;
+    border: 1px solid;
+    border-radius: 5px;
+
 }
