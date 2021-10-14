@@ -184,7 +184,7 @@
                             <!--summary tables-->
                             <hr>
                             <div class="row">
-                                <div class="col info_box">
+                                <div class="col info_table_box">
                                     <div class="row">
                                         <div class="col box_name">
                                             <div class="col box_name">
@@ -228,7 +228,7 @@
                                     </div>
                                 </div>
                                 
-                                 <div class="col info_box">
+                                 <div class="col info_table_box_2">
                                     <div class="row">
                                         <div class="col box_name">
                                             <div class="col box_name">
@@ -276,7 +276,7 @@
                             </div>
                             
                             <div class="row">
-                                <div class="col info_box">
+                                <div class="col info_table_box"">
                                     <div class="row">
                                         <div class="col box_name">
                                             <div class="col box_name">
@@ -320,7 +320,7 @@
                                     </div>
                                 </div>
                                 
-                                 <div class="col info_box">
+                                 <div class="col info_table_box_2">
                                     <div class="row">
                                         <div class="col box_name">
                                             <div class="col box_name">
