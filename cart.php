@@ -50,6 +50,7 @@
                     </div>
                 </div>
                 <div class="col-1">
+                    <h6>No Items</h6>
                     <input type="text" class="form-control" id="formGroupExampleInput" >
                 </div>
                 <div class="col-2 ">
@@ -81,6 +82,7 @@
                     </div>
                 </div>
                 <div class="col-1">
+                    <h6>No Items</h6>
                     <input type="text" class="form-control" id="formGroupExampleInput" >
                 </div>
                 <div class="col-2 ">
@@ -111,6 +113,7 @@
                     </div>
                 </div>
                 <div class="col-1">
+                    <h6>No Items</h6>
                     <input type="text" class="form-control" id="formGroupExampleInput" >
                 </div>
                 <div class="col-2 ">
@@ -165,7 +168,7 @@
                             <div>
                                 <h4>267,500 LKR</h4>
                             </div>
-                            <a href="">
+                            <a href="checkout.php">
                                 <button type="button" class="btn btn-secondary cart_checkout_button"> CHECKOUT ORDER </button>
                             </a> 
                         </div>

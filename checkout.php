@@ -15,7 +15,7 @@
     <div class="row item_row_main">
         
         
-        new egg
+        ship to your location's or other location's
         
         
         
