@@ -12,7 +12,7 @@ and open the template in the editor.
 }
 
 .company_name_box{
-    background-color: #0071FF;
+    background-color: #6C757D;
     padding: 12px;
     max-width:15%;
     display: flex;
@@ -97,7 +97,7 @@ and open the template in the editor.
 }
 
 .bell:hover{
-    color: #0071FF;
+    color: #d9d9d9;
     transition-duration: 500ms;
 }
 .help_box{
@@ -233,7 +233,7 @@ hr{
 }
 
 .menu_row:hover{
-    background-color: #0071FF;
+    background-color: #6C757D;
     transition-duration: 500ms;
     color: white;
 }

@@ -11,11 +11,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Bootstrap css -->
-        
+
         <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 
         <!-- Bootstrap js -->
-       
+
         <script src="js/bootstrap.min.js" type="text/javascript"></script>
 
         <!--font ausuome icons-->
@@ -50,7 +50,7 @@
                                         <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                                     </div>
                                     <div class="col search_btn">
-                                        <button type="submit" class="btn btn-primary submit">Search</button>
+                                        <button type="submit" class="btn btn-secondary submit">Search</button>
                                     </div>
                                 </div>
                             </form>
@@ -137,18 +137,15 @@
                         </div>
                         <!--dashboard content area-->
                         <div class="col conent_col">
-
                             <h1 class="title"><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
-
                             <div class="row">
-                                
                                 <div class="col info_box">
                                     <div class="row">
                                         <div class="col box_name">
                                             <div> <i class="fas fa-cart-arrow-down"></i> Orders</div>
                                         </div>
                                         <div class="col box_num">
-                                           35
+                                            35
                                         </div>
                                     </div>
                                 </div>
@@ -158,7 +155,7 @@
                                             <div> <i class="fas fa-charging-station"></i> Warranty</div>
                                         </div>
                                         <div class="col box_num">
-                                           35
+                                            35
                                         </div>
                                     </div>
                                 </div>
@@ -168,7 +165,7 @@
                                             <div> <i class="fas fa-shipping-fast"></i> Deliveries</div>
                                         </div>
                                         <div class="col box_num">
-                                           35
+                                            35
                                         </div>
                                     </div>
                                 </div>
@@ -178,13 +175,197 @@
                                             <div> <i class="fas fa-cogs"></i> Repairs</div>
                                         </div>
                                         <div class="col box_num">
-                                           35
+                                            35
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
+                            <!--summary tables-->
+                            <hr>
+                            <div class="row">
+                                <div class="col info_box">
+                                    <div class="row">
+                                        <div class="col box_name">
+                                            <div class="col box_name">
+                                                <div> <i class="fas fa-cart-arrow-down"></i> Orders</div>
+                                            </div>
+                                            <hr>
+                                            <div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Discription</th>
+                                                            <th scope="col">Total</th>
+                                                            <th scope="col">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">1</th>
+                                                            <td>AMD R9 3600X, ASUS B450 TUF Ga..</td>
+                                                            <td>RS: 125,000</td>
+                                                            <td>View</td>
 
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">2</th>
+                                                            <td>AMD R9 3600X, ASUS B450 TUF Ga..</td>
+                                                            <td>RS: 25,000</td>
+                                                            <td>View</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">3</th>
+                                                            <td>AMD R9 3600X, ASUS B450 TUF Ga..</td>
+                                                            <td>Rs: 800</td>
+                                                            <td>View</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                 <div class="col info_box">
+                                    <div class="row">
+                                        <div class="col box_name">
+                                            <div class="col box_name">
+                                                <div> <i class="fas fa-cart-arrow-down"></i> Orders</div>
+                                            </div>
+                                            <hr>
+                                            <div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Discription</th>
+                                                            <th scope="col">Total</th>
+                                                            <th scope="col">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">1</th>
+                                                            <td>AMD R9 3600X, ASUS B450 TUF Ga..</td>
+                                                            <td>RS: 125,000</td>
+                                                            <td>View</td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">2</th>
+                                                            <td>AMD R9 3600X, ASUS B450 TUF Ga..</td>
+                                                            <td>RS: 25,000</td>
+                                                            <td>View</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">3</th>
+                                                            <td>AMD R9 3600X, ASUS B450 TUF Ga..</td>
+                                                            <td>Rs: 800</td>
+                                                            <td>View</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                 
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col info_box">
+                                    <div class="row">
+                                        <div class="col box_name">
+                                            <div class="col box_name">
+                                                <div> <i class="fas fa-cart-arrow-down"></i> Orders</div>
+                                            </div>
+                                            <hr>
+                                            <div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Discription</th>
+                                                            <th scope="col">Total</th>
+                                                            <th scope="col">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">1</th>
+                                                            <td>AMD R9 3600X, ASUS B450 TUF Ga..</td>
+                                                            <td>RS: 125,000</td>
+                                                            <td>View</td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">2</th>
+                                                            <td>AMD R9 3600X, ASUS B450 TUF Ga..</td>
+                                                            <td>RS: 25,000</td>
+                                                            <td>View</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">3</th>
+                                                            <td>AMD R9 3600X, ASUS B450 TUF Ga..</td>
+                                                            <td>Rs: 800</td>
+                                                            <td>View</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                 <div class="col info_box">
+                                    <div class="row">
+                                        <div class="col box_name">
+                                            <div class="col box_name">
+                                                <div> <i class="fas fa-cart-arrow-down"></i> Orders</div>
+                                            </div>
+                                            <hr>
+                                            <div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Discription</th>
+                                                            <th scope="col">Total</th>
+                                                            <th scope="col">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">1</th>
+                                                            <td>AMD R9 3600X, ASUS B450 TUF Ga..</td>
+                                                            <td>RS: 125,000</td>
+                                                            <td>View</td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">2</th>
+                                                            <td>AMD R9 3600X, ASUS B450 TUF Ga..</td>
+                                                            <td>RS: 25,000</td>
+                                                            <td>View</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">3</th>
+                                                            <td>AMD R9 3600X, ASUS B450 TUF Ga..</td>
+                                                            <td>Rs: 800</td>
+                                                            <td>View</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                 
+                            </div>
                         </div>
                     </div>
                 </div>
