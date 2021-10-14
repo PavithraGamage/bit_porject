@@ -1,0 +1,346 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 9, 2021, 8:03:18 PM
+    Author     : Pavithra
+*/
+.main_col_1{
+    background-color: #F7F8FA;
+}
+
+.company_name_box{
+    background-color: #0071FF;
+    padding: 12px;
+    max-width:15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-style: solid;
+    border-width: 0px 0px 1px 0px;
+    border-color: #EDEFF2;
+}
+
+.company_name_box:hover{
+    background-color: #697485;
+    transition-duration: 500ms;
+}
+
+.company_image{
+    max-width: 300px;
+}
+
+.clock_box{
+    background-color: #F7F8FA;
+    padding: 12px;
+    max-width:7%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-style: solid;
+    border-width: 0px 0px 1px 0px;
+    border-color: #EDEFF2;
+}
+
+.clock_time{
+    color: #697485;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.clock_date{
+    color: #697485;
+    font-size: 12px;
+    font-weight: 400;
+}
+.search_box{
+    background-color: #F7F8FA;
+    padding: 12px;
+    color: #0071FF;
+    font-size: 0px;
+    font-weight: 400;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-style: solid;
+    border-width: 0px 0px 1px 0px;
+    border-color: #EDEFF2;
+
+}
+
+.input_col{
+    max-width: 87%;
+}
+
+.search_btn{
+    max-width: 17%;
+}
+
+.notification_box{
+    background-color: #F7F8FA;
+    padding: 12px;
+    max-width:5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-style: solid;
+    border-width: 0px 0px 1px 0px;
+    border-color: #EDEFF2;
+}
+
+.bell{
+    color: #697485;
+    font-size: 22px;
+    font-weight: 400;
+}
+
+.bell:hover{
+    color: #0071FF;
+    transition-duration: 500ms;
+}
+.help_box{
+    background-color: #F7F8FA;
+    padding: 12px;
+    max-width:5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-style: solid;
+    border-width: 0px 0px 1px 0px;
+    border-color: #EDEFF2;
+}
+
+.ring{
+    color: #697485;
+    font-size: 22px;
+    font-weight: 400;
+}
+
+.ring:hover{
+    color: #0071FF;
+    transition-duration: 500ms;
+}
+
+.profile_box{
+    background-color: #F7F8FA;
+    padding: 12px;
+    max-width:18%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-style: solid;
+    border-width: 0px 1px 1px 0px;
+    border-color: #EDEFF2;
+}
+
+.menu_col{
+    background-color: #F7F8FA;
+    max-width:15%;
+   
+}
+
+.conent_col{
+    background-color: #F7F8FA;
+    border-style: solid;
+    border-width: 0px 1px 0px 1px;
+    border-color: #EDEFF2;
+    min-height: 100vh;
+}
+
+.title{
+    color: #697485;
+    font-size: 25px;
+    font-weight: 500;
+    padding-top: 20px;
+    padding-left: 20px;
+
+}
+
+.main_col_2{
+    background-color: #F7F8FA;
+    padding: 25px;
+}
+
+.box{
+    background-color: white;
+    padding: 25px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #EDEFF2;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px 0px #E4E4E4;
+    margin-bottom: 25px;
+}
+
+.action_box_hedr_col_1{
+    max-width: 60%;
+}
+.action_box_title{
+    font-size: 14px;
+    color: #697485;
+    font-weight: 400;
+
+}
+.action_box_hedr_col_2{
+    max-width: 40%;
+}
+.action_box_title_link{
+    font-size: 14px;
+    color: #697485;
+    font-weight: 400;
+    text-align: right;
+
+}
+
+.action_box_title_link:hover{
+    color: #0071FF;
+    transition-duration: 500ms;
+}
+
+hr{
+    border-style: solid;
+    border-width: 1px;
+    border-color: #EDEFF2;
+
+}
+.acation_box_items_time{
+    font-size: 10px;
+    color: #697485;
+}
+
+
+.acation_box_items{
+    font-size: 12px;
+    color: #697485;
+}
+.acation_box_items:hover{
+    color: #0071FF;
+    transition-duration: 500ms;
+}
+
+.menu_row{
+    background-color: #F7F8FA;
+    padding: 10px;
+    color: #697485;
+    font-size: 14px;
+    font-weight: 400;
+    border-style: solid;
+    border-width: 0px 0px 1px 0px;
+    border-color: #EDEFF2;
+    
+}
+
+.menu_row:hover{
+    background-color: #0071FF;
+    transition-duration: 500ms;
+    color: white;
+}
+
+
+.dropdown-menu{
+    min-width: 0rem;
+    text-align: center;
+    color: green;
+    
+}
+
+.dropdown-item{
+    color: #697485;
+}
+
+.dropdown-item:hover{
+    color: white;
+    background-color: #0071FF;
+}
+
+.dropdown-item:active{
+    color: white;
+}
+
+
+.dropdown:hover>.dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  margin-left: -25px;
+  
+  
+  
+}
+
+.dropdown>.dropdown-toggle:active {
+  
+    pointer-events: none;
+}
+
+.profile_pic{
+    width: 40px;
+    
+}
+
+.profle_name{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+  
+}
+
+.profile_grreting{
+    font-size: 12px;
+    color: #697485;
+}
+
+.profile_name{
+    font-size: 15px;
+    color: #697485;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #697485;
+    border-color: #ced4da;
+}
+
+.nav_items {
+ 
+    text-decoration: blink;
+    
+}
+
+.info_box {
+    background-color: white;
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 10px;
+    box-shadow: 0px 0px 20px 0px #e4e4e4;
+    border-radius: 5px;
+    padding: 20px;
+    color: #697485;
+}
+
+.info_box_1 {
+    background-color: white;
+   
+    margin-right: 30px;
+    margin-top: 10px;
+    box-shadow: 0px 0px 20px 0px #e4e4e4;
+    border-radius: 5px;
+    padding: 20px;
+    color: #697485;
+}
+
+.box_num{
+    font-size: 25px;
+    text-align: right;
+    font-weight: 600;
+}
+
+.box_name {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+}
