@@ -15,28 +15,60 @@
             <h2>GET IN TOUCH</h2>
             <hr>
             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
-            <form>
+            <form action="<?php htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
+
+                <?php
+                if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'save') {
+
+                    extract($_POST);
+
+                    $name = clean_data($name);
+                    $email = clean_data($email);
+                    $phone = clean_data($phone);
+                    $message = clean_data($message);
+
+                    echo $name;
+                }
+
+                function clean_data($data = null) {
+
+                    $data = trim($data);
+                    $data = stripslashes($data);
+                    $data = htmlspecialchars($data);
+
+                    return $data;
+                }
+
+                $error = array('name' => 'frist name blank', 'phone' => 'phone not correct');
+
+                if (empty($name)) {
+
+                    $error_msg = 'frist name should not be blank';
+                }
+                ?>
+
                 <div class="form-group">
                     <label for="exampleInputEmail1">Your Name</label>
-                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Sam Smith">
+                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Sam Smith" name="name">
+                    <small><?php echo @$error_msg; ?></small>
 
                 </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="sam@gmail.com">
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="sam@gmail.com" name="email">
 
                 </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">Phone Number</label>
-                    <input type="tel" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="+947070035844">
+                    <input type="tel" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="+947070035844" name="phone">
 
                 </div>
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">Example textarea</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="message"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary form_btn">Submit</button>
+                <button type="submit" class="btn btn-primary form_btn" name="action" value="save">Submit</button>
             </form>
         </div>
         <div class="col map_col">
@@ -47,6 +79,8 @@
         </div>
     </div>
 </div>
+
+
 <!-- content end -->
 <!-- footer start -->
 <?php include 'ui/site_footer.php'; ?>
