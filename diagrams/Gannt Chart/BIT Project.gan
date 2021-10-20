@@ -1,9 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2021-11-04" view-index="0" gantt-divider-location="721" resource-divider-location="300" version="3.1.3102" locale="en_US">
+<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2021-10-17" view-index="0" gantt-divider-location="721" resource-divider-location="300" version="3.1.3102" locale="en_US">
     <description/>
-    <view zooming-state="default:0" id="gantt-chart">
+    <view zooming-state="default:6" id="gantt-chart">
         <field id="tpd3" name="Name" width="457" order="0"/>
         <field id="tpd4" name="Begin date" width="153" order="1"/>
         <field id="tpd5" name="End date" width="107" order="2"/>
+        <option id="color.recent">
+            <![CDATA[#000000 #666666]]>
+        </option>
     </view>
     <view id="resource-table">
         <field id="0" name="Name" width="210" order="0"/>
@@ -33,16 +36,60 @@
             <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
             <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
         </taskproperties>
-        <task id="0" name="1.0 Initiate" color="#8cb6ce" meeting="false" start="2021-10-20" duration="5" complete="0" thirdDate="2021-10-20" thirdDate-constraint="1" expand="true">
+        <task id="0" name="1.0 Initiate" color="#000000" meeting="false" start="2021-10-20" duration="5" complete="0" thirdDate="2021-10-20" thirdDate-constraint="1" expand="true">
             <task id="3" name="1.1 Proposal" color="#8cb6ce" meeting="false" start="2021-10-20" duration="1" complete="0" thirdDate="2021-10-19" thirdDate-constraint="0" expand="true"/>
             <task id="11" name="1.2 Literature Review" color="#8cb6ce" meeting="false" start="2021-10-21" duration="1" complete="0" thirdDate="2021-10-19" thirdDate-constraint="0" expand="true"/>
             <task id="13" name="1.3 Write the Dissertation Chapter 1 – Introduction" color="#8cb6ce" meeting="false" start="2021-10-22" duration="3" complete="0" thirdDate="2021-10-19" thirdDate-constraint="0" expand="true"/>
         </task>
-        <task id="14" name="2.0 Requirement Analysis" color="#8cb6ce" meeting="false" start="2021-10-27" duration="21" complete="0" thirdDate="2021-10-15" thirdDate-constraint="0" expand="true">
-            <task id="33" name="2.1 Gather Requirements" color="#8cb6ce" meeting="false" start="2021-10-27" duration="10" complete="0" thirdDate="2021-10-19" thirdDate-constraint="0" expand="true"/>
-            <task id="34" name="2.2 Analysis Requirements" color="#8cb6ce" meeting="false" start="2021-11-10" duration="6" complete="0" thirdDate="2021-10-19" thirdDate-constraint="0" expand="true"/>
-            <task id="35" name="2.3 Prepare Requirements Specification" color="#8cb6ce" meeting="false" start="2021-11-17" duration="2" complete="0" thirdDate="2021-10-19" thirdDate-constraint="0" expand="true"/>
-            <task id="36" name="2.4 Write the Dissertation Chapter 2 – Analysis" color="#8cb6ce" meeting="false" start="2021-11-19" duration="4" complete="0" thirdDate="2021-10-19" thirdDate-constraint="0" expand="true"/>
+        <task id="14" name="2.0 Requirement Analysis" color="#000000" meeting="false" start="2021-10-27" duration="13" complete="0" thirdDate="2021-10-15" thirdDate-constraint="0" expand="true">
+            <task id="33" name="2.1 Gather Requirements" color="#8cb6ce" meeting="false" start="2021-10-27" duration="6" complete="0" thirdDate="2021-10-19" thirdDate-constraint="0" expand="true"/>
+            <task id="34" name="2.2 Analysis Requirements" color="#8cb6ce" meeting="false" start="2021-11-04" duration="3" complete="0" thirdDate="2021-10-19" thirdDate-constraint="0" expand="true"/>
+            <task id="35" name="2.3 Prepare Requirements Specification" color="#8cb6ce" meeting="false" start="2021-11-09" duration="2" complete="0" thirdDate="2021-10-19" thirdDate-constraint="0" expand="true"/>
+            <task id="36" name="2.4 Write the Dissertation Chapter 2 – Analysis" color="#8cb6ce" meeting="false" start="2021-11-11" duration="2" complete="0" thirdDate="2021-10-19" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="109" name="3.0 Design" color="#000000" meeting="false" start="2021-11-15" duration="26" complete="0" thirdDate="2021-11-25" thirdDate-constraint="0" expand="true">
+            <task id="113" name="3.1 Design User Interface" color="#666666" meeting="false" start="2021-11-15" duration="6" complete="0" thirdDate="2021-11-26" thirdDate-constraint="0" expand="true">
+                <task id="142" name="3.1.1 Functional Specifications" color="#8cb6ce" meeting="false" start="2021-11-15" duration="2" complete="0" thirdDate="2021-11-17" thirdDate-constraint="0" expand="true"/>
+                <task id="146" name="3.1.2 Technical Specification" color="#8cb6ce" meeting="false" start="2021-11-17" duration="4" complete="0" thirdDate="2021-11-29" thirdDate-constraint="0" expand="true"/>
+            </task>
+            <task id="117" name="3.2 Database Design" color="#666666" meeting="false" start="2021-11-23" duration="5" complete="0" thirdDate="2021-12-09" thirdDate-constraint="0" expand="true">
+                <task id="157" name="3.2.1 Technical Specification" color="#8cb6ce" meeting="false" start="2021-11-23" duration="5" complete="0" thirdDate="2021-11-23" thirdDate-constraint="0" expand="true"/>
+            </task>
+            <task id="123" name="3.3 System Design" color="#666666" meeting="false" start="2021-11-30" duration="13" complete="0" thirdDate="2021-12-13" thirdDate-constraint="0" expand="true">
+                <task id="162" name="3.3.1 Technical Specification" color="#8cb6ce" meeting="false" start="2021-11-30" duration="5" complete="0" thirdDate="2021-11-23" thirdDate-constraint="0" expand="true"/>
+                <task id="169" name="3.3.2 Design Diagrams" color="#8cb6ce" meeting="false" start="2021-12-07" duration="8" complete="0" thirdDate="2021-11-23" thirdDate-constraint="0" expand="true"/>
+            </task>
+            <task id="126" name="3.4 Write the Dissertation Chapter 3 – Design" color="#8cb6ce" meeting="false" start="2021-12-17" duration="2" complete="0" thirdDate="2021-12-31" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="192" name="4.0 Implementation" color="#000000" meeting="false" start="2021-12-21" duration="54" complete="0" thirdDate="2021-10-25" thirdDate-constraint="0" expand="true">
+            <task id="194" name="4.1 User Interfaces Development" color="#666666" meeting="false" start="2021-12-21" duration="19" complete="0" thirdDate="2021-12-21" thirdDate-constraint="0" expand="true">
+                <task id="201" name="4.1.1 Code User Interfaces" color="#8cb6ce" meeting="false" start="2021-12-21" duration="12" complete="0" thirdDate="2021-10-25" thirdDate-constraint="0" expand="true"/>
+                <task id="202" name="4.1.2 Conduct Unit Test" color="#8cb6ce" meeting="false" start="2022-01-06" duration="4" complete="0" thirdDate="2021-10-25" thirdDate-constraint="0" expand="true"/>
+                <task id="203" name="4.1.3 Review User Interfaces Functionality" color="#8cb6ce" meeting="false" start="2022-01-12" duration="3" complete="0" thirdDate="2021-10-25" thirdDate-constraint="0" expand="true"/>
+            </task>
+            <task id="195" name="4.2 Database Development" color="#666666" meeting="false" start="2022-01-17" duration="12" complete="0" thirdDate="2021-10-25" thirdDate-constraint="0" expand="true">
+                <task id="204" name="4.2.1 Identify Table Relationships" color="#8cb6ce" meeting="false" start="2022-01-17" duration="8" complete="0" thirdDate="2021-10-25" thirdDate-constraint="0" expand="true"/>
+                <task id="206" name="4.2.2 Build Database Tables" color="#8cb6ce" meeting="false" start="2022-01-27" duration="4" complete="0" thirdDate="2021-10-25" thirdDate-constraint="0" expand="true"/>
+            </task>
+            <task id="197" name="4.3 System Development" color="#666666" meeting="false" start="2022-02-02" duration="21" complete="0" thirdDate="2022-02-02" thirdDate-constraint="0" expand="true">
+                <task id="207" name="4.3.1 Build System Functionality" color="#8cb6ce" meeting="false" start="2022-02-02" duration="18" complete="0" thirdDate="2021-10-25" thirdDate-constraint="0" expand="true"/>
+                <task id="208" name="4.3.2 Conduct Unit Test" color="#8cb6ce" meeting="false" start="2022-02-28" duration="3" complete="0" thirdDate="2021-10-25" thirdDate-constraint="0" expand="true"/>
+            </task>
+            <task id="198" name="4.4 Write the Dissertation Chapter 4 – Implementation" color="#8cb6ce" meeting="false" start="2022-03-03" duration="2" complete="0" thirdDate="2021-10-25" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="217" name="5.0 Evaluation" color="#000000" meeting="false" start="2022-03-07" duration="10" complete="0" thirdDate="2022-03-07" thirdDate-constraint="0" expand="true">
+            <task id="218" name="5.1 Integration Testing" color="#8cb6ce" meeting="false" start="2022-03-07" duration="3" complete="0" thirdDate="2022-02-24" thirdDate-constraint="0" expand="true"/>
+            <task id="219" name="5.2 System Testing" color="#8cb6ce" meeting="false" start="2022-03-10" duration="3" complete="0" thirdDate="2022-02-24" thirdDate-constraint="0" expand="true"/>
+            <task id="220" name="5.3 User Acceptance Testing" color="#8cb6ce" meeting="false" start="2022-03-15" duration="2" complete="0" thirdDate="2022-02-24" thirdDate-constraint="0" expand="true"/>
+            <task id="221" name="4.4 Write the Dissertation Chapter 4 – Evaluation" color="#8cb6ce" meeting="false" start="2022-03-17" duration="2" complete="0" thirdDate="2022-02-24" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="236" name="6.0 Deployment" meeting="false" start="2022-03-21" duration="5" complete="0" expand="true">
+            <task id="237" name="6.1 Deployment" color="#8cb6ce" meeting="false" start="2022-03-21" duration="2" complete="0" thirdDate="2022-03-31" thirdDate-constraint="0" expand="true"/>
+            <task id="238" name="6.2 Training Users" color="#8cb6ce" meeting="false" start="2022-03-23" duration="3" complete="0" thirdDate="2022-03-31" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="245" name="7.0 Conclusion" color="#000000" meeting="false" start="2022-03-28" duration="5" complete="0" thirdDate="2021-11-29" thirdDate-constraint="0" expand="true">
+            <task id="247" name="7.1 Writing Appendices" color="#8cb6ce" meeting="false" start="2022-03-28" duration="2" complete="0" thirdDate="2021-11-29" thirdDate-constraint="0" expand="true"/>
+            <task id="248" name="7.2 Finalize Disseratation" color="#8cb6ce" meeting="false" start="2022-03-30" duration="3" complete="0" thirdDate="2021-11-15" thirdDate-constraint="0" expand="true"/>
         </task>
     </tasks>
     <resources/>
