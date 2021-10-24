@@ -37,7 +37,7 @@
                     <div class="row">
                         <!--logo-->
                         <div class="col company_name_box">
-                            
+
                             <img src="images/logo.png" alt="" class="company_image">
                         </div>
                         <!--clock-->
@@ -121,29 +121,22 @@
                             </a>
                             <a href="delivery.php" class="nav_items">
                                 <div class="row menu_row">
-
                                     <div class="col">
                                         <div><i class="fas fa-shipping-fast"></i> Deliveries</div>
                                     </div>
-
                                 </div>
                             </a>
                             <a href="repairs.php" class="nav_items">
                                 <div class="row menu_row">
-
                                     <div class="col">
                                         <div><i class="fas fa-cogs"></i> Repairs</div>
                                     </div>
-
                                 </div>
                             </a>
                         </div>
                         <!--dashboard content area-->
                         <div class="col conent_col">
-
                             <h1 class="title"><i class="fas fa-charging-station"></i> Warranty</h1>
-
-
                         </div>
                     </div>
                 </div>
