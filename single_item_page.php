@@ -1,15 +1,4 @@
-<?php include 'ui/site_header.php'; ?>
-
-<!--Hero Section Start-->
-<div class="hero">
-    <div class="container">
-        <h2 class="hero_headding">Processors > AMD Ryzen R9 3900X</h2>
-        <hr class="hero_hr">
-        <p class="hero_para">AMD Ryzen™ 9 3900X desktop processors from the AMD 3000 series are the most advanced desktop processors in the world for elite gamers. Built to Perform. Designed to Win.
-            The world's most advanced processor with 12 cores for the world's elite gamers.</p>
-    </div>
-</div>
-<!--Hero Section End-->
+<?php include 'ui/system_page_header.php';?>
 
 <!-- content start-->
 <div class="container">

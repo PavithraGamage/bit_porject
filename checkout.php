@@ -1,12 +1,4 @@
-<?php include 'ui/site_header.php'; ?>
-<!--Hero Section Start-->
-<div class="hero">
-    <div class="container">
-        <h2 class="hero_headding">Checkout</h2>
-        <hr class="hero_hr">
-        <p class="hero_para">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book</p>
-    </div>
-</div>
+<?php include 'ui/system_page_header.php';?>
 <!--Hero Section End-->
 <!-- content start-->
 <div class="container">
@@ -20,7 +12,7 @@
           
             <div class="row">
                 <div class="col">
-                    <h3> <i class="fas fa-map-marker-alt"></i> Your Delivery Details</h3>
+                    <h3> <i class="fas fa-map-marker-alt"></i> Enter Your Delivery Details</h3>
                 </div>
                 <div class="col cart_remove_all">
                    
@@ -81,17 +73,21 @@
 
             </div>
              <div class="row">
-                <div class="col-5"></div>
-                <div class="col-7 cart_total">
-                    <h4 class="cart_summary">Summary</h4>
+                <div class="col-6"></div>
+                <div class="col-6 cart_total">
+                    <h4 class="cart_summary">Order Summary</h4>
                     <div class="row">
                         <div class="col-4">
                             <div>
                                 <h6>Item(s):</h6> 
                             </div>
                             <hr>
-                            <div>
+                             <div>
                                 <h6>Warranty & Service:</h6>  
+                            </div>
+                            <hr>
+                            <div>
+                                <h6>Delivery Charges:</h6>  
                             </div>
                             <hr>
                            
@@ -106,6 +102,10 @@
                             <hr>
                             <div>
                                 <h6>8,000 LKR</h6>
+                            </div>
+                            <hr>
+                             <div>
+                                <h6>3,000 LKR</h6>
                             </div>
                             <hr>
 
@@ -127,7 +127,7 @@
 
 <?php 
  
-var_dump($_POST);
+print_r($_POST)
 
 ?>
 </div>

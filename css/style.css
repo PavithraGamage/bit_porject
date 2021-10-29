@@ -191,7 +191,7 @@ label {
 /*catogry page*/
 
 .shop_row{
-    margin: 40px 0px 80px 0px;
+    margin: 80px 0px 80px 0px;
 }
 
 .wig_bar{
@@ -263,9 +263,6 @@ label {
 .item_row_main{
     margin-top: 80px;
     margin-bottom: 80px;
-    border: 0px solid;
-    border-radius: 5px;
-    box-shadow: 2px 4.8034px 19px rgb(7 27 81 / 9%);
     padding: 60px;
 
 }
@@ -388,4 +385,18 @@ label {
     border: 1px solid;
     border-radius: 5px;
 
+}
+
+.nav_sys{
+    background-color: black!important;
+}
+
+.sys_nav_link{
+    
+    color: white !important;
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding-right: .5rem;
+    padding-left: 1.5rem;
 }
