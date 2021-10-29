@@ -1,30 +1,33 @@
-<?php include 'ui/system_page_header.php';?>
+<?php include 'ui/system_page_header.php'; ?>
 
 <!-- content start-->
 <div class="container">
     <div class="row item_row_main">
         <div class="row">
-            <img src="images/amd_ryzen_r9_3900x.png" alt="" >
-
-
-            <div class="row">
-                <div class="col">
-
-                    <h3 class="item_price item_stock">In Stock</h3>
+            <!--product image-->
+            <div class="col-6">
+                <div class="image_box">
+                    <img src="images/amd_ryzen_r9_3900x.png" alt="" class="item_image"/>
                 </div>
-                <div class="col">
-                    <h3 class="item_price">Price - Rs: 125,000</h3>
-                </div>
+                             
+            </div>
+
+            <!--second content box-->
+            <div class="col-6">
+
+                <h2>AMD Ryzen - 9 3900X </h2>
+                <hr>    
+                <p>
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                </p>
+                <h4 class="price_hedding" >RS: 155,000</h4>
                 <div class="col cart_button">
                     <a href="cart.php">
                         <button type="button" class="btn btn-secondary item_btn">Add to Cart <i class="fas fa-cart-arrow-down"></i></button>
                     </a>
-                    
                 </div>
 
             </div>
-
-
 
         </div>
         <div class="row">

@@ -302,7 +302,7 @@ label {
 
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
 
 }
 
@@ -399,4 +399,19 @@ label {
 .navbar-expand-lg .navbar-nav .nav-link {
     padding-right: .5rem;
     padding-left: 1.5rem;
+}
+
+.item_image{
+    width: 350px;
+}
+
+.image_box{
+   
+    display: flex;
+    justify-content: center;
+
+}
+
+.price_hedding{
+    padding-bottom: 10px;
 }

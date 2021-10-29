@@ -10,9 +10,7 @@
                     <hr class="wig_hr">
                 </div>
                 <div class="wig_items">
-
-                    <!--<input type="range" class="range_slider" id="price_range" />-->
-                
+                    <input type="range" class="range_slider" id="price_range" />
                 </div>
             </div>
             <div class="row wig">
@@ -150,10 +148,27 @@
                 </div>
             </div>
             <div class="row wig">
-                Max Boost Clock
+
+                <h6 class="wig_title">Max Boost Clock</h6>
+                <div>
+                    <hr class="wig_hr">
+                </div>
+                <div class="wig_items">
+                    <input type="range" class="range_slider" id="price_range" />
+                </div>
+
             </div>
             <div class="row wig">
-                Base Clock
+
+
+                <h6 class="wig_title">Base Clock</h6>
+                <div>
+                    <hr class="wig_hr">
+                </div>
+                <div class="wig_items">
+                    <input type="range" class="range_slider" id="price_range" />
+                </div>
+
             </div>
             <div class="row wig">
                 <h6 class="wig_title">Total L1 Cache</h6>

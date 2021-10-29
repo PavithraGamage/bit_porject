@@ -32,9 +32,7 @@
     </div>
 </footer>
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
-<!-- Ion Slider -->
-<script src="../../plugins/ion-rangeslider/js/ion.rangeSlider.min.js"></script>
-<!-- Bootstrap slider -->
-<script src="../../plugins/bootstrap-slider/bootstrap-slider.min.js"></script>
+
+
 </body>
 </html>
