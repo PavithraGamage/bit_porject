@@ -2,7 +2,8 @@
     <div class="container">
         <div class="row">
             <div class="col-8">
-                <img src="images/cmaplus-logo-blue-big copy._w.png" alt="" class="footer_logo"/>
+                <!--<img src="images/cmaplus-logo-blue-big copy._w.png" alt="" class="footer_logo"/>-->
+                <img src="images/logo_new.png" alt="" class="footer_logo" />
                 <hr class="footer_hr">
                 <p class="footer_company">
 

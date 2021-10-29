@@ -128,7 +128,7 @@
                 <div class="col-6 cart_total">
                     <h4 class="cart_summary">Cart Summary</h4>
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-5">
                             <div>
                                 <h6>Item(s):</h6> 
                             </div>
@@ -143,7 +143,7 @@
                                 <h4>Est. Total:</h4>
                             </div>
                         </div>
-                        <div class="col-8">
+                        <div class="col-7">
                             <div>
                                 <h6>156,000 LKR</h6>
                             </div>
