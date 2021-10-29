@@ -1,10 +1,19 @@
-<?php include 'ui/system_page_header.php';?>
+<?php include 'ui/system_page_header.php'; ?>
+
 <!-- content start -->
 <div class="container">
     <div class="row shop_row">
         <div class="col-2 wig_bar">
             <div class="row wig">
-                <h6>Price</h6>
+                <h6 class="wig_title">Price</h6>
+                <div>
+                    <hr class="wig_hr">
+                </div>
+                <div class="wig_items">
+
+                    <!--<input type="range" class="range_slider" id="price_range" />-->
+                
+                </div>
             </div>
             <div class="row wig">
                 <h6 class="wig_title">Brand</h6>
