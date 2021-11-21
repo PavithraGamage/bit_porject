@@ -8,7 +8,8 @@
         <!-- Bootstrap CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
-        <title>Hello, world!</title>
+        <title><?php echo ucfirst(pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME));  ?></title>
+        
         <! -- main style -->
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
 
@@ -24,7 +25,7 @@
         <div>
             <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="http://localhost/bootstrap/">
+                    <a class="navbar-brand" href="http://localhost/bit/">
 <!--                        <img src="images/logo.png" alt="" class="nav_logo">-->
                         <img src="images/logo_new.png" alt=""  class="nav_logo" />
                     </a>
@@ -49,7 +50,7 @@
                                 <a class="nav-link sys_nav_link" href="http://localhost/bit/contact.php">Contact</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link sys_nav_link" href="http://localhost/bit/contact.php"> <i class="fas fa-user"></i> My Account</a>
+                                <a class="nav-link sys_nav_link" href="http://localhost/bit/my_account.php"> <i class="fas fa-user"></i> My Account</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php"> <i class="fas fa-cart-arrow-down"></i> Cart</a>

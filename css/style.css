@@ -1,12 +1,4 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : Sep 17, 2021, 1:12:14 PM
-    Author     : Pavithra
-*/
+
 
 /* home page */
 
@@ -419,10 +411,120 @@ label {
 
 /*dashboard*/
 
-.dash_hedding{
+.dash_image_box {
     display: flex;
     flex-direction: row;
+    align-content: center;
     flex-wrap: nowrap;
     justify-content: flex-end;
     align-items: center;
+}
+
+.dash_image{
+    width: 50px;
+    border-radius: 25px;
+}
+
+.dash_name_box {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+}
+
+.dash_notifcation_box {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+.dash_hedding_row {
+    border-style: solid;
+    border-color: #e4e6e7;
+    border-width: 0px 0px 1px 0px;
+    padding-bottom: 20px;
+}
+
+.dash_content{
+    border-style: solid;
+    border-color: #e4e6e7;
+    border-width: 0px 0px 0px 1px;
+    padding: 20px;
+}
+
+.dash_content_nav{
+    padding-top: 25px;
+}
+.dash_left_nav_first{
+    padding-bottom: 20px;
+    border-style: solid;
+    border-color: #e4e6e7;
+    border-width: 0px 0px 1px 0px;
+}
+.dash_left_nav{
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-style: solid;
+    border-color: #e4e6e7;
+    border-width: 0px 0px 1px 0px;
+}
+
+.dash_left_nav_last{
+    padding-top: 20px;
+}
+
+.dash_info_box {
+    min-height: 70px;
+    background-color: #f8f8f8;
+    margin: 15px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 1.48796px 15.893px 14.1356px rgba(7, 27, 81, 0.09);
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.dash_info_box_row{
+        
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+ 
+}
+
+.dash_info_box_number{
+    text-align: right;
+    font-size: 30px;
+}
+
+/* login form */
+.login{
+    max-width: 600px;
+    padding: 60px;
+    box-shadow: 1.48796px 25.893px 14.1356px rgba(7, 27, 81, 0.09);
+    margin-top: 100px;
+    margin-bottom: 100px;
+    margin-right: 40px;
+    border-radius: 25px;
+}
+
+.register{
+    max-width: 600px;
+    padding: 60px;
+    box-shadow: 1.48796px 25.893px 14.1356px rgba(7, 27, 81, 0.09);
+    margin-top: 100px;
+    margin-bottom: 100px;
+    margin-right: 40px;
+    border-radius: 25px;
 }
