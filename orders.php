@@ -1,198 +1,124 @@
+<?php include 'ui/system_page_header.php'; ?>
 
-<!--
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */-->
 
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Bootstrap css -->
-        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-
-        <!-- Bootstrap js -->
-        <script src="js/bootstrap.min.js" type="text/javascript"></script>
-
-        <!--font ausuome icons-->
-        <link href="icons/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet" type="text/css"/>
-
-        <!-- Custom Styles -->
-        <link href="styles/dashboard.css" rel="stylesheet" type="text/css"/>
-
-        <title></title>
-    </head>
-    <body>
-        <div class="container-fluid">
-            <div class="row">
-                <!--left contents-->
-                <div class="col-12 main_col_1"">
-                    <div class="row">
-                        <!--logo-->
-                        <div class="col company_name_box">
-
-                            <img src="images/logo.png" alt="" class="company_image">
-                        </div>
-                        <!--clock-->
-                        <div class="col clock_box">
-                            <div class="clock_time">10:58 PM</div>
-                            <div class="clock_date">12/10/2021</div>
-                        </div>
-                        <!--search-->
-                        <div class="col search_box">
-                            <form>
-                                <div class="row">
-                                    <div class="col input_col">
-                                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                                    </div>
-                                    <div class="col search_btn">
-                                        <button type="submit" class="btn btn-primary submit">Search</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <!--notification-->
-                        <div class="col notification_box">
-                            <i class="fas fa-bell bell"></i>
-                        </div>
-                        <!--help-->
-                        <div class="col help_box">
-                            <i class="far fa-life-ring ring"></i>
-                        </div>
-                        <!--profile-->
-                        <div class="col profile_box">
-                            <div class="row ">
-                                <div class="col profle_name">
-                                    <div class="profile_grreting">Good Morning</div>
-                                    <div class="profile_name">P.Samaranayake</div>
-                                </div>
-                                <div class="col dropdown">
-                                    <img  class="profile_pic" src="images/blank-profile-picture-973460_640.png" alt="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#">Edit Profile</a>
-                                        <a class="dropdown-item" href="#">Log Out</a>
-                                    </div>
-                                </div>
-
+<div class="container">
+    <div class="row item_row_main">
+        <!--headder row start-->
+        <div class="row dash_hedding_row">
+            <div class="col-6">
+                <h4> <i class="fas fa-tachometer-alt"></i> Dashboard</h4>
+            </div>
+            <!-- header section nav -->
+            <div class="col-6">
+                <div class="row">
+                    <!-- image and name -->
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="col-6 dash_image_box">
+                                <img src="images/blank-profile-picture-973460_640.png" class="dash_image" alt="" />
                             </div>
-
-
+                            <div class="col-6 dash_name_box">
+                                <h6>A.P.K Samaranayake</h6>
+                            </div>
                         </div>
                     </div>
-                    <!--main content-->
-                    <div class="row">
-                        <!-- left menu-->
-                        <div class="col menu_col">
-                            <a href="dashboard.php" class="nav_items">
-                                <div class="row menu_row">
-
-                                    <div class="col">
-                                        <div>
-                                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </a>
-                            <a href="orders.php" class="nav_items">
-                                <div class="row menu_row">
-
-                                    <div class="col">
-                                        <div><i class="fas fa-cart-arrow-down"></i> Orders</div>
-                                    </div>
-
-                                </div>
-                            </a>
-                            <a href="warranty.php" class="nav_items">
-                                <div class="row menu_row">
-
-                                    <div class="col">
-                                        <div><i class="fas fa-charging-station"></i> Warranty</div>
-                                    </div>
-
-                                </div>
-                            </a>
-                            <a href="delivery.php" class="nav_items">
-                                <div class="row menu_row">
-
-                                    <div class="col">
-                                        <div><i class="fas fa-shipping-fast"></i> Deliveries</div>
-                                    </div>
-
-                                </div>
-                            </a>
-                            <a href="repairs.php" class="nav_items">
-                                <div class="row menu_row">
-
-                                    <div class="col">
-                                        <div><i class="fas fa-cogs"></i> Repairs</div>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </div>
-                        <!--dashboard content area-->
-                        <div class="col conent_col">
-
-                            <h1 class="title"><i class="fas fa-cart-arrow-down"></i> Orders</h1>
-                            <hr>
-
-                            <div class="page_tables">
-
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" class="table_head">#</th>
-                                            <th scope="col" class="table_head">Date</th>
-                                            <th scope="col" class="table_head">Discription</th>
-                                            <th scope="col" class="table_head">Total</th>
-                                            <th scope="col" class="table_head">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row" class="table_body">1</th>
-                                            <td class="table_body">12/10/2021</td>
-                                            <td class="table_body">AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,... </td>
-                                            <td class="table_body">RS: 585,000</td>
-                                            <td>
-                                                <button>VIEW</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="table_body">2</th>
-                                            <td class="table_body">12/10/2021</td>
-                                            <td class="table_body">AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,... </td>
-                                            <td class="table_body">RS: 585,000</td>
-                                            <td>
-                                                <button>VIEW</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="table_body">3</th>
-                                            <td class="table_body">12/10/2021</td>
-                                            <td class="table_body">AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,...</td>
-                                            <td class="table_body">RS: 585,000</td>
-                                            <td>
-                                                <button>VIEW</button>
-                                            </td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-
-
-                            </div>
-
-
-                        </div>
+                    <div class="col-2 dash_notifcation_box">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="col-2 dash_notifcation_box">
+                        <i class="fas fa-sign-out-alt"></i>
                     </div>
                 </div>
-                <!--right contents-->
+            </div>
+        </div>
+
+        <!--headder row end-->
+
+        <!--dashboard start-->
+
+        <div class="row">
+            <div class="col-2 dash_content_nav">
+                <div class="dash_left_nav_first">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </div>
+                <div class="dash_left_nav">
+                    <i class="fas fa-shopping-cart"></i> Orders
+                </div>
+                <div class="dash_left_nav">
+                    <i class="fas fa-charging-station"></i> Warranty
+                </div>
+                <div class="dash_left_nav">
+                    <i class="fas fa-truck"></i> Delivery
+                </div>
+                <div class="dash_left_nav">
+                    <i class="fas fa-calendar-check"></i> Appointments
+                </div>
+                <div class="dash_left_nav">
+                    <i class="fas fa-tools"></i> Troubleshoots
+                </div>
+                <div class="dash_left_nav_last">
+                    <i class="fas fa-life-ring"></i> Help
+                </div>
+            </div>
+            <div class="col-10 dash_content">
+
+                <div class="page_tables">
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="table_head">#</th>
+                                <th scope="col" class="table_head">Date</th>
+                                <th scope="col" class="table_head">Discription</th>
+                                <th scope="col" class="table_head">Total</th>
+                                <th scope="col" class="table_head">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row" class="table_body">1</th>
+                                <td class="table_body">12/10/2021</td>
+                                <td class="table_body">AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,... </td>
+                                <td class="table_body">RS: 585,000</td>
+                                <td>
+                                    <button>VIEW</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="table_body">2</th>
+                                <td class="table_body">12/10/2021</td>
+                                <td class="table_body">AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,... </td>
+                                <td class="table_body">RS: 585,000</td>
+                                <td>
+                                    <button>VIEW</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="table_body">3</th>
+                                <td class="table_body">12/10/2021</td>
+                                <td class="table_body">AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,...</td>
+                                <td class="table_body">RS: 585,000</td>
+                                <td>
+                                    <button>VIEW</button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+
+
+
 
             </div>
         </div>
-    </body>
-</html>
+
+
+        <!--dashboard end-->
+    </div>
+</div>
+
+
+<?php include 'ui/site_footer.php'; ?>

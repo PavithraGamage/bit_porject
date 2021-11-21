@@ -6,7 +6,7 @@
         <!--headder row start-->
         <div class="row dash_hedding_row">
             <div class="col-6">
-            <h4> <i class="fas fa-tachometer-alt"></i> Dashboard</h4>
+                <h4> <i class="fas fa-tachometer-alt"></i> Dashboard</h4>
             </div>
             <!-- header section nav -->
             <div class="col-6">
@@ -39,10 +39,16 @@
         <div class="row">
             <div class="col-2 dash_content_nav">
                 <div class="dash_left_nav_first">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                    <a href="dashboard.php">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+
                 </div>
                 <div class="dash_left_nav">
-                    <i class="fas fa-shopping-cart"></i> Orders
+                    <a href="orders.php">
+                        <i class="fas fa-shopping-cart"></i> Orders
+                    </a>
+
                 </div>
                 <div class="dash_left_nav">
                     <i class="fas fa-charging-station"></i> Warranty
@@ -86,7 +92,7 @@
                     <div class="col-3 dash_info_box">
                         <div class="row">
                             <div class="col-9">
-                                <h6>  <i class="fas fa-truck"></i> Delivery</h6>
+                                <h6> <i class="fas fa-truck"></i> Delivery</h6>
                             </div>
                             <div class="col-3">
                                 <h6 class="dash_info_box_number">10</h6>
