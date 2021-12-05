@@ -10,7 +10,7 @@
 
         <title><?php echo ucfirst(pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME));  ?></title>
         
-        <! -- main style -->
+        <!-- main style -->
         <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
 
 
@@ -50,7 +50,7 @@
                                 <a class="nav-link sys_nav_link" href="http://localhost/bit/contact.php">Contact</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link sys_nav_link" href="http://localhost/bit/my_account.php"> <i class="fas fa-user"></i> My Account</a>
+                                <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php"> <i class="fas fa-cart-arrow-down"></i> Cart</a>
@@ -122,45 +122,41 @@
                     <i class="fas fa-life-ring"></i> Help
                 </div>
             </div>
-            <!-- Dashbaord Content Area Start -->
+            <!-- Dashboard Content Area Start -->
             <div class="col-10 dash_content">
                 <div class="page_tables">
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th scope="col" class="table_head">#</th>
-                                <th scope="col" class="table_head">Date</th>
-                                <th scope="col" class="table_head">Discription</th>
-                                <th scope="col" class="table_head">Total</th>
+                                <th scope="col" class="table_head">Invoice Number</th>
+                                <th scope="col" class="table_head">Purchase Date</th>
+                                <th scope="col" class="table_head">Warranty Status</th>
+                                <th scope="col" class="table_head">Item</th>
                                 <th scope="col" class="table_head">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <th scope="row" class="table_body">1</th>
+                                <td class="table_body">1021</td>
                                 <td class="table_body">12/10/2021</td>
-                                <td class="table_body">AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,... </td>
-                                <td class="table_body">RS: 585,000</td>
+                                <td class="table_body">156 Days Remaining</td>
+                                <td class="table_body">AMD Ryzen 9 3900X </td>
                                 <td>
-                                    <button>VIEW</button>
+                                    <a href="http://localhost/bit/claim_warranty.php">
+                                    <button>Claim Warranty</button>
+                                    </a>                                  
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row" class="table_body">2</th>
-                                <td class="table_body">12/10/2021</td>
-                                <td class="table_body">AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,... </td>
-                                <td class="table_body">RS: 585,000</td>
+                                <td class="table_body">1022</td>
+                                <td class="table_body">12/11/2021</td>
+                                <td class="table_body">No Warranty</td>
+                                <td class="table_body">Havit Gaming Mouse</td>
                                 <td>
-                                    <button>VIEW</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="table_body">3</th>
-                                <td class="table_body">12/10/2021</td>
-                                <td class="table_body">AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,...</td>
-                                <td class="table_body">RS: 585,000</td>
-                                <td>
-                                    <button>VIEW</button>
+                                    <button>No Action</button>
                                 </td>
                             </tr>
                         </tbody>

@@ -50,7 +50,7 @@
                                 <a class="nav-link sys_nav_link" href="http://localhost/bit/contact.php">Contact</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link sys_nav_link" href="http://localhost/bit/my_account.php"> <i class="fas fa-user"></i> My Account</a>
+                                <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php"> <i class="fas fa-cart-arrow-down"></i> Cart</a>
@@ -122,58 +122,107 @@
                     <i class="fas fa-life-ring"></i> Help
                 </div>
             </div>
-            <!-- Dashbaord Content Area Start -->
+            <!-- Dashboard Content Area Start -->
             <div class="col-10 dash_content">
-                <div class="page_tables">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="table_head">#</th>
-                                <th scope="col" class="table_head">Date</th>
-                                <th scope="col" class="table_head">Discription</th>
-                                <th scope="col" class="table_head">Total</th>
-                                <th scope="col" class="table_head">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row" class="table_body">1</th>
-                                <td class="table_body">12/10/2021</td>
-                                <td class="table_body">AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,... </td>
-                                <td class="table_body">RS: 585,000</td>
-                                <td>
-                                    <button>VIEW</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="table_body">2</th>
-                                <td class="table_body">12/10/2021</td>
-                                <td class="table_body">AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,... </td>
-                                <td class="table_body">RS: 585,000</td>
-                                <td>
-                                    <button>VIEW</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="table_body">3</th>
-                                <td class="table_body">12/10/2021</td>
-                                <td class="table_body">AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,...</td>
-                                <td class="table_body">RS: 585,000</td>
-                                <td>
-                                    <button>VIEW</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- Dashbaord Content Area End -->
+                <h5>Make Appointment to Claim Your Warranty</h5>
+                <hr>
+                <form>
+                    <h6>Personal Details</h6>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-2 col-form-label">Name :</label>
+                                <div class="col-sm-10">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="Gamage Pavithra">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-2 col-form-label">Email :</label>
+                                <div class="col-sm-10">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="gamage2pavithra@gmail.com">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-2 col-form-label">Contact Number :</label>
+                                <div class="col-sm-10">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="0757003662">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-2 col-form-label">Address :</label>
+                                <div class="col-sm-10">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="58/E, Kesbewa Road, Kamburugoda, Bandaragama, Western, 12530">
+                                </div>
+                            </div>
+
+                            <hr>
+                        </div>
+
+                        <h6>Defect Item Details</h6>
+                        <div class="col">
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-2 col-form-label">Item Name :</label>
+                                <div class="col-sm-10">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="AMD Ryzen 9 3900X">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-2 col-form-label">Item Part Number :</label>
+                                <div class="col-sm-10">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="100-10000000023CBX">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-2 col-form-label">Item Serial Number :</label>
+                                <div class="col-sm-10">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="458WQWDWDQWDWQ48">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-2 col-form-label">Purchase Date :</label>
+                                <div class="col-sm-10">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="12/10/2021">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-2 col-form-label">Warranty Remaining :</label>
+                                <div class="col-sm-10">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="156 Days">
+                                </div>
+                            </div>
+
+                            <hr>
+                        </div>
+                        <h6>Describe Defect</h6>
+                        <div class="col">
+                            <div class="form-group">
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+                            <hr>
+                        </div>
+                        <h6>Make Appointment</h6>
+                        <div class="col">
+                            <div class="form-group">
+                                <input type="date">
+                                <input type="time">
+                            </div>
+                            <!-- <hr> -->
+                            <br>
+                            <button type="button" class="btn btn-secondary">Make An Appointment</button>
+                        </div>
+                        
+                    </div>
+                </form>
             </div>
+            <!-- Dashbaord Content Area End -->
         </div>
 
 
         <!--dashboard end-->
     </div>
 </div>
+
 
 <footer>
     <div class="container">
