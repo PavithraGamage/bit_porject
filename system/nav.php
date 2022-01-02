@@ -171,41 +171,86 @@
               <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                   <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                  <li class="nav-item">
-                      <a href="#" class="nav-link">
-                          <i class="nav-icon fas fa-chart-pie"></i>
-                          <p>
-                              Customer Management
-                              <i class="right fas fa-angle-left"></i>
-                          </p>
-                      </a>
-                      <ul class="nav nav-treeview">
+                  <?php
+
+                    $sql = "SELECT m.module_id, u.first_name, m.description, m.path, m.view, m.icon, m.status
+                    FROM users_modules um
+                    LEFT JOIN users u ON u.user_id = um.user_id
+                    LEFT JOIN modules m ON m.module_id = um.module_id
+                    WHERE length(m.module_id) = '2' AND u.user_id ='3' AND m.status = '1'";
+
+                    // database connection call
+                    $db = db_con();
+
+                    // assign the query
+                    $result = $db->query($sql);
+
+                    ?>
+
+                  <?php
+
+                    // check the result grater than 1
+                    if ($result->num_rows > 0) {
+
+                        // assign the result to row variable
+                        while ($row = $result->fetch_assoc()) {
+
+                    ?>
                           <li class="nav-item">
-                              <a href="<?php echo SITE_URL; ?>customers/view.php" class="nav-link">
-                                  <i class="far fa-circle nav-icon"></i>
-                                  <p>View Customers</p>
+                              <a href="#" class="nav-link">
+                                  <i class="nav-icon <?php echo $row['icon'] ?>"></i>
+                                  <p>
+
+                                      <?php
+                                        //   display module name
+                                        echo $row['description'];
+                                        ?>
+                                      <i class="right fas fa-angle-left"></i>
+                                  </p>
                               </a>
+                              <ul class="nav nav-treeview">
+
+                                  <?php
+
+                                    $sql_sub = "SELECT m.module_id, u.first_name, m.description, m.path, m.view, m.icon, m.status
+                                                FROM users_modules um
+                                                LEFT JOIN users u ON u.user_id = um.user_id
+                                                LEFT JOIN modules m ON m.module_id = um.module_id
+                                                WHERE length(m.module_id) = '4' AND u.user_id ='3' AND substr(m.module_id, 1,2) = '". $row['module_id'] ."' AND m.status = '1'";
+
+                            
+                                    $result_sub = $db->query($sql_sub);
+
+                                    ?>
+
+                                    <?php 
+                                    
+                                        if($result_sub->num_rows > 0){
+
+                                            while ($row_sub = $result_sub->fetch_assoc()){
+                                                
+                                                // create file path for sub menu 
+                                                $file = $row_sub['path'] ."/". $row_sub['view']. ".php";
+                                    ?>
+                                  <li class="nav-item">
+                                      <a href="<?php echo SITE_URL; ?><?php echo $file; ?>" class="nav-link">
+                                          <i class="far fa-circle nav-icon"></i>
+                                          <p><?php echo $row_sub['description'] ?></p>
+                                      </a>
+                                  </li>
+
+                                  <?php 
+                                  }
+                                }
+                                  ?>
+                              </ul>
                           </li>
-                          <li class="nav-item">
-                              <a href="<?php echo SITE_URL; ?>customers/add.php" class="nav-link">
-                                  <i class="far fa-circle nav-icon"></i>
-                                  <p>Add Customer</p>
-                              </a>
-                          </li>
-                          <li class="nav-item">
-                              <a href="pages/charts/inline.html" class="nav-link">
-                                  <i class="far fa-circle nav-icon"></i>
-                                  <p>Inline</p>
-                              </a>
-                          </li>
-                          <li class="nav-item">
-                              <a href="pages/charts/uplot.html" class="nav-link">
-                                  <i class="far fa-circle nav-icon"></i>
-                                  <p>uPlot</p>
-                              </a>
-                          </li>
-                      </ul>
-                  </li>
+
+                  <?php
+                        }
+                    }
+
+                    ?>
               </ul>
           </nav>
           <!-- /.sidebar-menu -->
