@@ -173,11 +173,12 @@
                with font-awesome or any other icon font library -->
                   <?php
 
-                    $sql = "SELECT m.module_id, u.first_name, m.description, m.path, m.view, m.icon, m.status
+                 $sql = "SELECT m.module_id, m.description, m.path, m.view, m.icon, m.status
                     FROM users_modules um
-                    LEFT JOIN users u ON u.user_id = um.user_id
-                    LEFT JOIN modules m ON m.module_id = um.module_id
-                    WHERE length(m.module_id) = '2' AND u.user_id ='3' AND m.status = '1'";
+                    INNER JOIN modules m ON m.module_id = um.module_id
+                    WHERE length(m.module_id) = '2' AND um.user_id ='".$_SESSION['user_id']."' AND m.status = '1'";
+
+                 
 
                     // database connection call
                     $db = db_con();
@@ -185,6 +186,7 @@
                     // assign the query
                     $result = $db->query($sql);
 
+               
                     ?>
 
                   <?php
@@ -212,11 +214,10 @@
 
                                   <?php
 
-                                    $sql_sub = "SELECT m.module_id, u.first_name, m.description, m.path, m.view, m.icon, m.status
+                                    $sql_sub = "SELECT m.module_id, m.description, m.path, m.view, m.icon, m.status
                                                 FROM users_modules um
-                                                LEFT JOIN users u ON u.user_id = um.user_id
-                                                LEFT JOIN modules m ON m.module_id = um.module_id
-                                                WHERE length(m.module_id) = '4' AND u.user_id ='3' AND substr(m.module_id, 1,2) = '". $row['module_id'] ."' AND m.status = '1'";
+                                                INNER JOIN modules m ON m.module_id = um.module_id
+                                                WHERE length(m.module_id) = '4' AND um.user_id ='".$_SESSION['user_id']."' AND substr(m.module_id, 1,2) = '". $row['module_id'] ."' AND m.status = '1'";
 
                             
                                     $result_sub = $db->query($sql_sub);

@@ -9,7 +9,7 @@ session_start();
 if (!isset($_SESSION['user_id'])) {
 
     //redirect to login page
-    $path = SITE_URL."login.php";
+    $path = SITE_URL . "login.php";
     header("Location: $path");
 }
 
@@ -36,6 +36,10 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- JQVMap -->
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>plugins/jqvmap/jqvmap.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="<?php echo SITE_URL; ?>plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?php echo SITE_URL; ?>plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="<?php echo SITE_URL; ?>plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>dist/css/adminlte.min.css">
     <!-- overlayScrollbars -->
@@ -44,6 +48,7 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>plugins/summernote/summernote-bs4.min.css">
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
