@@ -17,16 +17,17 @@ include '../nav.php';
         margin-left: 10px;
     }
 </style>
+
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Brands</h1>
+                    <h1 class="m-0">Models</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Brands</a></li>
+                        <li class="breadcrumb-item"><a href="#">Models</a></li>
                         <li class="breadcrumb-item active">Add</li>
                     </ol>
                 </div><!-- /.col -->
@@ -38,11 +39,10 @@ include '../nav.php';
             <div class="col">
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Insert New Brand</h3>
+                        <h3 class="card-title">Insert New Model</h3>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-
                     <?php
 
 
@@ -56,17 +56,17 @@ include '../nav.php';
 
                         // call data clean function
 
-                        $brand_name =  data_clean($brand_name);
+                        $model_name =  data_clean($model_name);
 
                         // create error variable to store error messages
                         $error =  array();
 
-                        if (empty($brand_name)) {
-                            $error['brand_name'] = "Brand Name Should not be empty";
+                        if (empty($model_name)) {
+                            $error['model_name'] = "Brand Name Should not be empty";
                         }
 
                         if (empty($error)) {
-                            $sql = "INSERT INTO `brands` (`brand_id`, `brand_name`) VALUES (NULL, '$brand_name');";
+                            $sql = "INSERT INTO `models` (`model_id`, `model_name`) VALUES (NULL, '$model_name');";
                         }
 
                         // call db con function
@@ -79,9 +79,9 @@ include '../nav.php';
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Brand Name</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="brand_name">
-                                <?php echo @$error['brand_name']; ?>
+                                <label for="exampleInputEmail1">Model Name</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="model_name">
+                                <?php echo @$error['model_name']; ?>
                             </div>
                         </div>
                         <!-- /.card-body -->
@@ -100,7 +100,7 @@ include '../nav.php';
                 $db = db_con();
 
                 // sql query
-                $sql = "SELECT * FROM `brands`";
+                $sql = "SELECT * FROM `models`";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -108,17 +108,16 @@ include '../nav.php';
                 ?>
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Available Brands</h3>
+                        <h3 class="card-title">Available Models</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Brand ID</th>
-                                    <th>Brand Name</th>
+                                    <th>Model ID</th>
+                                    <th>Model Name</th>
                                     <th>Actions</th>
-
 
                                 </tr>
                             </thead>
@@ -129,13 +128,12 @@ include '../nav.php';
                                     while ($row = $result->fetch_assoc()) {
                                 ?>
                                         <tr>
-                                            <td><?php echo $row['brand_id'] ?> </td>
-                                            <td><?php echo $row['brand_name'] ?> </td>
+                                            <td><?php echo $row['model_id'] ?> </td>
+                                            <td><?php echo $row['model_name'] ?> </td>
                                             <td class="table_actions">
                                                 <button type="button" class="btn btn-block btn-primary btn-xs">Update</button>
                                                 <button type="button" class="btn btn-block btn-danger btn-xs">Delete</button>
                                             </td>
-
 
                                         </tr>
 
