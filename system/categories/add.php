@@ -1,22 +1,119 @@
 <?php
 include '../header.php';
 include '../nav.php';
-?>
-<style>
-    .table_actions {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        align-content: center !important;
-        justify-content: center !important;
-        align-items: center !important;
+
+// extract variables
+extract($_POST);
+
+// DB Connection
+$db = db_con();
+
+// form Name
+$form_name = 'Insert New Category';
+
+// form button name change
+$btn_name = "Insert";
+
+// form button value change
+$btn_value = "insert";
+
+// form button icon
+$btn_icon = '<i class="far fa-save"></i>';
+
+ // create error variable to store error messages
+ $error =  array();
+
+//insert category
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
+
+    // call data clean function
+    $category_name =  data_clean($category_name);
+
+    // basic validation
+    if (empty($category_name)) {
+        $error['category_name'] = "Category Name Should not be empty";
     }
 
-    .btn-block+.btn-block {
-        margin-top: 0rem !important;
-        margin-left: 10px;
+    // Advance validation
+    if (!empty($category_name)) {
+
+        $sql = "SELECT * FROM `categories` WHERE category_name = '$category_name'";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['category_name'] = "Manufacturer <b> $category_name </b> Already Exists";
+        }
     }
-</style>
+
+    if (empty($error)) {
+        $sql = "INSERT INTO `categories` (`category_id`, `category_name`) VALUES (NULL, '$category_name');";
+    }
+
+    // run database query
+    $query = $db->query($sql);
+}
+
+// edit category
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
+
+    // from name change
+    $form_name = "Edit Category";
+
+    // form button name change
+    $btn_name = "Update";
+
+    // form button value change
+    $btn_value = "update";
+
+    // form button icon
+    $btn_icon = '<i class="far fa-edit"></i>';
+
+    // check recodes in DB
+    $sql = "SELECT * FROM categories WHERE category_id = '$category_id'";
+
+    $result = $db->query($sql);
+
+    if ($result->num_rows > 0) {
+
+        $row = $result->fetch_assoc();
+        $category_id = $row['category_id'];
+        $category_name = $row['category_name'];
+
+    }
+
+}
+
+// update the edit data
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
+    
+    // Advance Validation
+    if (!empty($category_name)) {
+
+        $sql = "SELECT * FROM `categories` WHERE category_name = '$category_name'";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['category_name'] = "Manufacturer <b> $category_name </b> Already Exists";
+        }
+    }
+
+    $sql = "UPDATE `categories` SET `category_name` = '$category_name' WHERE `category_id` = '$category_id';";
+    $query = $db->query($sql);
+
+}
+
+// delete recode
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
+
+    $sql = "DELETE FROM `categories` WHERE `category_id` = '$category_id'";
+    $db->query($sql);
+
+}
+
+?>
+
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -33,60 +130,112 @@ include '../nav.php';
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
+    <!-- Alerts -->
+    <div class="container-fluid">
+        <!-- Blank Submit  and Already Exist-->
+        <?php
+        if (!empty($error)) {
+        ?>
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h5><i class="icon fas fa-ban"></i> Alert!</h5>
+                <?php echo $error['category_name']; ?>
+            </div>
+        <?php
+        }
+        ?>
+        <!-- Successfully Insert -->
+        <?php
+        if ((@$query == true && @$error == null) && @$action == 'insert') {
+            $error['insert_msg'] = "<b>$category_name</b> Successfully Insert";
+        ?>
+            <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h5><i class="icon fas fa-check"></i> Alert!</h5>
+                <?php echo $error['insert_msg']; ?>
+            </div>
+        <?php
+        }
+        ?>
+        <!-- Update -->
+        <?php
+        if ((@$query == true && @$error == null) && @$action == 'update') {
+            $error['insert_msg'] = "<b>$category_name</b> Successfully Update";
+        ?>
+            <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h5><i class="icon fas fa-check"></i> Alert!</h5>
+                <?php echo $error['insert_msg']; ?>
+            </div>
+        <?php
+        }
+        ?>
+
+        <!-- Delete -->
+        <?php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
+            $sql = "SELECT * FROM categories WHERE category_id = '$category_id'";
+
+            $result = $db->query($sql);
+        
+            if ($result->num_rows > 0) {
+        
+                $row = $result->fetch_assoc();
+                $category_id = $row['category_id'];
+                $category_name = $row['category_name'];
+        ?>
+                <div class="card">
+                    <h5 class="card-header bg-danger">Conformation</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $category_name ?> ?</b> </h5>
+                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                            <input type="hidden" name="category_id" value="<?php echo $category_id ?>"><br>
+                            <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
+                            <button type="submit" name="action" value="cancel_delete" class="btn btn-primary btn-s">No</button>
+                        </form>
+
+                    </div>
+                </div>
+
+        <?php
+            }
+        }
+        ?>
+
+        <?php
+        if (@$action == 'confirm_delete') {
+            $error['delete_msg'] = "Recode Delete";
+        ?>
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h5><i class="fas fa-trash-alt"></i> Alert!</h5>
+                <?php echo $error['delete_msg']; ?>
+            </div>
+
+        <?php
+        }
+        ?>
+    </div>
     <div class="container-fluid">
         <div class="row">
             <div class="col">
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Insert New Category</h3>
+                        <h3 class="card-title"><?php echo @$form_name ?></h3>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <?php
-
-
-                    // extract variables
-                    extract($_POST);
-
-
-
-
-                    if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
-
-                        // call data clean function
-
-                        $category_name =  data_clean($category_name);
-
-                        // create error variable to store error messages
-                        $error =  array();
-
-                        if (empty($category_name)) {
-                            $error['category_name'] = "Category Name Should not be empty";
-                        }
-
-                        if (empty($error)) {
-                            $sql = "INSERT INTO `categories` (`category_id`, `category_name`) VALUES (NULL, '$category_name');";
-                        }
-
-                        // call db con function
-                        $db = db_con();
-
-                        // run database query
-                        $query = $db->query($sql);
-                    }
-                    ?>
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Model Name</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="category_name">
-                                <?php echo @$error['category_name']; ?>
+                                <label for="exampleInputEmail1">Category Name</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Category Name" name="category_name" value="<?php echo @$category_name ?>">
                             </div>
                         </div>
                         <!-- /.card-body -->
-
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary"  name="action" value="insert">Insert</button>
+                            <input type="hidden" name="category_id" value="<?php echo @$category_id ?>">
+                            <button type="submit" class="btn btn-primary" name="action" value="<?php echo @$btn_value ?>"> <?php echo @$btn_icon ?> <?php echo @$btn_name ?></button>
                         </div>
                     </form>
                 </div>
@@ -114,9 +263,9 @@ include '../nav.php';
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Category ID</th>
                                     <th>Category Name</th>
-                                    <th>Actions</th>
+                                    <th style="width: 85px !important;">Edit</th>
+                                    <th style="width: 85px !important;">Delete</th>
 
                                 </tr>
                             </thead>
@@ -127,16 +276,20 @@ include '../nav.php';
                                     while ($row = $result->fetch_assoc()) {
                                 ?>
                                         <tr>
-                                            <td><?php echo $row['category_id'] ?> </td>
                                             <td><?php echo $row['category_name'] ?> </td>
-                                            <td class="table_actions">
-                                                <button type="button" class="btn btn-block btn-primary btn-xs">Update</button>
-                                                <button type="button" class="btn btn-block btn-danger btn-xs">Delete</button>
+                                            <td>
+                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                                    <input type="hidden" name="category_id" value="<?php echo $row['category_id'] ?>">
+                                                    <button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button>
+                                                </form>
                                             </td>
-
-
+                                            <td>
+                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                                    <input type="hidden" name="category_id" value="<?php echo $row['category_id'] ?>">
+                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
+                                                </form>
+                                            </td>
                                         </tr>
-
                                 <?php
                                     }
                                 }

@@ -5,7 +5,7 @@ include '../nav.php';
 // extract variables
 extract($_POST);
 
-// call db con function
+// DB Connection
 $db = db_con();
 
 // form Name
@@ -20,19 +20,14 @@ $btn_value = "insert";
 // form button icon
 $btn_icon = '<i class="far fa-save"></i>';
 
-
+// create error variable to store error messages
+$error =  array();
 
 // insert manufactures
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
-
-
     // call data clean function
-
     $man_name =  data_clean($man_name);
-
-    // create error variable to store error messages
-    $error =  array();
 
     if (empty($man_name)) {
         $error['man_name'] = "Manufacture Name Should Not Be Empty";
@@ -42,7 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     if (!empty($man_name)) {
 
         $sql = "SELECT * FROM `manufacturers` WHERE man_name = '$man_name'";
+
         $result = $db->query($sql);
+
         if ($result->num_rows > 0) {
             $error['man_name'] = "Manufacturer <b> $man_name </b> Already Exists";
         }
@@ -73,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 
     // check recodes in DB
     $sql = "SELECT * FROM manufacturers WHERE man_id = '$man_id'";
+
     $result = $db->query($sql);
 
     if ($result->num_rows > 0) {
@@ -80,22 +78,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
         $row = $result->fetch_assoc();
         $man_id = $row['man_id'];
         $man_name = $row['man_name'];
+
     }
+
 }
 
 // update the edit data
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
+     // Advance Validation
+     if (!empty($man_name)) {
+
+        $sql = "SELECT * FROM `manufacturers` WHERE man_name = '$man_name'";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['man_name'] = "Manufacturer <b> $man_name </b> Already Exists";
+        }
+    }
+
     $sql = "UPDATE `manufacturers` SET `man_name` = '$man_name' WHERE `man_id` = '$man_id';";
     $query = $db->query($sql);
+
 }
 
 // delete recode
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
     $sql = "DELETE FROM `manufacturers` WHERE `man_id` = '$man_id'";
     $db->query($sql);
+
 }
 
 ?>
@@ -198,10 +211,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <?php
         }
         ?>
-
-
-
-
     </div>
     <div class="container-fluid">
         <div class="row">
@@ -217,11 +226,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Manufacturer Name</label>
                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Manufacturer Name" name="man_name" value="<?php echo @$man_name ?>">
-
                             </div>
                         </div>
                         <!-- /.card-body -->
-
                         <div class="card-footer">
                             <input type="hidden" name="man_id" value="<?php echo @$man_id ?>">
                             <button type="submit" class="btn btn-primary" name="action" value="<?php echo @$btn_value ?>"><?php echo $btn_icon ?> <?php echo @$btn_name ?></button>
@@ -231,10 +238,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
             </div>
             <!-- Right Section Start -->
             <div class="col">
+                <!-- Table Data Fletch -->
                 <?php
-
-                // db connect
-                $db = db_con();
 
                 // sql query
                 $sql = "SELECT * FROM `manufacturers`";
@@ -279,7 +284,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                                 </form>
                                             </td>
                                         </tr>
-
                                 <?php
                                     }
                                 }
