@@ -51,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     $serial_number = data_clean($serial_number);
     $sku = data_clean($sku);
     $stock = data_clean($stock);
-    $stock = data_clean($stock);
     $reorder_level = data_clean($reorder_level);
     $unit_price = data_clean($unit_price);
     $sale_price = data_clean($sale_price);
@@ -92,8 +91,151 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     }
 
     // Advance validation
+    if (!empty($item_name)) {
+
+        $sql = "SELECT * FROM items WHERE item_name = '$item_name'";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['error_category'] = "This <b> $item_name </b> Item Already Exists";
+        }
+    }
+
+    if (!empty($serial_number)) {
+
+        $sql = "SELECT * FROM items WHERE serial_number = '$serial_number'";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['error_serial_number'] = "This <b> $serial_number </b> Serial Number Already Exists";
+        }
+    }
+
+    if (!empty($sku)) {
+
+        $sql = "SELECT * FROM items WHERE sku = '$sku'";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['error_sku'] = "This <b> $sku </b> SKU Already Exists";
+        }
+    }
+
+    //discount rate calculation
+    if (!empty($sale_price) && !empty($unit_price)) {
+        $discount = (($unit_price - $sale_price) * 100) / $unit_price;
+    }
+
+    //insert data to db
+    if (empty($error)) {
+
+        $sql = "INSERT INTO `items` (`item_id`, `item_image`, `item_name`, `sku`, `serial_number`, `recorder_level`, `quantity`, `unit_price`, `sale_price`, `discount_rate`, `date`, `stock`, `category_id`, `man_id`, `brand_id`, `model_id`) 
+                VALUES (NULL, '', '$item_name', '$sku', '$serial_number', '$reorder_level', '0', '$unit_price', '$sale_price', '$discount', '2022-02-09', '$stock', '$category', '$manufacture', '$brand', '$model');";
+    }
+
+    // run database query
+    $query = $db->query($sql);
 }
 
+
+// edit items
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
+
+    // from name change
+    $form_name = "Edit Items";
+
+    // form button name change
+    $btn_name = "Update";
+
+    // form button value change
+    $btn_value = "update";
+
+    // form button icon
+    $btn_icon = '<i class="far fa-edit"></i>';
+
+    // check recodes in DB
+    $sql = "SELECT * FROM `items` WHERE item_id = $item_id";
+
+    $result = $db->query($sql);
+
+    if ($result->num_rows > 0) {
+
+        $row = $result->fetch_assoc();
+
+        $item_id =  $row['item_id'];
+        $category =  $row['category_id'];
+        $manufacture = $row['man_id'];
+        $brand = $row['brand_id'];
+        $model = $row['model_id'];
+        $item_name = $row['item_name'];
+        $serial_number = $row['serial_number'];
+        $sku = $row['sku'];
+        $stock = $row['stock'];
+        $reorder_level = $row['recorder_level'];
+        $unit_price = $row['unit_price'];
+        $sale_price = $row['sale_price'];
+    }
+}
+
+// update the edit data
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
+
+    // Advance validation
+    if (!empty($item_name)) {
+
+        $sql = "SELECT * FROM items WHERE item_name = '$item_name'";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['error_category'] = "This <b> $item_name </b> Item Already Exists";
+        }
+    }
+
+    if (!empty($serial_number)) {
+
+        $sql = "SELECT * FROM items WHERE serial_number = '$serial_number'";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['error_serial_number'] = "This <b> $serial_number </b> Serial Number Already Exists";
+        }
+    }
+
+    if (!empty($sku)) {
+
+        $sql = "SELECT * FROM items WHERE sku = '$sku'";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['error_sku'] = "This <b> $sku </b> SKU Already Exists";
+        }
+    }
+
+      //discount rate calculation
+      if (!empty($sale_price) && !empty($unit_price)) {
+        $discount = (($unit_price - $sale_price) * 100) / $unit_price;
+    }
+
+    $sql = "UPDATE `items` 
+            SET `item_name`= '$item_name', `sku` = '$sku', `serial_number` = '$serial_number', `recorder_level`= $reorder_level, `unit_price` = $unit_price, `sale_price` = $sale_price , `discount_rate` = $discount, `stock` = $stock,  `category_id` = $category, `man_id` = $manufacture, `brand_id` = $brand, `model_id` = $model 
+            WHERE `item_id` = $item_id;";
+
+    $query = $db->query($sql);
+}
+
+// delete recode
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
+
+    $sql = "DELETE FROM `items` WHERE `item_id` = '$item_id'";
+    $db->query($sql);
+
+}
 
 ?>
 
@@ -125,37 +267,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                 <ul>
                     <?php
                     if (!empty($error['error_category'])) {
-                        echo "<li>". $error['error_category'] . "</li>";
+                        echo "<li>" . $error['error_category'] . "</li>";
                     }
                     if (!empty($error['error_manufacture'])) {
-                        echo "<li>". $error['error_manufacture'] . "</li>";
+                        echo "<li>" . $error['error_manufacture'] . "</li>";
                     }
                     if (!empty($error['error_brand'])) {
-                        echo "<li>". $error['error_brand'] . "</li>";
+                        echo "<li>" . $error['error_brand'] . "</li>";
                     }
                     if (!empty($error['error_model'])) {
-                        echo "<li>". $error['error_model'] . "</li>";
+                        echo "<li>" . $error['error_model'] . "</li>";
                     }
                     if (!empty($error['error_item_name'])) {
-                        echo "<li>". $error['error_item_name'] . "</li>";
+                        echo "<li>" . $error['error_item_name'] . "</li>";
                     }
                     if (!empty($error['error_serial_number'])) {
-                        echo "<li>". $error['error_serial_number'] . "</li>";
+                        echo "<li>" . $error['error_serial_number'] . "</li>";
                     }
                     if (!empty($error['error_sku'])) {
-                        echo "<li>". $error['error_sku'] . "</li>";
+                        echo "<li>" . $error['error_sku'] . "</li>";
                     }
                     if (!empty($error['error_stock'])) {
-                        echo "<li>". $error['error_stock'] . "</li>";
+                        echo "<li>" . $error['error_stock'] . "</li>";
                     }
                     if (!empty($error['error_reorder_level'])) {
-                        echo "<li>". $error['error_reorder_level'] . "</li>";
+                        echo "<li>" . $error['error_reorder_level'] . "</li>";
                     }
                     if (!empty($error['error_unit_price'])) {
-                        echo "<li>". $error['error_unit_price'] . "</li>";
+                        echo "<li>" . $error['error_unit_price'] . "</li>";
                     }
                     if (!empty($error['error_sale_price'])) {
-                        echo "<li>". $error['error_sale_price'] . "</li>";
+                        echo "<li>" . $error['error_sale_price'] . "</li>";
                     }
                     ?>
                 </ul>
@@ -166,7 +308,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         <!-- Successfully Insert -->
         <?php
         if ((@$query == true && @$error == null) && @$action == 'insert') {
-            $error['insert_msg'] = "<b>$category_name</b> Successfully Insert";
+            $error['insert_msg'] = "<b>$item_name</b> Successfully Insert";
         ?>
             <div class="alert alert-success alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -193,22 +335,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         <!-- Delete -->
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
-            $sql = "SELECT * FROM categories WHERE category_id = '$category_id'";
+            $sql = "SELECT * FROM items WHERE item_id = '$item_id'";
 
             $result = $db->query($sql);
 
             if ($result->num_rows > 0) {
 
                 $row = $result->fetch_assoc();
-                $category_id = $row['category_id'];
-                $category_name = $row['category_name'];
+                $item_id = $row['item_id'];
+                $item_name = $row['item_name'];
         ?>
                 <div class="card">
                     <h5 class="card-header bg-danger">Conformation</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $category_name ?> ?</b> </h5>
+                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $item_name ?> ?</b> </h5>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                            <input type="hidden" name="category_id" value="<?php echo $category_id ?>"><br>
+                            <input type="hidden" name="item_id" value="<?php echo $item_id ?>"><br>
                             <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
                             <button type="submit" name="action" value="cancel_delete" class="btn btn-primary btn-s">No</button>
                         </form>
@@ -357,7 +499,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-                            <input type="hidden" name="category_id" value="<?php echo @$item_id ?>">
+                            <input type="hidden" name="item_id" value="<?php echo @$item_id ?>">
                             <button type="submit" class="btn btn-primary" name="action" value="<?php echo @$btn_value ?>"><?php echo @$btn_icon ?> <?php echo @$btn_name ?></button>
                         </div>
                     </form>
@@ -431,7 +573,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                 $db = db_con();
 
                 // sql query
-                $sql = "SELECT * FROM `categories`";
+                $sql = "SELECT * FROM `items`";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -439,25 +581,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                 ?>
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Categories Models</h3>
+                        <h3 class="card-title">Available Items</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Category ID</th>
-                                    <th>Category Name</th>
-                                    <th>Category Name</th>
-                                    <th>Category Name</th>
-                                    <th>Category Name</th>
-                                    <th>Category Name</th>
-                                    <th>Category Name</th>
-                                    <th>Category Name</th>
-                                    <th>Category Name</th>
-
-
-
+                                    <th>Item Name</th>
+                                    <th style="width: 85px !important;">Edit</th>
+                                    <th style="width: 85px !important;">Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -467,16 +600,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                     while ($row = $result->fetch_assoc()) {
                                 ?>
                                         <tr>
-                                            <td><?php echo $row['category_id'] ?> </td>
-                                            <td><?php echo $row['category_name'] ?> </td>
-                                            <td><?php echo $row['category_name'] ?> </td>
-                                            <td><?php echo $row['category_name'] ?> </td>
-                                            <td><?php echo $row['category_name'] ?> </td>
-                                            <td><?php echo $row['category_name'] ?> </td>
-                                            <td><?php echo $row['category_name'] ?> </td>
-                                            <td><?php echo $row['category_name'] ?> </td>
-                                            <td><?php echo $row['category_name'] ?> </td>
-
+                                            <td><?php echo $row['item_name'] ?> </td>
+                                            <td>
+                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                                    <input type="hidden" name="item_id" value="<?php echo $row['item_id'] ?>">
+                                                    <button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                                    <input type="hidden" name="item_id" value="<?php echo $row['item_id'] ?>">
+                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
+                                                </form>
+                                            </td>
 
                                         </tr>
 
