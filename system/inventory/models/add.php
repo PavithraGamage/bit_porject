@@ -1,6 +1,6 @@
 <?php
-include '../header.php';
-include '../nav.php';
+include '../../header.php';
+include '../../nav.php';
 
 // extract variables
 extract($_POST);
@@ -9,7 +9,7 @@ extract($_POST);
 $db = db_con();
 
 // form Name
-$form_name = 'Insert New Manufacturer';
+$form_name = 'Insert New Models';
 
 // form button name change
 $btn_name = "Insert";
@@ -23,41 +23,41 @@ $btn_icon = '<i class="far fa-save"></i>';
 // create error variable to store error messages
 $error =  array();
 
-// insert manufactures
+// insert models
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
     // call data clean function
-    $man_name =  data_clean($man_name);
+    $model_name =  data_clean($model_name);
 
-    if (empty($man_name)) {
-        $error['man_name'] = "Manufacture Name Should Not Be Empty";
+    if (empty($model_name)) {
+        $error['model_name'] = "Model Name Should not be empty";
     }
 
     // Advance Validation
-    if (!empty($man_name)) {
+    if (!empty($model_name)) {
 
-        $sql = "SELECT * FROM `manufacturers` WHERE man_name = '$man_name'";
+        $sql = "SELECT * FROM `models` WHERE model_name = '$model_name'";
 
         $result = $db->query($sql);
 
         if ($result->num_rows > 0) {
-            $error['man_name'] = "Manufacturer <b> $man_name </b> Already Exists";
+            $error['model_name'] = "Manufacturer <b> $model_name </b> Already Exists";
         }
     }
 
     if (empty($error)) {
-        $sql = "INSERT INTO `manufacturers` (`man_id`, `man_name`) VALUES (NULL, '$man_name');";
+        $sql = "INSERT INTO `models` (`model_id`, `model_name`) VALUES (NULL, '$model_name');";
     }
 
     // run database query
     $query = $db->query($sql);
 }
 
-// edit manufacturers
+// edit models
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 
     // from name change
-    $form_name = "Edit Manufacturer";
+    $form_name = "Edit Models";
 
     // form button name change
     $btn_name = "Update";
@@ -69,15 +69,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
     $btn_icon = '<i class="far fa-edit"></i>';
 
     // check recodes in DB
-    $sql = "SELECT * FROM manufacturers WHERE man_id = '$man_id'";
+    $sql = "SELECT * FROM models WHERE model_id = '$model_id'";
 
     $result = $db->query($sql);
 
     if ($result->num_rows > 0) {
 
         $row = $result->fetch_assoc();
-        $man_id = $row['man_id'];
-        $man_name = $row['man_name'];
+        $model_id = $row['model_id'];
+        $model_name = $row['model_name'];
 
     }
 
@@ -86,19 +86,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 // update the edit data
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
-     // Advance Validation
-     if (!empty($man_name)) {
+    // Advance Validation
+    if (!empty($model_name)) {
 
-        $sql = "SELECT * FROM `manufacturers` WHERE man_name = '$man_name'";
+        $sql = "SELECT * FROM `models` WHERE model_name = '$model_name'";
 
         $result = $db->query($sql);
 
         if ($result->num_rows > 0) {
-            $error['man_name'] = "Manufacturer <b> $man_name </b> Already Exists";
+            $error['model_name'] = "Manufacturer <b> $model_name </b> Already Exists";
         }
     }
 
-    $sql = "UPDATE `manufacturers` SET `man_name` = '$man_name' WHERE `man_id` = '$man_id';";
+    $sql = "UPDATE `models` SET `model_name` = '$model_name' WHERE `model_id` = '$model_id';";
     $query = $db->query($sql);
 
 }
@@ -106,11 +106,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 // delete recode
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
-    $sql = "DELETE FROM `manufacturers` WHERE `man_id` = '$man_id'";
+    $sql = "DELETE FROM `models` WHERE `model_id` = '$model_id'";
     $db->query($sql);
 
 }
-
 ?>
 
 <div class="content-wrapper">
@@ -118,11 +117,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Manufacturers</h1>
+                    <h1 class="m-0">Models</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Manufacturers</a></li>
+                        <li class="breadcrumb-item"><a href="#">Models</a></li>
                         <li class="breadcrumb-item active">Add</li>
                     </ol>
                 </div><!-- /.col -->
@@ -138,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
             <div class="alert alert-danger alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <h5><i class="icon fas fa-ban"></i> Alert!</h5>
-                <?php echo $error['man_name']; ?>
+                <?php echo $error['model_name']; ?>
             </div>
         <?php
         }
@@ -146,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <!-- Successfully Insert -->
         <?php
         if ((@$query == true && @$error == null) && @$action == 'insert') {
-            $error['insert_msg'] = "<b>$man_name</b> Successfully Insert";
+            $error['insert_msg'] = "<b>$model_name</b> Successfully Insert";
         ?>
             <div class="alert alert-success alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -159,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <!-- Update -->
         <?php
         if ((@$query == true && @$error == null) && @$action == 'update') {
-            $error['insert_msg'] = "<b>$man_name</b> Successfully Update";
+            $error['insert_msg'] = "<b>$model_name</b> Successfully Update";
         ?>
             <div class="alert alert-success alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -173,19 +172,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <!-- Delete -->
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
-            $sql = "SELECT * FROM manufacturers WHERE man_id = '$man_id'";
+            $sql = "SELECT * FROM models WHERE model_id = '$model_id'";
+
             $result = $db->query($sql);
+        
             if ($result->num_rows > 0) {
+        
                 $row = $result->fetch_assoc();
-                $man_id = $row['man_id'];
-                $man_name = $row['man_name'];
+                $model_id = $row['model_id'];
+                $model_name = $row['model_name'];
         ?>
                 <div class="card">
                     <h5 class="card-header bg-danger">Conformation</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $man_name ?> ?</b> </h5>
+                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $model_name ?> ?</b> </h5>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                            <input type="hidden" name="man_id" value="<?php echo $man_id ?>"><br>
+                            <input type="hidden" name="model_id" value="<?php echo $model_id ?>"><br>
                             <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
                             <button type="submit" name="action" value="cancel_delete" class="btn btn-primary btn-s">No</button>
                         </form>
@@ -224,25 +226,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Manufacturer Name</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Manufacturer Name" name="man_name" value="<?php echo @$man_name ?>">
+                                <label for="exampleInputEmail1">Model Name</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Model Name" name="model_name" value="<?php echo @$model_name ?>">
                             </div>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-                            <input type="hidden" name="man_id" value="<?php echo @$man_id ?>">
-                            <button type="submit" class="btn btn-primary" name="action" value="<?php echo @$btn_value ?>"><?php echo $btn_icon ?> <?php echo @$btn_name ?></button>
+                            <input type="hidden" name="model_id" value="<?php echo @$model_id ?>">
+                            <button type="submit" class="btn btn-primary" name="action" value="<?php echo $btn_value ?>"><?php echo @$btn_icon ?> <?php echo @$btn_name ?></button>
                         </div>
                     </form>
                 </div>
             </div>
             <!-- Right Section Start -->
             <div class="col">
-                <!-- Table Data Fletch -->
                 <?php
 
+                // db connect
+                $db = db_con();
+
                 // sql query
-                $sql = "SELECT * FROM `manufacturers`";
+                $sql = "SELECT * FROM `models`";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -250,14 +254,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 ?>
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Manufacture List</h3>
+                        <h3 class="card-title">Available Models</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="man_list" class="table table-bordered table-hover">
+                        <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Manufacturer Name</th>
+                                    <th>Model Name</th>
                                     <th style="width: 85px !important;">Edit</th>
                                     <th style="width: 85px !important;">Delete</th>
 
@@ -265,21 +269,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             </thead>
                             <tbody>
                                 <?php
-                                // Table Data
+
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
                                 ?>
                                         <tr>
-                                            <td><?php echo $row['man_name'] ?> </td>
+                                            <td><?php echo $row['model_name'] ?> </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="man_id" value="<?php echo $row['man_id'] ?>">
+                                                    <input type="hidden" name="model_id" value="<?php echo $row['model_id'] ?>">
                                                     <button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button>
                                                 </form>
                                             </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="man_id" value="<?php echo $row['man_id'] ?>">
+                                                    <input type="hidden" name="model_id" value="<?php echo $row['model_id'] ?>">
                                                     <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
                                                 </form>
                                             </td>
@@ -300,12 +304,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     </div>
 </div>
 
-<?php include '../footer.php'; ?>
+<?php include '../../footer.php'; ?>
 
 <!-- Page specific script -->
 <script>
     $(function() {
-        $('#man_list').DataTable({
+        // $("#user_list").DataTable({
+        //     "responsive": true,
+        //     "lengthChange": false,
+        //     "autoWidth": false,
+        //     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        // }).buttons().container().appendTo('#user_list_wrapper .col-md-6:eq(0)');
+        $('#brand_list').DataTable({
             "paging": true,
             "lengthChange": false,
             "searching": false,

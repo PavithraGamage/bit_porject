@@ -1,6 +1,6 @@
 <?php
-include '../header.php';
-include '../nav.php';
+include '../../header.php';
+include '../../nav.php';
 
 // extract variables
 extract($_POST);
@@ -9,7 +9,7 @@ extract($_POST);
 $db = db_con();
 
 // form Name
-$form_name = 'Insert New Category';
+$form_name = 'Insert New Specification';
 
 // form button name change
 $btn_name = "Insert";
@@ -20,45 +20,47 @@ $btn_value = "insert";
 // form button icon
 $btn_icon = '<i class="far fa-save"></i>';
 
- // create error variable to store error messages
- $error =  array();
+// create error variable to store error messages
+$error =  array();
 
-//insert category
+//insert specification
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
     // call data clean function
-    $category_name =  data_clean($category_name);
+    $spc_name =  data_clean($spc_name);
 
-    // basic validation
-    if (empty($category_name)) {
-        $error['category_name'] = "Category Name Should not be empty";
+    if (empty($spc_name)) {
+        $error['spc_name'] = "Specification Name Should Not Be Empty";
     }
 
-    // Advance validation
-    if (!empty($category_name)) {
+    // Advance Validation
+    if (!empty($spc_name)) {
 
-        $sql = "SELECT * FROM `categories` WHERE category_name = '$category_name'";
+        $sql = "SELECT * FROM `specifications` WHERE spec = '$spc_name'";
 
         $result = $db->query($sql);
 
         if ($result->num_rows > 0) {
-            $error['category_name'] = "Manufacturer <b> $category_name </b> Already Exists";
+            $error['spc_name'] = "Specification <b> $spc_name </b> Already Exists";
         }
     }
 
     if (empty($error)) {
-        $sql = "INSERT INTO `categories` (`category_id`, `category_name`) VALUES (NULL, '$category_name');";
+        $sql = "INSERT INTO `specifications` (`spec_id`, `spec`, `value`) VALUES (NULL, '$spc_name', '');";
     }
+
+    // call db con function
+    $db = db_con();
 
     // run database query
     $query = $db->query($sql);
 }
 
-// edit category
+// edit specifications
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 
     // from name change
-    $form_name = "Edit Category";
+    $form_name = "Edit Specification";
 
     // form button name change
     $btn_name = "Update";
@@ -70,60 +72,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
     $btn_icon = '<i class="far fa-edit"></i>';
 
     // check recodes in DB
-    $sql = "SELECT * FROM categories WHERE category_id = '$category_id'";
+    $sql = "SELECT * FROM specifications WHERE spec_id = '$spec_id'";
 
     $result = $db->query($sql);
 
     if ($result->num_rows > 0) {
 
         $row = $result->fetch_assoc();
-        $category_id = $row['category_id'];
-        $category_name = $row['category_name'];
-
+        $spec_id = $row['spec_id'];
+        $spc_name = $row['spec'];
     }
-
 }
 
 // update the edit data
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
-    
-    // Advance Validation
-    if (!empty($category_name)) {
 
-        $sql = "SELECT * FROM `categories` WHERE category_name = '$category_name'";
+    // Advance Validation
+    if (!empty($spc_name)) {
+
+        $sql = "SELECT * FROM `specifications` WHERE spec = '$spc_name'";
 
         $result = $db->query($sql);
 
         if ($result->num_rows > 0) {
-            $error['category_name'] = "Manufacturer <b> $category_name </b> Already Exists";
+            $error['spc_name'] = "Specification <b> $spc_name </b> Already Exists";
         }
     }
 
-    $sql = "UPDATE `categories` SET `category_name` = '$category_name' WHERE `category_id` = '$category_id';";
+    //fletch query
+    $sql = "UPDATE `specifications` SET `spec` = '$spc_name' WHERE `spec_id` = '$spec_id';";
     $query = $db->query($sql);
-
 }
 
 // delete recode
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
-    $sql = "DELETE FROM `categories` WHERE `category_id` = '$category_id'";
+    $sql = "DELETE FROM `specifications` WHERE `spec_id` = '$spec_id'";
     $db->query($sql);
 
 }
-
 ?>
-
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Categories</h1>
+                    <h1 class="m-0">Specifications</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Categories</a></li>
+                        <li class="breadcrumb-item"><a href="#">Specifications</a></li>
                         <li class="breadcrumb-item active">Add</li>
                     </ol>
                 </div><!-- /.col -->
@@ -139,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
             <div class="alert alert-danger alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <h5><i class="icon fas fa-ban"></i> Alert!</h5>
-                <?php echo $error['category_name']; ?>
+                <?php echo $error['spc_name']; ?>
             </div>
         <?php
         }
@@ -147,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <!-- Successfully Insert -->
         <?php
         if ((@$query == true && @$error == null) && @$action == 'insert') {
-            $error['insert_msg'] = "<b>$category_name</b> Successfully Insert";
+            $error['insert_msg'] = "<b>$spc_name</b> Successfully Insert";
         ?>
             <div class="alert alert-success alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -160,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <!-- Update -->
         <?php
         if ((@$query == true && @$error == null) && @$action == 'update') {
-            $error['insert_msg'] = "<b>$category_name</b> Successfully Update";
+            $error['insert_msg'] = "<b>$spc_name</b> Successfully Update";
         ?>
             <div class="alert alert-success alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -174,22 +172,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <!-- Delete -->
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
-            $sql = "SELECT * FROM categories WHERE category_id = '$category_id'";
+            $sql = "SELECT * FROM specifications WHERE spec_id = '$spec_id'";
 
             $result = $db->query($sql);
         
             if ($result->num_rows > 0) {
         
                 $row = $result->fetch_assoc();
-                $category_id = $row['category_id'];
-                $category_name = $row['category_name'];
+                $spec_id = $row['spec_id'];
+                $spc_name = $row['spec'];
         ?>
                 <div class="card">
                     <h5 class="card-header bg-danger">Conformation</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $category_name ?> ?</b> </h5>
+                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $spc_name ?> ?</b> </h5>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                            <input type="hidden" name="category_id" value="<?php echo $category_id ?>"><br>
+                            <input type="hidden" name="spec_id" value="<?php echo $spec_id ?>"><br>
                             <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
                             <button type="submit" name="action" value="cancel_delete" class="btn btn-primary btn-s">No</button>
                         </form>
@@ -221,23 +219,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
             <div class="col">
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title"><?php echo @$form_name ?></h3>
+                        <h3 class="card-title"><?php echo $form_name ?></h3>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Category Name</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Category Name" name="category_name" value="<?php echo @$category_name ?>">
+                                <label for="exampleInputEmail1">Specification Name</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="spc_name" value="<?php echo @$spc_name ?>">
                             </div>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-                            <input type="hidden" name="category_id" value="<?php echo @$category_id ?>">
-                            <button type="submit" class="btn btn-primary" name="action" value="<?php echo @$btn_value ?>"> <?php echo @$btn_icon ?> <?php echo @$btn_name ?></button>
+                            <input type="hidden" name="spec_id" value="<?php echo @$spec_id ?>">
+                            <button type="submit" class="btn btn-primary" name="action" value="<?php echo @$btn_value ?>"><?php echo @$btn_icon ?> <?php echo @$btn_name ?></button>
                         </div>
                     </form>
+
+
                 </div>
             </div>
             <!-- Right Section Start -->
@@ -248,7 +248,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 $db = db_con();
 
                 // sql query
-                $sql = "SELECT * FROM `categories`";
+                $sql = "SELECT * FROM `specifications`";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -256,17 +256,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 ?>
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Categories Models</h3>
+                        <h3 class="card-title">Specifications </h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Category Name</th>
+                                    <th>Specification Name</th>
                                     <th style="width: 85px !important;">Edit</th>
                                     <th style="width: 85px !important;">Delete</th>
-
                                 </tr>
                             </thead>
                             <tbody>
@@ -276,16 +275,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     while ($row = $result->fetch_assoc()) {
                                 ?>
                                         <tr>
-                                            <td><?php echo $row['category_name'] ?> </td>
+                                            <td><?php echo $row['spec'] ?> </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="category_id" value="<?php echo $row['category_id'] ?>">
+                                                    <input type="hidden" name="spec_id" value="<?php echo $row['spec_id'] ?>">
                                                     <button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button>
                                                 </form>
                                             </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="category_id" value="<?php echo $row['category_id'] ?>">
+                                                    <input type="hidden" name="spec_id" value="<?php echo $row['spec_id'] ?>">
                                                     <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
                                                 </form>
                                             </td>
@@ -306,7 +305,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     </div>
 </div>
 
-<?php include '../footer.php'; ?>
+<?php include '../../footer.php'; ?>
 
 <!-- Page specific script -->
 <script>

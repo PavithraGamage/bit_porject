@@ -1,6 +1,6 @@
 <?php
-include '../header.php';
-include '../nav.php';
+include '../../header.php';
+include '../../nav.php';
 
 // extract variables
 extract($_POST);
@@ -39,8 +39,16 @@ $brand_result = $db->query($sql_brand);
 $sql_model = "SELECT * FROM `models`";
 $model_result = $db->query($sql_model);
 
+// create error variable to store error message styles
+$error_style =  array();
+$error_style_icon = array();
+
 //insert item
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
+
+    // error styles
+    $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
     // call data clean function
     $category =  data_clean($category);
@@ -134,10 +142,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
         $sql = "INSERT INTO `items` (`item_id`, `item_image`, `item_name`, `sku`, `serial_number`, `recorder_level`, `quantity`, `unit_price`, `sale_price`, `discount_rate`, `date`, `stock`, `category_id`, `man_id`, `brand_id`, `model_id`) 
                 VALUES (NULL, '', '$item_name', '$sku', '$serial_number', '$reorder_level', '0', '$unit_price', '$sale_price', '$discount', '2022-02-09', '$stock', '$category', '$manufacture', '$brand', '$model');";
-    }
 
-    // run database query
-    $query = $db->query($sql);
+        // run database query
+        $query = $db->query($sql);
+
+        $error_style['success'] = "alert-success";
+        $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
+        $error['insert_msg'] = "<b>$item_name</b> Successfully Insert";
+    }
 }
 
 
@@ -183,6 +195,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 // update the edit data
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
+    // error styles
+    $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+
     // Advance validation
     if (!empty($item_name)) {
 
@@ -217,16 +233,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         }
     }
 
-      //discount rate calculation
-      if (!empty($sale_price) && !empty($unit_price)) {
+    //discount rate calculation
+    if (!empty($sale_price) && !empty($unit_price)) {
         $discount = (($unit_price - $sale_price) * 100) / $unit_price;
     }
 
-    $sql = "UPDATE `items` 
+    // update query
+    if (empty($error)) {
+        $sql = "UPDATE `items` 
             SET `item_name`= '$item_name', `sku` = '$sku', `serial_number` = '$serial_number', `recorder_level`= $reorder_level, `unit_price` = $unit_price, `sale_price` = $sale_price , `discount_rate` = $discount, `stock` = $stock,  `category_id` = $category, `man_id` = $manufacture, `brand_id` = $brand, `model_id` = $model 
             WHERE `item_id` = $item_id;";
 
-    $query = $db->query($sql);
+        // run database query
+        $query = $db->query($sql);
+
+        $error_style['success'] = "alert-success";
+        $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
+        $error['update'] = "<b>$item_name</b> Successfully Updated";
+    }
 }
 
 // delete recode
@@ -235,6 +259,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     $sql = "DELETE FROM `items` WHERE `item_id` = '$item_id'";
     $db->query($sql);
 
+    $error['delete_msg'] = "Recode Delete";
+
+    // error styles
+    $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
 
 ?>
@@ -257,87 +286,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     </div>
     <!-- Alerts -->
     <div class="container-fluid">
-        <!-- Blank Submit  and Already Exist-->
-        <?php
-        if (!empty($error)) {
-        ?>
-            <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h5><i class="icon fas fa-ban"></i> Alert!</h5>
-                <ul>
-                    <?php
-                    if (!empty($error['error_category'])) {
-                        echo "<li>" . $error['error_category'] . "</li>";
-                    }
-                    if (!empty($error['error_manufacture'])) {
-                        echo "<li>" . $error['error_manufacture'] . "</li>";
-                    }
-                    if (!empty($error['error_brand'])) {
-                        echo "<li>" . $error['error_brand'] . "</li>";
-                    }
-                    if (!empty($error['error_model'])) {
-                        echo "<li>" . $error['error_model'] . "</li>";
-                    }
-                    if (!empty($error['error_item_name'])) {
-                        echo "<li>" . $error['error_item_name'] . "</li>";
-                    }
-                    if (!empty($error['error_serial_number'])) {
-                        echo "<li>" . $error['error_serial_number'] . "</li>";
-                    }
-                    if (!empty($error['error_sku'])) {
-                        echo "<li>" . $error['error_sku'] . "</li>";
-                    }
-                    if (!empty($error['error_stock'])) {
-                        echo "<li>" . $error['error_stock'] . "</li>";
-                    }
-                    if (!empty($error['error_reorder_level'])) {
-                        echo "<li>" . $error['error_reorder_level'] . "</li>";
-                    }
-                    if (!empty($error['error_unit_price'])) {
-                        echo "<li>" . $error['error_unit_price'] . "</li>";
-                    }
-                    if (!empty($error['error_sale_price'])) {
-                        echo "<li>" . $error['error_sale_price'] . "</li>";
-                    }
-                    ?>
-                </ul>
-            </div>
-        <?php
-        }
-        ?>
-        <!-- Successfully Insert -->
-        <?php
-        if ((@$query == true && @$error == null) && @$action == 'insert') {
-            $error['insert_msg'] = "<b>$item_name</b> Successfully Insert";
-        ?>
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h5><i class="icon fas fa-check"></i> Alert!</h5>
-                <?php echo $error['insert_msg']; ?>
-            </div>
-        <?php
-        }
-        ?>
-        <!-- Update -->
-        <?php
-        if ((@$query == true && @$error == null) && @$action == 'update') {
-            $error['insert_msg'] = "<b>$category_name</b> Successfully Update";
-        ?>
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h5><i class="icon fas fa-check"></i> Alert!</h5>
-                <?php echo $error['insert_msg']; ?>
-            </div>
-        <?php
-        }
-        ?>
 
-        <!-- Delete -->
+        <!-- Insert / update / delete / blank / already exist alerts-->
+        <?php show_error($error, $error_style, $error_style_icon); ?>
+
+        <!-- Delete confirmation -->
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
             $sql = "SELECT * FROM items WHERE item_id = '$item_id'";
 
             $result = $db->query($sql);
+           
 
             if ($result->num_rows > 0) {
 
@@ -363,19 +322,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         }
         ?>
 
-        <?php
-        if (@$action == 'confirm_delete') {
-            $error['delete_msg'] = "Recode Delete";
-        ?>
-            <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h5><i class="fas fa-trash-alt"></i> Alert!</h5>
-                <?php echo $error['delete_msg']; ?>
-            </div>
-
-        <?php
-        }
-        ?>
     </div>
     <div class="container-fluid">
         <div class="row">
@@ -403,13 +349,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Category</label>
                                 <select class="form-control select2" style="width: 100%;" name="category">
+                                    <option value="">- Select Category -</option>
                                     <?php
 
                                     // fletch data
                                     if ($cat_result->num_rows > 0) {
                                         while ($cat_row = $cat_result->fetch_assoc()) {
                                     ?>
-                                            <option value="<?php echo $cat_row['category_id'] ?>"><?php echo $cat_row['category_name']; ?></option>
+                                            <option value="<?php echo $cat_row['category_id'] ?>" <?php if ($cat_row['category_id'] == @$category) { ?> selected <?php } ?>><?php echo $cat_row['category_name']; ?></option>
                                     <?php
 
                                         }
@@ -420,13 +367,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Manufacture</label>
                                 <select class="form-control select2" style="width: 100%;" name="manufacture">
+                                    <option value="">- Select Manufacture -</option>
                                     <?php
 
                                     // fletch data
                                     if ($man_result->num_rows > 0) {
                                         while ($man_row = $man_result->fetch_assoc()) {
                                     ?>
-                                            <option value="<?php echo $man_row['man_id'] ?>"><?php echo $man_row['man_name']; ?></option>
+                                            <option value="<?php echo $man_row['man_id'] ?>" <?php if ($man_row['man_id'] == @$manufacture) { ?> selected <?php } ?>><?php echo $man_row['man_name']; ?></option>
                                     <?php
 
                                         }
@@ -437,13 +385,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Brand</label>
                                 <select class="form-control select2" style="width: 100%;" name="brand">
+                                    <option value="">- Select Brand -</option>
                                     <?php
 
                                     // fletch data
                                     if ($brand_result->num_rows > 0) {
                                         while ($brand_row = $brand_result->fetch_assoc()) {
                                     ?>
-                                            <option value="<?php echo $brand_row['brand_id'] ?>"><?php echo $brand_row['brand_name']; ?></option>
+                                            <option value="<?php echo $brand_row['brand_id'] ?>" <?php if ($brand_row['brand_id'] == @$brand) { ?> selected <?php } ?>><?php echo $brand_row['brand_name']; ?></option>
                                     <?php
 
                                         }
@@ -454,13 +403,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Model</label>
                                 <select class="form-control select2" style="width: 100%;" name="model">
+                                    <option value="">- Select Model -</option>
                                     <?php
 
                                     // fletch data
                                     if ($model_result->num_rows > 0) {
                                         while ($model_row = $model_result->fetch_assoc()) {
                                     ?>
-                                            <option value="<?php echo $model_row['model_id'] ?>"><?php echo $model_row['model_name']; ?></option>
+                                            <option value="<?php echo $model_row['model_id'] ?>" <?php if ($model_row['model_id'] == @$model) { ?> selected <?php } ?>><?php echo $model_row['model_name']; ?></option>
                                     <?php
 
                                         }
@@ -632,7 +582,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     </div>
 </div>
 
-<?php include '../footer.php'; ?>
+<?php include '../../footer.php'; ?>
 
 <!-- Page specific script -->
 <script>

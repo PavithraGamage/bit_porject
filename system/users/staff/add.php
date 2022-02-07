@@ -1,6 +1,12 @@
 <?php
-include '../header.php';
-include '../nav.php';
+include '../../header.php';
+include '../../nav.php';
+
+// extract variables
+extract($_POST);
+
+
+print_r($_POST);
 ?>
 
 <div class="content-wrapper">
@@ -28,7 +34,7 @@ include '../nav.php';
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">First Name</label>
@@ -173,7 +179,7 @@ include '../nav.php';
     </div>
 </div>
 
-<?php include '../footer.php'; ?>
+<?php include '../../footer.php'; ?>
 
 <!-- Page specific script -->
 <script>
