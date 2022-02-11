@@ -20,11 +20,19 @@ $btn_value = "insert";
 // form button icon
 $btn_icon = '<i class="far fa-save"></i>';
 
- // create error variable to store error messages
- $error =  array();
+// create error variable to store error messages
+$error =  array();
+
+// create error variable to store error message styles
+$error_style =  array();
+$error_style_icon = array();
 
 //insert category
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
+
+    // error styles
+    $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
     // call data clean function
     $category_name =  data_clean($category_name);
@@ -42,16 +50,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $result = $db->query($sql);
 
         if ($result->num_rows > 0) {
-            $error['category_name'] = "Manufacturer <b> $category_name </b> Already Exists";
+            $error['category_name'] = "<b> $category_name </b> Already Exists";
+        }
+    }
+
+    // image upload
+    if (empty($error)) {
+        $target_dri = "../../../assets/images/";
+        $target_file = $target_dri . basename($_FILES["category_image"]["name"]);
+        $upload_ok = 1;
+        $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        $check = getimagesize($_FILES['category_image']['tmp_name']);
+        if ($check !== false) {
+            //Multi-purpose Internet Mail Extensions          
+            $upload_ok = 1;
+        } else {
+            $error['category_image'] = "File is not an image.";
+            $upload_ok = 0;
+        }
+
+        if (file_exists($target_file)) {
+            $error['category_image'] = "Sorry, file already exists.";
+            $upload_ok = 0;
+        }
+
+        if ($_FILES["category_image"]["size"] > 5000000) {
+            $error['category_image'] = "Sorry, your file is too large.";
+            $upload_ok = 0;
+        }
+
+        if ($image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg" && $image_file_type != "gif") {
+            $error['category_image'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $upload_ok = 0;
+        }
+
+        if ($upload_ok == 0) {
+            echo "Sorry, your file was not uploaded.";
+            // if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["category_image"]["tmp_name"], $target_file)) {
+                $photo = htmlspecialchars(basename($_FILES["category_image"]["name"]));
+            } else {
+                $error['category_image'] = "Sorry, there was an error uploading your file.";
+            }
         }
     }
 
     if (empty($error)) {
-        $sql = "INSERT INTO `categories` (`category_id`, `category_name`) VALUES (NULL, '$category_name');";
-    }
+        $sql = "INSERT INTO `categories` (`category_id`, `category_name`, `cat_image`) VALUES (NULL, '$category_name', '$photo');";
 
-    // run database query
-    $query = $db->query($sql);
+        // run database query
+        $query = $db->query($sql);
+
+        // 
+        $error_style['success'] = "alert-success";
+        $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
+        $error['insert_msg'] = "<b>$category_name</b> Successfully Insert";
+    }
 }
 
 // edit category
@@ -79,14 +134,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
         $row = $result->fetch_assoc();
         $category_id = $row['category_id'];
         $category_name = $row['category_name'];
-
     }
-
 }
 
 // update the edit data
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
-    
+
+    // error styles
+    $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+
+
     // Advance Validation
     if (!empty($category_name)) {
 
@@ -95,13 +153,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         $result = $db->query($sql);
 
         if ($result->num_rows > 0) {
-            $error['category_name'] = "Manufacturer <b> $category_name </b> Already Exists";
+            $error['category_name'] = "<b> $category_name </b> Already Exists";
         }
     }
 
-    $sql = "UPDATE `categories` SET `category_name` = '$category_name' WHERE `category_id` = '$category_id';";
-    $query = $db->query($sql);
+      // image upload
+      if (empty($error)) {
+        $target_dri = "../../../assets/images/";
+        $target_file = $target_dri . basename($_FILES["category_image"]["name"]);
+        $upload_ok = 1;
+        $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        $check = getimagesize($_FILES['category_image']['tmp_name']);
+        if ($check !== false) {
+            //Multi-purpose Internet Mail Extensions          
+            $upload_ok = 1;
+        } else {
+            $error['category_image'] = "File is not an image.";
+            $upload_ok = 0;
+        }
 
+        if (file_exists($target_file)) {
+            $error['category_image'] = "Sorry, file already exists.";
+            $upload_ok = 0;
+        }
+
+        if ($_FILES["category_image"]["size"] > 5000000) {
+            $error['category_image'] = "Sorry, your file is too large.";
+            $upload_ok = 0;
+        }
+
+        if ($image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg" && $image_file_type != "gif") {
+            $error['category_image'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $upload_ok = 0;
+        }
+
+        if ($upload_ok == 0) {
+            echo "Sorry, your file was not uploaded.";
+            // if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["category_image"]["tmp_name"], $target_file)) {
+                $photo = htmlspecialchars(basename($_FILES["category_image"]["name"]));
+            } else {
+                $error['category_image'] = "Sorry, there was an error uploading your file.";
+            }
+        }
+    }
+
+    // update query
+    if (empty($error)) {
+        $sql = "UPDATE `categories` SET `category_name` = '$category_name', cat_image = '$photo' WHERE `category_id` = '$category_id';";
+
+        // run database query
+        $query = $db->query($sql);
+
+        $error_style['success'] = "alert-success";
+        $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
+        $error['update'] = "<b>$category_name</b> Successfully Updated";
+    }
 }
 
 // delete recode
@@ -110,6 +218,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     $sql = "DELETE FROM `categories` WHERE `category_id` = '$category_id'";
     $db->query($sql);
 
+    $error['delete_msg'] = "Recode Delete";
+
+    // error styles
+    $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
 
 ?>
@@ -132,54 +245,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     </div>
     <!-- Alerts -->
     <div class="container-fluid">
-        <!-- Blank Submit  and Already Exist-->
-        <?php
-        if (!empty($error)) {
-        ?>
-            <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h5><i class="icon fas fa-ban"></i> Alert!</h5>
-                <?php echo $error['category_name']; ?>
-            </div>
-        <?php
-        }
-        ?>
-        <!-- Successfully Insert -->
-        <?php
-        if ((@$query == true && @$error == null) && @$action == 'insert') {
-            $error['insert_msg'] = "<b>$category_name</b> Successfully Insert";
-        ?>
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h5><i class="icon fas fa-check"></i> Alert!</h5>
-                <?php echo $error['insert_msg']; ?>
-            </div>
-        <?php
-        }
-        ?>
-        <!-- Update -->
-        <?php
-        if ((@$query == true && @$error == null) && @$action == 'update') {
-            $error['insert_msg'] = "<b>$category_name</b> Successfully Update";
-        ?>
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h5><i class="icon fas fa-check"></i> Alert!</h5>
-                <?php echo $error['insert_msg']; ?>
-            </div>
-        <?php
-        }
-        ?>
 
-        <!-- Delete -->
+        <!-- Insert / update / delete / blank / already exist alerts-->
+        <?php show_error($error, $error_style, $error_style_icon); ?>
+
+        <!-- Delete Confirmation -->
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
             $sql = "SELECT * FROM categories WHERE category_id = '$category_id'";
 
             $result = $db->query($sql);
-        
+
             if ($result->num_rows > 0) {
-        
+
                 $row = $result->fetch_assoc();
                 $category_id = $row['category_id'];
                 $category_name = $row['category_name'];
@@ -202,19 +280,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         }
         ?>
 
-        <?php
-        if (@$action == 'confirm_delete') {
-            $error['delete_msg'] = "Recode Delete";
-        ?>
-            <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h5><i class="fas fa-trash-alt"></i> Alert!</h5>
-                <?php echo $error['delete_msg']; ?>
-            </div>
-
-        <?php
-        }
-        ?>
     </div>
     <div class="container-fluid">
         <div class="row">
@@ -225,8 +290,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                         <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label" for="category_image">Category Image</label>
+                                <input type="file" class="form-control" id="category_image" style="height: auto;" name="category_image">
+                                <?php echo @$category_image; ?>
+                            </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Category Name</label>
                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Category Name" name="category_name" value="<?php echo @$category_name ?>">
@@ -263,6 +333,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th style="width: 125px !important;">Category Image</th>
                                     <th>Category Name</th>
                                     <th style="width: 85px !important;">Edit</th>
                                     <th style="width: 85px !important;">Delete</th>
@@ -276,6 +347,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     while ($row = $result->fetch_assoc()) {
                                 ?>
                                         <tr>
+                                            <td><img src="../../../assets/images/<?php echo $row['cat_image'] ?>" class="img-fluid" width="100"></td>
                                             <td><?php echo $row['category_name'] ?> </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">

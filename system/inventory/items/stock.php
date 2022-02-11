@@ -9,7 +9,7 @@ extract($_POST);
 $db = db_con();
 
 // form Name
-$form_name = 'Insert New Specification';
+$form_name = 'Insert New Part';
 
 // form button name change
 $btn_name = "Insert";
@@ -23,14 +23,20 @@ $btn_icon = '<i class="far fa-save"></i>';
 // create error variable to store error messages
 $error =  array();
 
+// Item drop down data fletch 
+$sql_item = "SELECT * FROM `items`";
+$item_result = $db->query($sql_item);
+
+
 // create error variable to store error message styles
 $error_style =  array();
 $error_style_icon = array();
 
 // date
+
 $date = date('Y-m-d');
 
-//insert specification
+//insert item to stock
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
     // error styles
@@ -38,42 +44,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
     // call data clean function
-    $spc_name =  data_clean($spc_name);
+    $item_serial_number = data_clean($item_serial_number);
 
-    if (empty($spc_name)) {
-        $error['spc_name'] = "Specification Name Should Not Be Empty";
+    // basic validation
+    if (empty($item_serial_number)) {
+        $error['error_category'] = "Insert Serial Number";
     }
 
-    // Advance Validation
-    if (!empty($spc_name)) {
+    // Advance validation
+    if (!empty($item_serial_number)) {
 
-        $sql = "SELECT * FROM `specifications` WHERE spec = '$spc_name'";
+        $sql = "SELECT * FROM `stock` WHERE item_serial = '$item_serial_number';";
 
         $result = $db->query($sql);
 
         if ($result->num_rows > 0) {
-            $error['spc_name'] = "Specification <b> $spc_name </b> Already Exists";
+            $error['error_category'] = "This <b> $item_serial_number</b> Serial Number Already Exist";
         }
     }
 
+    // insert data to db
+
     if (empty($error)) {
-        $sql = "INSERT INTO `specifications` (`spec_id`, `spec`, `value`) VALUES (NULL, '$spc_name', '');";
+
+        $sql = "INSERT INTO `stock` (`id`, `item_serial`, `stock_date`, `stock_status`, `item_id`) 
+                VALUES (NULL, '$item_serial_number', '$date', '1', '$item');";
 
         // run database query
         $query = $db->query($sql);
 
-        // success message style
         $error_style['success'] = "alert-success";
         $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
-        $error['insert_msg'] = "<b>$spc_name</b> Successfully Insert";
+        $error['insert_msg'] = "Successfully Insert <b>$item_serial_number</b>";
     }
 }
 
-// edit specifications
+// edit recodes
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 
     // from name change
-    $form_name = "Edit Specification";
+    $form_name = "Edit Part";
 
     // form button name change
     $btn_name = "Update";
@@ -85,15 +95,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
     $btn_icon = '<i class="far fa-edit"></i>';
 
     // check recodes in DB
-    $sql = "SELECT * FROM specifications WHERE spec_id = '$spec_id'";
+    $sql = "SELECT * FROM `stock` WHERE id = $stock_id";
 
     $result = $db->query($sql);
 
     if ($result->num_rows > 0) {
 
         $row = $result->fetch_assoc();
-        $spec_id = $row['spec_id'];
-        $spc_name = $row['spec'];
+
+        $stock_id =  $row['id'];
+        $item = $row['item_id'];
+        $item_serial_number = $row['item_serial'];
     }
 }
 
@@ -104,36 +116,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
-    // Advance Validation
-    if (!empty($spc_name)) {
+     // Advance validation
+     if (!empty($item_serial_number)) {
 
-        $sql = "SELECT * FROM `specifications` WHERE spec = '$spc_name'";
+        $sql = "SELECT * FROM `stock` WHERE item_serial = '$item_serial_number';";
 
         $result = $db->query($sql);
 
         if ($result->num_rows > 0) {
-            $error['spc_name'] = "Specification <b> $spc_name </b> Already Exists";
+            $error['error_category'] = "This <b> $item_serial_number</b> Serial Number Already Exist";
         }
     }
 
+    // update query
     if (empty($error)) {
-        //fletch query
-        $sql = "UPDATE `specifications` SET `spec` = '$spc_name' WHERE `spec_id` = '$spec_id';";
+
+        $sql = "UPDATE `stock` SET `item_serial` = '$item_serial_number' WHERE `id` = $stock_id;";
 
         // run database query
         $query = $db->query($sql);
 
-        // success message styles
         $error_style['success'] = "alert-success";
         $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
-        $error['update'] = "<b>$spc_name</b> Successfully Updated";
+        $error['update'] = "<b>$item_serial_number</b> Successfully Updated";
     }
 }
 
 // delete recode
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
-    $sql = "DELETE FROM `specifications` WHERE `spec_id` = '$spec_id'";
+    $sql = "DELETE FROM `stock` WHERE `id` = '$stock_id'";
     $db->query($sql);
 
     $error['delete_msg'] = "Recode Delete";
@@ -142,18 +154,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
+
 ?>
+
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Specifications</h1>
+                    <h1 class="m-0">Add to Stock</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Specifications</a></li>
-                        <li class="breadcrumb-item active">Add</li>
+                        <li class="breadcrumb-item"><a href="#">Items</a></li>
+                        <li class="breadcrumb-item active">Add to Stock</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -161,28 +175,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     </div>
     <!-- Alerts -->
     <div class="container-fluid">
+
         <!-- Insert / update / delete / blank / already exist alerts-->
         <?php show_error($error, $error_style, $error_style_icon); ?>
 
-        <!-- Delete -->
+        <!-- Delete confirmation -->
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
-            $sql = "SELECT * FROM specifications WHERE spec_id = '$spec_id'";
+            $sql = "SELECT * FROM stock, items WHERE id = '$stock_id'";
 
             $result = $db->query($sql);
+
 
             if ($result->num_rows > 0) {
 
                 $row = $result->fetch_assoc();
-                $spec_id = $row['spec_id'];
-                $spc_name = $row['spec'];
+                $stock_id = $row['id'];
+                $item_name = $row['item_name'];
+                $item_serial = $row['item_serial'];
         ?>
                 <div class="card">
                     <h5 class="card-header bg-danger">Conformation</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $spc_name ?> ?</b> </h5>
+                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $item_serial . " related to ". $item_name?> ?</b> </h5>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                            <input type="hidden" name="spec_id" value="<?php echo $spec_id ?>"><br>
+                            <input type="hidden" name="stock_id" value="<?php echo $stock_id ?>"><br>
                             <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
                             <button type="submit" name="action" value="cancel_delete" class="btn btn-primary btn-s">No</button>
                         </form>
@@ -194,6 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
             }
         }
         ?>
+
     </div>
     <div class="container-fluid">
         <div class="row">
@@ -207,18 +225,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Specification Name</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="spc_name" value="<?php echo @$spc_name ?>">
+                                <label for="exampleInputEmail1">Select Part Name</label>
+                                <select class="form-control select2" style="width: 100%;" name="item">
+                                    <option value="">- Select Item -</option>
+                                    <?php
+
+                                    // fletch data
+                                    if ($item_result->num_rows > 0) {
+                                        while ($item_row = $item_result->fetch_assoc()) {
+                                    ?>
+                                            <option value="<?php echo $item_row['item_id'] ?>" <?php if ($item_row['item_id'] == @$item) { ?> selected <?php } ?>><?php echo $item_row['item_name']; ?></option>
+                                    <?php
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Part Serial Number</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Serial Number" name="item_serial_number" value="<?php echo @$item_serial_number ?>">
                             </div>
                         </div>
+
                         <!-- /.card-body -->
+
                         <div class="card-footer">
-                            <input type="hidden" name="spec_id" value="<?php echo @$spec_id ?>">
+                            <input type="hidden" name="stock_id" value="<?php echo @$stock_id ?>">
                             <button type="submit" class="btn btn-primary" name="action" value="<?php echo @$btn_value ?>"><?php echo @$btn_icon ?> <?php echo @$btn_name ?></button>
                         </div>
                     </form>
-
-
                 </div>
             </div>
             <!-- Right Section Start -->
@@ -229,7 +264,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 $db = db_con();
 
                 // sql query
-                $sql = "SELECT * FROM `specifications`";
+                $sql = "SELECT * FROM stock , items;";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -237,14 +272,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 ?>
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Specifications </h3>
+                        <h3 class="card-title">Available Items</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Specification Name</th>
+                                    <th>Item Name</th>
+                                    <th>Item Serial Number</th>
                                     <th style="width: 85px !important;">Edit</th>
                                     <th style="width: 85px !important;">Delete</th>
                                 </tr>
@@ -256,20 +292,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     while ($row = $result->fetch_assoc()) {
                                 ?>
                                         <tr>
-                                            <td><?php echo $row['spec'] ?> </td>
+                                            <td><?php echo $row['item_name'] ?> </td>
+                                            <td><?php echo $row['item_serial'] ?> </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="spec_id" value="<?php echo $row['spec_id'] ?>">
+                                                    <input type="hidden" name="stock_id" value="<?php echo $row['id'] ?>">
                                                     <button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button>
                                                 </form>
                                             </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="spec_id" value="<?php echo $row['spec_id'] ?>">
+                                                    <input type="hidden" name="stock_id" value="<?php echo $row['id'] ?>">
                                                     <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
                                                 </form>
                                             </td>
+
                                         </tr>
+
                                 <?php
                                     }
                                 }
@@ -280,7 +319,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     </div>
                     <!-- /.card-body -->
                 </div>
-
             </div>
         </div>
     </div>

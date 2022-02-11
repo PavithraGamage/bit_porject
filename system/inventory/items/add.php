@@ -27,10 +27,6 @@ $error =  array();
 $sql_cat = "SELECT * FROM `categories`";
 $cat_result = $db->query($sql_cat);
 
-// manufactures drop down data fletch 
-$sql_man = "SELECT * FROM `manufacturers`";
-$man_result = $db->query($sql_man);
-
 // brand drop down data fletch 
 $sql_brand = "SELECT * FROM `brands`";
 $brand_result = $db->query($sql_brand);
@@ -39,9 +35,16 @@ $brand_result = $db->query($sql_brand);
 $sql_model = "SELECT * FROM `models`";
 $model_result = $db->query($sql_model);
 
+// Item drop down data fletch 
+$sql_item = "SELECT * FROM `items`";
+$item_result = $db->query($sql_item);
+
 // create error variable to store error message styles
 $error_style =  array();
 $error_style_icon = array();
+
+// date
+$date = date('Y-m-d');
 
 //insert item
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
@@ -52,23 +55,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
     // call data clean function
     $category =  data_clean($category);
-    $manufacture = data_clean($manufacture);
     $brand = data_clean($brand);
     $model = data_clean($model);
     $item_name = data_clean($item_name);
-    $serial_number = data_clean($serial_number);
     $sku = data_clean($sku);
-    $stock = data_clean($stock);
     $reorder_level = data_clean($reorder_level);
     $unit_price = data_clean($unit_price);
     $sale_price = data_clean($sale_price);
 
     // basic validation
+    if (empty($item_name)) {
+        $error['error_item_name'] = "Item Name Should not be empty";
+    }
     if (empty($category)) {
         $error['error_category'] = "Select a Category";
-    }
-    if (empty($manufacture)) {
-        $error['error_manufacture'] = "Select a Manufacture";
     }
     if (empty($brand)) {
         $error['error_brand'] = "Select a Brand";
@@ -76,17 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     if (empty($model)) {
         $error['error_model'] = "Select a Model ";
     }
-    if (empty($item_name)) {
-        $error['error_item_name'] = "Item Name Should not be empty";
-    }
-    if (empty($serial_number)) {
-        $error['error_serial_number'] = "Serial Number Should not be empty";
-    }
     if (empty($sku)) {
         $error['error_sku'] = "SKU Should not be empty";
-    }
-    if (empty($stock)) {
-        $error['error_stock'] = "Stock Should not be empty";
     }
     if (empty($reorder_level)) {
         $error['error_reorder_level'] = "Reorder Level Should not be empty";
@@ -98,6 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $error['error_sale_price'] = "Sale Price Should not be empty";
     }
 
+
     // Advance validation
     if (!empty($item_name)) {
 
@@ -107,17 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
         if ($result->num_rows > 0) {
             $error['error_category'] = "This <b> $item_name </b> Item Already Exists";
-        }
-    }
-
-    if (!empty($serial_number)) {
-
-        $sql = "SELECT * FROM items WHERE serial_number = '$serial_number'";
-
-        $result = $db->query($sql);
-
-        if ($result->num_rows > 0) {
-            $error['error_serial_number'] = "This <b> $serial_number </b> Serial Number Already Exists";
         }
     }
 
@@ -132,6 +113,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         }
     }
 
+    // image upload
+    if (empty($error)) {
+        $target_dri = "../../../assets/images/";
+        $target_file = $target_dri . basename($_FILES["item_image"]["name"]);
+        $upload_ok = 1;
+        $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        $check = getimagesize($_FILES['item_image']['tmp_name']);
+        if ($check !== false) {
+            //Multi-purpose Internet Mail Extensions          
+            $upload_ok = 1;
+        } else {
+            $error['item_image'] = "File is not an image.";
+            $upload_ok = 0;
+        }
+
+        if (file_exists($target_file)) {
+            $error['item_image'] = "Sorry, file already exists.";
+            $upload_ok = 0;
+        }
+
+        if ($_FILES["item_image"]["size"] > 5000000) {
+            $error['item_image'] = "Sorry, your file is too large.";
+            $upload_ok = 0;
+        }
+
+        if ($image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg" && $image_file_type != "gif") {
+            $error['item_image'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $upload_ok = 0;
+        }
+
+        if ($upload_ok == 0) {
+            echo "Sorry, your file was not uploaded.";
+            // if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["item_image"]["tmp_name"], $target_file)) {
+                $photo = htmlspecialchars(basename($_FILES["item_image"]["name"]));
+            } else {
+                $error['item_image'] = "Sorry, there was an error uploading your file.";
+            }
+        }
+    }
+
     //discount rate calculation
     if (!empty($sale_price) && !empty($unit_price)) {
         $discount = (($unit_price - $sale_price) * 100) / $unit_price;
@@ -140,12 +163,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     //insert data to db
     if (empty($error)) {
 
-        $sql = "INSERT INTO `items` (`item_id`, `item_image`, `item_name`, `sku`, `serial_number`, `recorder_level`, `quantity`, `unit_price`, `sale_price`, `discount_rate`, `date`, `stock`, `category_id`, `man_id`, `brand_id`, `model_id`) 
-                VALUES (NULL, '', '$item_name', '$sku', '$serial_number', '$reorder_level', '0', '$unit_price', '$sale_price', '$discount', '2022-02-09', '$stock', '$category', '$manufacture', '$brand', '$model');";
+        $sql = "INSERT INTO `items` (`item_id`, `item_image`, `item_name`, `sku`, `recorder_level`, `unit_price`, `sale_price`, `discount_rate`, `item_description`, `date`, `stock`, `category_id`, `brand_id`, `model_id`) 
+                VALUES (NULL, '$photo', '$item_name', '$sku', '$reorder_level', '$unit_price', '$sale_price', '$discount', '$additional_info', '$date', NULL, '$category', '$brand', '$model');";
 
         // run database query
         $query = $db->query($sql);
 
+        // success message style
         $error_style['success'] = "alert-success";
         $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
         $error['insert_msg'] = "<b>$item_name</b> Successfully Insert";
@@ -179,16 +203,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 
         $item_id =  $row['item_id'];
         $category =  $row['category_id'];
-        $manufacture = $row['man_id'];
         $brand = $row['brand_id'];
         $model = $row['model_id'];
-        $item_name = $row['item_name'];
-        $serial_number = $row['serial_number'];
         $sku = $row['sku'];
-        $stock = $row['stock'];
+        $item_name = $row['item_name'];
         $reorder_level = $row['recorder_level'];
         $unit_price = $row['unit_price'];
         $sale_price = $row['sale_price'];
+        $item_image = $row['item_image'];
+        $additional_info = $row['item_description'];
     }
 }
 
@@ -211,17 +234,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         }
     }
 
-    if (!empty($serial_number)) {
-
-        $sql = "SELECT * FROM items WHERE serial_number = '$serial_number'";
-
-        $result = $db->query($sql);
-
-        if ($result->num_rows > 0) {
-            $error['error_serial_number'] = "This <b> $serial_number </b> Serial Number Already Exists";
-        }
-    }
-
     if (!empty($sku)) {
 
         $sql = "SELECT * FROM items WHERE sku = '$sku'";
@@ -238,15 +250,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         $discount = (($unit_price - $sale_price) * 100) / $unit_price;
     }
 
+      // image upload
+      if (empty($error)) {
+        $target_dri = "../../../assets/images/";
+        $target_file = $target_dri . basename($_FILES["item_image"]["name"]);
+        $upload_ok = 1;
+        $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        $check = getimagesize($_FILES['item_image']['tmp_name']);
+        if ($check !== false) {
+            //Multi-purpose Internet Mail Extensions          
+            $upload_ok = 1;
+        } else {
+            $error['item_image'] = "File is not an image.";
+            $upload_ok = 0;
+        }
+
+        if (file_exists($target_file)) {
+            $error['item_image'] = "Sorry, file already exists.";
+            $upload_ok = 0;
+        }
+
+        if ($_FILES["item_image"]["size"] > 5000000) {
+            $error['item_image'] = "Sorry, your file is too large.";
+            $upload_ok = 0;
+        }
+
+        if ($image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg" && $image_file_type != "gif") {
+            $error['item_image'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $upload_ok = 0;
+        }
+
+        if ($upload_ok == 0) {
+            echo "Sorry, your file was not uploaded.";
+            // if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["item_image"]["tmp_name"], $target_file)) {
+                $photo = htmlspecialchars(basename($_FILES["item_image"]["name"]));
+            } else {
+                $error['item_image'] = "Sorry, there was an error uploading your file.";
+            }
+        }
+    }
+
     // update query
     if (empty($error)) {
         $sql = "UPDATE `items` 
-            SET `item_name`= '$item_name', `sku` = '$sku', `serial_number` = '$serial_number', `recorder_level`= $reorder_level, `unit_price` = $unit_price, `sale_price` = $sale_price , `discount_rate` = $discount, `stock` = $stock,  `category_id` = $category, `man_id` = $manufacture, `brand_id` = $brand, `model_id` = $model 
-            WHERE `item_id` = $item_id;";
+                SET item_image = '$photo',  item_name = '$item_name', sku = '$sku', recorder_level = $reorder_level, unit_price = $unit_price, sale_price = $sale_price, discount_rate = $discount, item_description = '$additional_info', `date` = $date, category_id = $category, brand_id = $brand, model_id = $model 
+                WHERE `item_id` = $item_id";
 
         // run database query
         $query = $db->query($sql);
 
+        // success message styles
         $error_style['success'] = "alert-success";
         $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
         $error['update'] = "<b>$item_name</b> Successfully Updated";
@@ -273,12 +328,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Items</h1>
+                    <h1 class="m-0">Add Items</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Items</a></li>
-                        <li class="breadcrumb-item active">Add</li>
+                        <li class="breadcrumb-item active">Add Items</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -290,13 +345,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <!-- Insert / update / delete / blank / already exist alerts-->
         <?php show_error($error, $error_style, $error_style_icon); ?>
 
-        <!-- Delete confirmation -->
+        <!-- Delete Confirmation -->
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
             $sql = "SELECT * FROM items WHERE item_id = '$item_id'";
 
             $result = $db->query($sql);
-           
+
 
             if ($result->num_rows > 0) {
 
@@ -332,22 +387,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="exampleInputFile">Item Image</label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="exampleInputFile">
-                                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                    </div>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">Upload</span>
-                                    </div>
-                                </div>
+                                <label class="form-label" for="item_image">Item Image <span style="color: red;">*</span></label>
+                                <input type="file" class="form-control" id="item_image" style="height: auto;" name="item_image" />
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Category</label>
+                                <label for="exampleInputEmail1">Item Name <span style="color: red;">*</span></label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Item Name" name="item_name" value="<?php echo @$item_name ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Category <span style="color: red;">*</span></label>
                                 <select class="form-control select2" style="width: 100%;" name="category">
                                     <option value="">- Select Category -</option>
                                     <?php
@@ -365,25 +416,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Manufacture</label>
-                                <select class="form-control select2" style="width: 100%;" name="manufacture">
-                                    <option value="">- Select Manufacture -</option>
-                                    <?php
-
-                                    // fletch data
-                                    if ($man_result->num_rows > 0) {
-                                        while ($man_row = $man_result->fetch_assoc()) {
-                                    ?>
-                                            <option value="<?php echo $man_row['man_id'] ?>" <?php if ($man_row['man_id'] == @$manufacture) { ?> selected <?php } ?>><?php echo $man_row['man_name']; ?></option>
-                                    <?php
-
-                                        }
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Brand</label>
+                                <label for="exampleInputEmail1">Brand <span style="color: red;">*</span></label>
                                 <select class="form-control select2" style="width: 100%;" name="brand">
                                     <option value="">- Select Brand -</option>
                                     <?php
@@ -401,7 +434,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Model</label>
+                                <label for="exampleInputEmail1">Model <span style="color: red;">*</span></label>
                                 <select class="form-control select2" style="width: 100%;" name="model">
                                     <option value="">- Select Model -</option>
                                     <?php
@@ -419,32 +452,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Item Name</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="item_name" value="<?php echo @$item_name ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Item Serial Number</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="serial_number" value="<?php echo @$serial_number ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">SKU</label>
+                                <label for="exampleInputEmail1">SKU <span style="color: red;">*</span></label>
                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="sku" value="<?php echo @$sku ?>">
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Stock</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="stock" value="<?php echo @$stock ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Reorder Level</label>
+                                <label for="exampleInputEmail1">Reorder Level <span style="color: red;">*</span></label>
                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="reorder_level" value="<?php echo @$reorder_level ?>">
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Unit Price</label>
+                                <label for="exampleInputEmail1">Unit Price <span style="color: red;">*</span></label>
                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="unit_price" value="<?php echo @$unit_price ?>">
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Sale Price</label>
+                                <label for="exampleInputEmail1">Sale Price <span style="color: red;">*</span></label>
                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="sale_price" value="<?php echo @$sale_price ?>">
+                            </div>
+                            <div class="form-group">
+                                <label>Product Description</label>
+                                <textarea class="form-control" rows="3" placeholder="Enter ..." name="additional_info"><?php echo @$additional_info ?></textarea>
                             </div>
                         </div>
                         <!-- /.card-body -->
@@ -456,66 +481,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 </div>
             </div>
             <!-- Right Section Start -->
-            <div class="col">
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">Insert Item Specifications</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <!-- form start -->
-                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Item Name</label>
-                                <select class="form-control select2" style="width: 100%;">
-                                    <option selected="selected">ASUS TUF GAMING GEFORCE RTX 3080TI 12GB</option>
-                                    <option>AMD RYZEN THREADRIPPER 3990X</option>
-                                    <option>INTEL CORE I9-12900K PROCESSOR</option>
-                                    <option>INTEL CORE I9-12900KF PROCESSOR</option>
-                                    <option>ASUS ROG MAXIMUS Z690 EXTREME GLACIAL</option>
-                                    <option>ASUS ROG MAXIMUS Z690 EXTREME</option>
-                                    <option>ASUS ROG STRIX TRX40-XE GAMING WIFI</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Spec 1</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="category_name">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Spec 2</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="category_name">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Spec 3</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="category_name">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Spec 4</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="category_name">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Spec 5</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="category_name">
-                            </div>
-
-
-
-
-
-                        </div>
-
-                        <!-- /.card-body -->
-
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Insert</button>
-                        </div>
-                    </form>
-                </div>
-
-            </div>
-        </div>
-        <!-- item table -->
-        <div class="row">
             <div class="col">
                 <?php
 
@@ -538,7 +503,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
+                                    <th style="width: 125px !important;">Item Image</th>
                                     <th>Item Name</th>
+                                    <th style="width: 85px !important;">View</th>
                                     <th style="width: 85px !important;">Edit</th>
                                     <th style="width: 85px !important;">Delete</th>
                                 </tr>
@@ -550,7 +517,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     while ($row = $result->fetch_assoc()) {
                                 ?>
                                         <tr>
+                                            <td><img src="../../../assets/images/<?php echo $row['item_image'] ?>" class="img-fluid" width="100"></td>
                                             <td><?php echo $row['item_name'] ?> </td>
+                                            <td>
+                                                <form action="view.php" method="post">
+                                                    <input type="hidden" name="item_id" value="<?php echo $row['item_id'] ?>">
+                                                    <a href="view.php">
+                                                        <button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button>
+                                                    </a>
+                                                </form>
+                                            </td>
+
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                                     <input type="hidden" name="item_id" value="<?php echo $row['item_id'] ?>">
@@ -576,7 +553,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     </div>
                     <!-- /.card-body -->
                 </div>
-
             </div>
         </div>
     </div>

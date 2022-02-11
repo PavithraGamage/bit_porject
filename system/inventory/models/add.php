@@ -23,8 +23,16 @@ $btn_icon = '<i class="far fa-save"></i>';
 // create error variable to store error messages
 $error =  array();
 
+// create error variable to store error message styles
+$error_style =  array();
+$error_style_icon = array();
+
 // insert models
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
+
+    // error styles
+    $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
     // call data clean function
     $model_name =  data_clean($model_name);
@@ -47,10 +55,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
     if (empty($error)) {
         $sql = "INSERT INTO `models` (`model_id`, `model_name`) VALUES (NULL, '$model_name');";
-    }
 
-    // run database query
-    $query = $db->query($sql);
+        // run database query
+        $query = $db->query($sql);
+
+        // success message style
+        $error_style['success'] = "alert-success";
+        $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
+        $error['insert_msg'] = "<b>$model_name</b> Successfully Insert";
+    }
 }
 
 // edit models
@@ -78,13 +91,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
         $row = $result->fetch_assoc();
         $model_id = $row['model_id'];
         $model_name = $row['model_name'];
-
     }
-
 }
 
 // update the edit data
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
+
+    // error styles
+    $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
     // Advance Validation
     if (!empty($model_name)) {
@@ -99,8 +114,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     }
 
     $sql = "UPDATE `models` SET `model_name` = '$model_name' WHERE `model_id` = '$model_id';";
+
+    // run database query
     $query = $db->query($sql);
 
+    // success message styles
+    $error_style['success'] = "alert-success";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
+    $error['update'] = "<b>$model_name</b> Successfully Updated";
 }
 
 // delete recode
@@ -109,6 +130,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     $sql = "DELETE FROM `models` WHERE `model_id` = '$model_id'";
     $db->query($sql);
 
+    $error['delete_msg'] = "Recode Delete";
+
+    // error styles
+    $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
 ?>
 
@@ -130,44 +156,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     </div>
     <!-- Alerts -->
     <div class="container-fluid">
-        <!-- Blank Submit  and Already Exist-->
-        <?php
-        if (!empty($error)) {
-        ?>
-            <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h5><i class="icon fas fa-ban"></i> Alert!</h5>
-                <?php echo $error['model_name']; ?>
-            </div>
-        <?php
-        }
-        ?>
-        <!-- Successfully Insert -->
-        <?php
-        if ((@$query == true && @$error == null) && @$action == 'insert') {
-            $error['insert_msg'] = "<b>$model_name</b> Successfully Insert";
-        ?>
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h5><i class="icon fas fa-check"></i> Alert!</h5>
-                <?php echo $error['insert_msg']; ?>
-            </div>
-        <?php
-        }
-        ?>
-        <!-- Update -->
-        <?php
-        if ((@$query == true && @$error == null) && @$action == 'update') {
-            $error['insert_msg'] = "<b>$model_name</b> Successfully Update";
-        ?>
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h5><i class="icon fas fa-check"></i> Alert!</h5>
-                <?php echo $error['insert_msg']; ?>
-            </div>
-        <?php
-        }
-        ?>
+        <!-- Insert / update / delete / blank / already exist alerts-->
+        <?php show_error($error, $error_style, $error_style_icon); ?>
 
         <!-- Delete -->
         <?php
@@ -175,9 +165,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
             $sql = "SELECT * FROM models WHERE model_id = '$model_id'";
 
             $result = $db->query($sql);
-        
+
             if ($result->num_rows > 0) {
-        
+
                 $row = $result->fetch_assoc();
                 $model_id = $row['model_id'];
                 $model_name = $row['model_name'];
@@ -197,20 +187,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
         <?php
             }
-        }
-        ?>
-
-        <?php
-        if (@$action == 'confirm_delete') {
-            $error['delete_msg'] = "Recode Delete";
-        ?>
-            <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h5><i class="fas fa-trash-alt"></i> Alert!</h5>
-                <?php echo $error['delete_msg']; ?>
-            </div>
-
-        <?php
         }
         ?>
     </div>

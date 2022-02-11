@@ -10,7 +10,7 @@
 
         <title><?php echo ucfirst(pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME));  ?></title>
         
-        <! -- main style -->
+        <!-- main style -->
         <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
 
 
