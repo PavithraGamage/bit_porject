@@ -5,8 +5,108 @@ include '../../nav.php';
 // extract variables
 extract($_POST);
 
+// DB Connection
+$db = db_con();
 
-print_r($_POST);
+// form Name
+$form_name = 'Insert New Staff Member';
+
+// form button name change
+$btn_name = "Insert";
+
+// form button value change
+$btn_value = "insert";
+
+// form button icon
+$btn_icon = '<i class="far fa-save"></i>';
+
+// create error variable to store error messages
+$error =  array();
+
+// create error variable to store error message styles
+$error_style =  array();
+$error_style_icon = array();
+
+// date
+$date = date('Y-m-d');
+
+//insert item
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
+
+    // error styles
+    $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+
+    // call data clean function
+
+    $first_name = data_clean($first_name);
+    $last_name =  data_clean($last_name);
+    $nic = data_clean($nic);
+    $dob = data_clean($dob);
+    //$age = data_clean($age); derived by $dob
+    $username = data_clean($username);
+    $email = data_clean($email);
+    $contact_number = data_clean($contact_number);
+    $address_line_1 = data_clean($address_line_1);
+    $address_line_2 = data_clean($address_line_2);
+    $city = data_clean($city);
+    $province = data_clean($province);
+    $postal_code = data_clean($postal_code);
+
+    // basic validation
+    // if (empty($profile_image)) {
+    //     $error['profile_image'] = "Profile Image Should not be empty";
+    // }
+    if (empty($first_name)) {
+        $error['first_name'] = "First Name Should not be empty";
+    }
+    if (empty($last_name)) {
+        $error['last_name'] = "Last Name Should not be empty";
+    }
+    if (empty($nic)) {
+        $error['nic'] = "NIC Should not be empty";
+    }
+    if (empty($dob)) {
+        $error['dob'] = "Date of Birth Should not be empty";
+    }
+    if (empty($username)) {
+        $error['username'] = "Username Should not be empty";
+    }
+    if (empty($password)) {
+        $error['password'] = "Password Should not be empty";
+    }
+    if (empty($verify_password)) {
+        $error['error_item_name'] = "Verify Password Should not be empty";
+    }
+    if (empty($contact_number)) {
+        $error['contact_number'] = "Contact Number Should not be empty";
+    }
+    if (empty($address_line_1)) {
+        $error['address_line_1'] = "Address line 1 Should not be empty";
+    }
+    if (empty($city)) {
+        $error['city'] = "City Should not be empty";
+    }
+    if (empty($province)) {
+        $error['province'] = "Province Should not be empty";
+    }
+    if (empty($province)) {
+        $error['postal_code'] = "Postal Code Should not be empty";
+    }
+
+     // Advance validation
+     if (!empty($username)) {
+
+        $sql = "SELECT * FROM users WHERE user_name = '$username'";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['user_name'] = "<b> $username </b> User Already Exists";
+        }
+    }
+    
+}
 ?>
 
 <div class="content-wrapper">
@@ -25,36 +125,75 @@ print_r($_POST);
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
+     <!-- Alerts -->
+     <div class="container-fluid">
+
+<!-- Insert / update / delete / blank / already exist alerts-->
+<?php show_error($error, $error_style, $error_style_icon); ?>
+
+<!-- Delete Confirmation -->
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
+    $sql = "SELECT * FROM items WHERE item_id = '$item_id'";
+
+    $result = $db->query($sql);
+
+
+    if ($result->num_rows > 0) {
+
+        $row = $result->fetch_assoc();
+        $item_id = $row['item_id'];
+        $item_name = $row['item_name'];
+?>
+        <div class="card">
+            <h5 class="card-header bg-danger">Conformation</h5>
+            <div class="card-body">
+                <h5 class="card-title">Are You Want to DELETE <b> <?php echo $item_name ?> ?</b> </h5>
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                    <input type="hidden" name="item_id" value="<?php echo $item_id ?>"><br>
+                    <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
+                    <button type="submit" name="action" value="cancel_delete" class="btn btn-primary btn-s">No</button>
+                </form>
+
+            </div>
+        </div>
+
+<?php
+    }
+}
+?>
+
+</div>
     <div class="container-fluid">
         <div class="row">
             <div class="col">
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Create Users</h3>
+                        <h3 class="card-title"><?php echo $form_name ?></h3>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="form-group">
+                                <label class="form-label" for="item_image">Profile Image <span style="color: red;">*</span></label>
+                                <input type="file" class="form-control" id="profile_image" style="height: auto;" name="profile_image" />
+                            </div>
+                            <div class="form-group">
                                 <label for="exampleInputEmail1">First Name</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter First Name" name="first_name">
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter First Name" name="first_name" value="<?php echo @$first_name ?>">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Last Name</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Last Name" name="last_nam">
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Last Name" name="last_name" value="<?php echo @$last_name ?>">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">NIC</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter NIC" name="nic">
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter NIC" name="nic" value="<?php echo @$nic ?>">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Date of Birth</label>
                                 <input type="date" class="form-control" id="exampleInputEmail1" placeholder="Enter Date of Birth" name="dob">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Age</label>
-                                <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Enter Age" name="age">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Username</label>
@@ -102,23 +241,12 @@ print_r($_POST);
                                 <label for="exampleInputEmail1">Postal Code</label>
                                 <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Enter Postal Code" name="postal_code">
                             </div>
-                            <div class="form-group">
-                                <label for="exampleInputFile">Upload Profile Image</label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="exampleInputFile" name="profile_image">
-                                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                    </div>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">Upload</span>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <!-- /.card-body -->
 
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <input type="hidden" name="item_id" value="<?php echo @$item_id ?>">
+                            <button type="submit" class="btn btn-primary" name="action" value="<?php echo @$btn_value ?>"><?php echo @$btn_icon ?> <?php echo @$btn_name ?></button>
                         </div>
                     </form>
                 </div>

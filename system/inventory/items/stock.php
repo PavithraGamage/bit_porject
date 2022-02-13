@@ -264,7 +264,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 $db = db_con();
 
                 // sql query
-                $sql = "SELECT * FROM stock , items;";
+                $sql = "SELECT * FROM items RIGHT JOIN stock ON items.item_id = stock.item_id;";
 
                 // fletch data
                 $result = $db->query($sql);

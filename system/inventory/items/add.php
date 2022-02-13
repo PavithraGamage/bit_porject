@@ -39,12 +39,19 @@ $model_result = $db->query($sql_model);
 $sql_item = "SELECT * FROM `items`";
 $item_result = $db->query($sql_item);
 
+// Specification data fletch 
+$sql_spec = "SELECT * FROM `specifications`";
+$item_spec = $db->query($sql_spec);
+
 // create error variable to store error message styles
 $error_style =  array();
 $error_style_icon = array();
 
 // date
 $date = date('Y-m-d');
+
+// photo 
+$photo = null;
 
 //insert item
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
@@ -113,61 +120,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         }
     }
 
-    // image upload
-    if (empty($error)) {
-        $target_dri = "../../../assets/images/";
-        $target_file = $target_dri . basename($_FILES["item_image"]["name"]);
-        $upload_ok = 1;
-        $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        $check = getimagesize($_FILES['item_image']['tmp_name']);
-        if ($check !== false) {
-            //Multi-purpose Internet Mail Extensions          
-            $upload_ok = 1;
-        } else {
-            $error['item_image'] = "File is not an image.";
-            $upload_ok = 0;
-        }
+    // image upload function
+     $photo =  image_upload("item_image");
 
-        if (file_exists($target_file)) {
-            $error['item_image'] = "Sorry, file already exists.";
-            $upload_ok = 0;
-        }
-
-        if ($_FILES["item_image"]["size"] > 5000000) {
-            $error['item_image'] = "Sorry, your file is too large.";
-            $upload_ok = 0;
-        }
-
-        if ($image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg" && $image_file_type != "gif") {
-            $error['item_image'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-            $upload_ok = 0;
-        }
-
-        if ($upload_ok == 0) {
-            echo "Sorry, your file was not uploaded.";
-            // if everything is ok, try to upload file
-        } else {
-            if (move_uploaded_file($_FILES["item_image"]["tmp_name"], $target_file)) {
-                $photo = htmlspecialchars(basename($_FILES["item_image"]["name"]));
-            } else {
-                $error['item_image'] = "Sorry, there was an error uploading your file.";
-            }
-        }
-    }
-
-    //discount rate calculation
-    if (!empty($sale_price) && !empty($unit_price)) {
-        $discount = (($unit_price - $sale_price) * 100) / $unit_price;
-    }
+    //discount rate calculation function
+    $discount = discount($unit_price, $sale_price);
 
     //insert data to db
     if (empty($error)) {
 
-        $sql = "INSERT INTO `items` (`item_id`, `item_image`, `item_name`, `sku`, `recorder_level`, `unit_price`, `sale_price`, `discount_rate`, `item_description`, `date`, `stock`, `category_id`, `brand_id`, `model_id`) 
-                VALUES (NULL, '$photo', '$item_name', '$sku', '$reorder_level', '$unit_price', '$sale_price', '$discount', '$additional_info', '$date', NULL, '$category', '$brand', '$model');";
+        $sql = "INSERT INTO `items` (`item_image`, `item_name`, `sku`, `recorder_level`, `unit_price`, `sale_price`, `discount_rate`, `item_description`, `date`, `stock`, `category_id`, `brand_id`, `model_id`) 
+                VALUES ('$photo', '$item_name', '$sku', '$reorder_level', '$unit_price', '$sale_price', '$discount', '$additional_info', '$date', NULL, '$category', '$brand', '$model');";
 
         // run database query
-        $query = $db->query($sql);
+        $db->query($sql);
+
+        $item_id = $db->insert_id;
+
+        foreach ($specs as $key => $value) {
+
+            $sql = "INSERT INTO spec_items (spec_id, item_id, value) VALUES ('$key' , '$item_id', '$value')";
+
+            $db->query($sql);
+        }
 
         // success message style
         $error_style['success'] = "alert-success";
@@ -210,7 +185,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
         $reorder_level = $row['recorder_level'];
         $unit_price = $row['unit_price'];
         $sale_price = $row['sale_price'];
-        $item_image = $row['item_image'];
         $additional_info = $row['item_description'];
     }
 }
@@ -218,12 +192,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 // update the edit data
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
+
     // error styles
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
     // Advance validation
-    if (!empty($item_name)) {
+    if (!empty($item_name) && $previous_item_name != $item_name) {
 
         $sql = "SELECT * FROM items WHERE item_name = '$item_name'";
 
@@ -246,12 +221,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     }
 
     //discount rate calculation
-    if (!empty($sale_price) && !empty($unit_price)) {
-        $discount = (($unit_price - $sale_price) * 100) / $unit_price;
-    }
+    $discount = discount($unit_price, $sale_price);
 
-      // image upload
-      if (empty($error)) {
+    // image upload
+    if (empty($error)) {
         $target_dri = "../../../assets/images/";
         $target_file = $target_dri . basename($_FILES["item_image"]["name"]);
         $upload_ok = 1;
@@ -390,12 +363,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="form-group">
-                                <label class="form-label" for="item_image">Item Image <span style="color: red;">*</span></label>
+                                <label class="form-label" for="image">Item Image <span style="color: red;">*</span></label>
                                 <input type="file" class="form-control" id="item_image" style="height: auto;" name="item_image" />
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Item Name <span style="color: red;">*</span></label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Item Name" name="item_name" value="<?php echo @$item_name ?>">
+                                <input type="text" class="form-control" id="item_name" placeholder="Item Name" name="item_name" value="<?php echo @$item_name ?>">
+                                <input type="hidden" class="form-control" id="previous_item_name" placeholder="Item Name" name="previous_item_name" value="<?php echo @$item_name ?>">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Category <span style="color: red;">*</span></label>
@@ -467,6 +441,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                 <label for="exampleInputEmail1">Sale Price <span style="color: red;">*</span></label>
                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="sale_price" value="<?php echo @$sale_price ?>">
                             </div>
+                            <?php
+                            if ($item_spec->num_rows > 0) {
+                                while ($spec_row = $item_spec->fetch_assoc()) {
+                            ?>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1"><?php echo $spec_row['spec'] ?> <span style="color: red;">*</span></label>
+                                        <input type="text" class="form-control" id="specs<?php echo $spec_row['spec_id']; ?>" placeholder="Enter <?php echo $spec_row['spec'] ?> " name="specs[<?php echo $spec_row['spec_id']; ?>]">
+                                    </div>
+                            <?php
+                                }
+                            }
+                            ?>
                             <div class="form-group">
                                 <label>Product Description</label>
                                 <textarea class="form-control" rows="3" placeholder="Enter ..." name="additional_info"><?php echo @$additional_info ?></textarea>
@@ -562,13 +548,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
 <!-- Page specific script -->
 <script>
-    $(function() {
-        // $("#user_list").DataTable({
-        //     "responsive": true,
-        //     "lengthChange": false,
-        //     "autoWidth": false,
-        //     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        // }).buttons().container().appendTo('#user_list_wrapper .col-md-6:eq(0)');
+    $(function() {                      
         $('#brand_list').DataTable({
             "paging": true,
             "lengthChange": false,
