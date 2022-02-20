@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     // call data clean function
     $brand_name =  data_clean($brand_name);
 
+    // basic validation
     if (empty($brand_name)) {
         $error['brand_name'] = "Brand Name Should Not Be Empty";
     }
@@ -99,6 +100,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     // error styles
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+
+     // basic validation
+     if (empty($brand_name)) {
+        $error['brand_name'] = "Brand Name Should Not Be Empty";
+    }
 
     // Advance Validation
     if (!empty($brand_name)) {

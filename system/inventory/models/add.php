@@ -37,11 +37,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     // call data clean function
     $model_name =  data_clean($model_name);
 
+    // basic validation
     if (empty($model_name)) {
         $error['model_name'] = "Model Name Should not be empty";
     }
 
-    // Advance Validation
+    // advance validation
     if (!empty($model_name)) {
 
         $sql = "SELECT * FROM `models` WHERE model_name = '$model_name'";
@@ -101,6 +102,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
+    // basic validation
+    if (empty($model_name)) {
+        $error['model_name'] = "Model Name Should not be empty";
+    }
+
     // Advance Validation
     if (!empty($model_name)) {
 
@@ -113,15 +119,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         }
     }
 
-    $sql = "UPDATE `models` SET `model_name` = '$model_name' WHERE `model_id` = '$model_id';";
+    if (empty($error)) {
+        $sql = "UPDATE `models` SET `model_name` = '$model_name' WHERE `model_id` = '$model_id';";
 
-    // run database query
-    $query = $db->query($sql);
+        // run database query
+        $query = $db->query($sql);
 
-    // success message styles
-    $error_style['success'] = "alert-success";
-    $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
-    $error['update'] = "<b>$model_name</b> Successfully Updated";
+        // success message styles
+        $error_style['success'] = "alert-success";
+        $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
+        $error['update'] = "<b>$model_name</b> Successfully Updated";
+    }
 }
 
 // delete recode

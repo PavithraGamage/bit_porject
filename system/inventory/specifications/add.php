@@ -27,6 +27,10 @@ $error =  array();
 $error_style =  array();
 $error_style_icon = array();
 
+// categories drop down data fletch 
+$sql_cat = "SELECT * FROM `categories`";
+$cat_result = $db->query($sql_cat);
+
 // date
 $date = date('Y-m-d');
 
@@ -39,6 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
     // call data clean function
     $spc_name =  data_clean($spc_name);
+    $category = data_clean($category);
+
+    //basic validations
+    if (empty($category)) {
+        $error['category'] = "Category Should Not Be Empty";
+    }
 
     if (empty($spc_name)) {
         $error['spc_name'] = "Specification Name Should Not Be Empty";
@@ -57,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     }
 
     if (empty($error)) {
-        $sql = "INSERT INTO `specifications` (`spec_id`, `spec`, `value`) VALUES (NULL, '$spc_name', '');";
+        $sql = "INSERT INTO `specifications` (`spec_id`, `spec`,`category_id`) VALUES (NULL, '$spc_name', '$category');";
 
         // run database query
         $query = $db->query($sql);
@@ -94,6 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
         $row = $result->fetch_assoc();
         $spec_id = $row['spec_id'];
         $spc_name = $row['spec'];
+        $category = $row['category_id'];
     }
 }
 
@@ -104,8 +115,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
+    // basic validation
+    if (empty($spc_name)) {
+        $error['spc_name'] = "Specification Name Should Not Be Empty";
+    }
+
     // Advance Validation
-    if (!empty($spc_name)) {
+    if (!empty($spc_name) && $previous_spc_name != $spc_name) {
 
         $sql = "SELECT * FROM `specifications` WHERE spec = '$spc_name'";
 
@@ -118,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
     if (empty($error)) {
         //fletch query
-        $sql = "UPDATE `specifications` SET `spec` = '$spc_name' WHERE `spec_id` = '$spec_id';";
+        $sql = "UPDATE `specifications` SET `spec` = '$spc_name', `category_id` = '$category' WHERE `spec_id` = '$spec_id';";
 
         // run database query
         $query = $db->query($sql);
@@ -207,8 +223,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                         <div class="card-body">
                             <div class="form-group">
+                                <label for="exampleInputEmail1">Category <span style="color: red;">*</span></label>
+                                <select class="form-control select2" style="width: 100%;" name="category">
+                                    <option value="">- Select Category -</option>
+                                    <?php
+
+                                    // fletch data
+                                    if ($cat_result->num_rows > 0) {
+                                        while ($cat_row = $cat_result->fetch_assoc()) {
+                                    ?>
+                                            <option value="<?php echo $cat_row['category_id'] ?>" <?php if ($cat_row['category_id'] == @$category) { ?> selected <?php } ?>><?php echo $cat_row['category_name']; ?></option>
+                                    <?php
+
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="exampleInputEmail1">Specification Name</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="spc_name" value="<?php echo @$spc_name ?>">
+                                <input type="text" class="form-control" id="spc_name" placeholder="Enter Brand Name" name="spc_name" value="<?php echo @$spc_name ?>">
+                                <input type="hidden" class="form-control" id="previous_spc_name" placeholder="Enter Brand Name" name="previous_spc_name" value="<?php echo @$spc_name ?>">
                             </div>
                         </div>
                         <!-- /.card-body -->

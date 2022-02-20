@@ -103,7 +103,7 @@
 <!--Carousel End-->
 
 <!--card start-->
-<div class="container">
+<div class="container-fluid" style="width:90vw; margin-bottom:150px">
     <div class="row catagory_row">
         <div class="col-3">
             <div class="card card_styles" style="width: 18rem;">

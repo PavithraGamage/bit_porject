@@ -142,7 +142,10 @@
                                 <td class="table_body">AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,... </td>
                                 <td class="table_body">RS: 585,000</td>
                                 <td>
+                                    <a href="invoice.php">
                                     <button>VIEW</button>
+                                    </a>
+                                    
                                 </td>
                             </tr>
                             <tr>

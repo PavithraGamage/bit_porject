@@ -116,8 +116,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
-     // Advance validation
-     if (!empty($item_serial_number)) {
+    // basic validation
+    if (empty($item_serial_number)) {
+        $error['error_category'] = "Insert Serial Number";
+    }
+
+    // Advance validation
+    if (!empty($item_serial_number)) {
 
         $sql = "SELECT * FROM `stock` WHERE item_serial = '$item_serial_number';";
 
@@ -197,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 <div class="card">
                     <h5 class="card-header bg-danger">Conformation</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $item_serial . " related to ". $item_name?> ?</b> </h5>
+                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $item_serial . " related to " . $item_name ?> ?</b> </h5>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                             <input type="hidden" name="stock_id" value="<?php echo $stock_id ?>"><br>
                             <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>

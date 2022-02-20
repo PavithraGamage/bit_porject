@@ -12,6 +12,15 @@ $db = db_con();
 $sql = "SELECT * FROM `items`  WHERE `item_id` = '$item_id'";
 $result = $db->query($sql);
 
+// Items specification data fletch 
+$spec_sql = "SELECT si.value, s.spec FROM spec_items si INNER JOIN specifications s ON s.spec_id = si.spec_id WHERE si.item_id = $item_id";
+$spec_result = $db->query($spec_sql);
+
+
+$stock_count = "SELECT COUNT(item_id) AS item_stock FROM stock WHERE item_id = $item_id GROUP BY item_id;";
+$stock_count_result = $db->query($stock_count);
+$row = $stock_count_result->fetch_assoc();
+$in_stock = $row['item_stock'];
 
 ?>
 <div class="content-wrapper">
@@ -21,7 +30,7 @@ $result = $db->query($sql);
                 <div class="col-sm-6">
                     <?php
                     if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
+                         $row = $result->fetch_assoc();
 
                     ?>
                             <h1 class="m-0"><?php echo $row['item_name']; ?></h1>
@@ -54,11 +63,11 @@ $result = $db->query($sql);
                     <?php echo $row['item_description']; ?>
                 </p>
                 <h5 class="price_hedding">Unit Price - Rs: <?php echo $row['unit_price']; ?></h5>
-                <h5 class="price_hedding">Sale Price -  Rs: <?php echo $row['sale_price']; ?></h5>
+                <h5 class="price_hedding">Sale Price - Rs: <?php echo $row['sale_price']; ?></h5>
                 <h5 class="price_hedding">Discount Rate - <?php echo $row['discount_rate']; ?> %</h5>
                 <h6>SKU: <?php echo $row['sku']; ?> </h6>
                 <h6>Reorder Level: <?php echo $row['recorder_level']; ?></h6>
-                <h6>In Stock: <?php echo $row['stock']; ?></h6>
+                <h6>In Stock: <?php echo $in_stock; ?></h6>
 
             </div>
 
@@ -66,7 +75,7 @@ $result = $db->query($sql);
     </div>
 <?php
                         }
-                    }
+                    
 ?>
 <div class="row">
 
@@ -80,78 +89,23 @@ $result = $db->query($sql);
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row">Brand</th>
-                    <td>AMD</td>
 
-                </tr>
-                <tr>
-                    <th scope="row">Product Family</th>
-                    <td>AMD Ryzen™ Processors</td>
+                <?php
+                if ($spec_result->num_rows > 0) {
+                    while ($spec_row = $spec_result->fetch_assoc()) {
 
-                </tr>
-                <tr>
-                    <th scope="row">Product Line</th>
-                    <td>AMD Ryzen™ 9 Desktop Processors</td>
+                ?>
 
-                </tr>
-                <tr>
-                    <th scope="row">CPU Cores</th>
-                    <td>12</td>
+                        <tr>
+                            <th scope="row"><?php echo $spec_row['spec']; ?></th>
+                            <td><?php echo $spec_row['value']; ?></td>
 
-                </tr>
-                <tr>
-                    <th scope="row">CPU Threads</th>
-                    <td>24</td>
+                        </tr>
+                <?php
+                    }
+                }
 
-                </tr>
-                <tr>
-                    <th scope="row">Max Boost Clock</th>
-                    <td>Up to 4.6GHz</td>
-
-                </tr>
-                <tr>
-                    <th scope="row">Base Clock</th>
-                    <td>3.8GHz</td>
-
-                </tr>
-                <tr>
-                    <th scope="row">Total L1 Cache</th>
-                    <td>768KB</td>
-
-                </tr>
-                <tr>
-                    <th scope="row">Total L2 Cache</th>
-                    <td>6MB</td>
-
-                </tr>
-                <tr>
-                    <th scope="row">Total L3 Cache</th>
-                    <td>64MB</td>
-
-                </tr>
-                <tr>
-                    <th scope="row">Default TDP</th>
-                    <td>105W</td>
-
-                </tr>
-                <tr>
-                    <th scope="row">CMOS</th>
-                    <td>TSMC 7nm FinFET</td>
-
-                </tr>
-                <tr>
-                    <th scope="row">Unlock for Overclocking</th>
-                    <td>Yes</td>
-
-                </tr>
-                <tr>
-                    <th scope="row">CPU Socket</th>
-                    <td>AM4</td>
-
-                </tr>
-
-
+                ?>
             </tbody>
         </table>
     </div>

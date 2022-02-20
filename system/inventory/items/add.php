@@ -53,8 +53,12 @@ $date = date('Y-m-d');
 // photo 
 $photo = null;
 
+// spec array
+$spec = array();
+
 //insert item
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
+
 
     // error styles
     $error_style['success'] = "alert-danger";
@@ -69,6 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     $reorder_level = data_clean($reorder_level);
     $unit_price = data_clean($unit_price);
     $sale_price = data_clean($sale_price);
+    foreach ($specs as $key => $value) {
+
+        $spec[$key] = data_clean($value);
+    }
 
     // basic validation
     if (empty($item_name)) {
@@ -94,6 +102,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     }
     if (empty($sale_price)) {
         $error['error_sale_price'] = "Sale Price Should not be empty";
+    }
+    foreach ($specs as $key => $value) {
+
+        if (empty($spec[$key])) {
+
+            $error['spec_empty'] = "$value Spec Items not be blank";
+        }
     }
 
 
@@ -121,7 +136,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     }
 
     // image upload function
-     $photo =  image_upload("item_image");
+    $photo =  image_upload("item_image", "../../../assets/images/");
+
+    if (array_key_exists("photo", $photo)) {
+
+        $photo = $photo['photo'];
+    } else {
+
+        $error['item_image'] = $photo['item_image'];
+    }
 
     //discount rate calculation function
     $discount = discount($unit_price, $sale_price);
@@ -132,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $sql = "INSERT INTO `items` (`item_image`, `item_name`, `sku`, `recorder_level`, `unit_price`, `sale_price`, `discount_rate`, `item_description`, `date`, `stock`, `category_id`, `brand_id`, `model_id`) 
                 VALUES ('$photo', '$item_name', '$sku', '$reorder_level', '$unit_price', '$sale_price', '$discount', '$additional_info', '$date', NULL, '$category', '$brand', '$model');";
 
-        // run database query
+        //run database query
         $db->query($sql);
 
         $item_id = $db->insert_id;
@@ -197,6 +220,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
+    // basic validation
+    if (empty($item_name)) {
+        $error['error_item_name'] = "Item Name Should not be empty";
+    }
+    if (empty($category)) {
+        $error['error_category'] = "Select a Category";
+    }
+    if (empty($brand)) {
+        $error['error_brand'] = "Select a Brand";
+    }
+    if (empty($model)) {
+        $error['error_model'] = "Select a Model ";
+    }
+    if (empty($sku)) {
+        $error['error_sku'] = "SKU Should not be empty";
+    }
+    if (empty($reorder_level)) {
+        $error['error_reorder_level'] = "Reorder Level Should not be empty";
+    }
+    if (empty($unit_price)) {
+        $error['error_unit_price'] = "Unit Price Should not be empty";
+    }
+    if (empty($sale_price)) {
+        $error['error_sale_price'] = "Sale Price Should not be empty";
+    }
+
     // Advance validation
     if (!empty($item_name) && $previous_item_name != $item_name) {
 
@@ -209,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         }
     }
 
-    if (!empty($sku)) {
+    if (!empty($sku) && $previous_sku != $sku) {
 
         $sql = "SELECT * FROM items WHERE sku = '$sku'";
 
@@ -358,10 +407,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     <div class="card-header">
                         <h3 class="card-title"><?php echo $form_name ?></h3>
                     </div>
+
                     <!-- /.card-header -->
                     <!-- form start -->
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                         <div class="card-body">
+
+
+
+
+                            <div class="card card-primary card-outline card-tabs">
+                                <div class="card-header p-0 pt-1 border-bottom-0">
+                                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Home</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Profile</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-three-messages-tab" data-toggle="pill" href="#custom-tabs-three-messages" role="tab" aria-controls="custom-tabs-three-messages" aria-selected="false">Messages</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="custom-tabs-three-settings-tab" data-toggle="pill" href="#custom-tabs-three-settings" role="tab" aria-controls="custom-tabs-three-settings" aria-selected="false">Settings</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="card-body">
+                                    <div class="tab-content" id="custom-tabs-three-tabContent">
+                                        <div class="tab-pane fade active show" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur.
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
+                                            Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-three-messages" role="tabpanel" aria-labelledby="custom-tabs-three-messages-tab">
+                                            Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
+                                        </div>
+                                        <div class="tab-pane fade" id="custom-tabs-three-settings" role="tabpanel" aria-labelledby="custom-tabs-three-settings-tab">
+                                            Pellentesque vestibulum commodo nibh nec blandit. Maecenas neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi euismod molestie tristique. Vestibulum consectetur dolor a vestibulum pharetra. Donec interdum placerat urna nec pharetra. Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam. Nunc et felis ut nisl commodo dignissim. In hac habitasse platea dictumst. Praesent imperdiet accumsan ex sit amet facilisis.
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card -->
+                            </div>
+
+
+
+
+
+
+
+
                             <div class="form-group">
                                 <label class="form-label" for="image">Item Image <span style="color: red;">*</span></label>
                                 <input type="file" class="form-control" id="item_image" style="height: auto;" name="item_image" />
@@ -427,7 +524,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">SKU <span style="color: red;">*</span></label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="sku" value="<?php echo @$sku ?>">
+                                <input type="text" class="form-control" id="sku" placeholder="Enter Brand Name" name="sku" value="<?php echo @$sku ?>">
+                                <input type="hidden" class="form-control" id="previous_sku" placeholder="Enter Brand Name" name="previous_sku" value="<?php echo @$sku ?>">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Reorder Level <span style="color: red;">*</span></label>
@@ -469,9 +567,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
             <!-- Right Section Start -->
             <div class="col">
                 <?php
-
-                // db connect
-                $db = db_con();
 
                 // sql query
                 $sql = "SELECT * FROM `items`";
@@ -548,7 +643,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
 <!-- Page specific script -->
 <script>
-    $(function() {                      
+    $(function() {
         $('#brand_list').DataTable({
             "paging": true,
             "lengthChange": false,

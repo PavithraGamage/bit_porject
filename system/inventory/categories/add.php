@@ -36,11 +36,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
     // call data clean function
     $category_name =  data_clean($category_name);
+    $category_description = data_clean($category_description);
 
     // basic validation
     if (empty($category_name)) {
         $error['category_name'] = "Category Name Should not be empty";
     }
+
+    // if (empty($category_image)) {
+    //     $error['category_image'] = "Category Image Should not be empty";
+    // }
 
     // Advance validation
     if (!empty($category_name)) {
@@ -97,12 +102,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     }
 
     if (empty($error)) {
-        $sql = "INSERT INTO `categories` (`category_id`, `category_name`, `cat_image`) VALUES (NULL, '$category_name', '$photo');";
+        $sql = "INSERT INTO `categories` (`category_id`, `category_name`, `category_description`, `cat_image`) VALUES (NULL, '$category_name', '$category_description','$photo');";
 
         // run database query
         $query = $db->query($sql);
 
-        // 
+        // error message styles
         $error_style['success'] = "alert-success";
         $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
         $error['insert_msg'] = "<b>$category_name</b> Successfully Insert";
@@ -134,6 +139,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
         $row = $result->fetch_assoc();
         $category_id = $row['category_id'];
         $category_name = $row['category_name'];
+        $category_description = $row['category_description'];
+        $category_image = $row['cat_image'];
     }
 }
 
@@ -144,9 +151,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
+    // basic validation
+    if (empty($category_name)) {
+        $error['category_name'] = "Category Name Should not be empty";
+    }
 
     // Advance Validation
-    if (!empty($category_name)) {
+    if (!empty($category_name) && $previous_category_name != $category_name) {
 
         $sql = "SELECT * FROM `categories` WHERE category_name = '$category_name'";
 
@@ -157,8 +168,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         }
     }
 
-      // image upload
-      if (empty($error)) {
+    // image upload
+    if (empty($error) && !empty($_FILES['category_image']['name'])) {
         $target_dri = "../../../assets/images/";
         $target_file = $target_dri . basename($_FILES["category_image"]["name"]);
         $upload_ok = 1;
@@ -197,11 +208,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
                 $error['category_image'] = "Sorry, there was an error uploading your file.";
             }
         }
+    } else {
+        $photo = $previous_category_image;
     }
 
     // update query
     if (empty($error)) {
-        $sql = "UPDATE `categories` SET `category_name` = '$category_name', cat_image = '$photo' WHERE `category_id` = '$category_id';";
+        $sql = "UPDATE categories SET category_name = '$category_name', category_description = '$category_description' , cat_image = '$photo' WHERE `category_id` = '$category_id';";
 
         // run database query
         $query = $db->query($sql);
@@ -295,11 +308,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             <div class="form-group">
                                 <label class="form-label" for="category_image">Category Image</label>
                                 <input type="file" class="form-control" id="category_image" style="height: auto;" name="category_image">
-                                <?php echo @$category_image; ?>
+
+                                <input type="hidden" name="previous_category_image" value="<?php echo @$category_image; ?>">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Category Name</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Category Name" name="category_name" value="<?php echo @$category_name ?>">
+                                <input type="text" class="form-control" id="category_name" placeholder="Enter Category Name" name="category_name" value="<?php echo @$category_name ?>">
+                                <input type="hidden" class="form-control" id="previous_category_name" placeholder="Enter Category Name" name="previous_category_name" value="<?php echo @$category_name ?>">
+                            </div>
+                            <div class="form-group">
+                                <label>Category Short Description</label>
+                                <textarea class="form-control" rows="3" placeholder="Enter ..." name="category_description"><?php echo @$category_description ?></textarea>
                             </div>
                         </div>
                         <!-- /.card-body -->

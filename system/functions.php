@@ -75,11 +75,10 @@ function show_error($error = null, $error_style = null, $error_style_icon = null
 
 // Image Upload Function------------------------
 
-function image_upload($image_upload = null)
+function image_upload($image_upload = null, $target_dri = null, $previous_image = null)
 {
 
     if (empty($error) && !empty($_FILES[$image_upload]['name'])) {
-        $target_dri = "../../../assets/images/";
         $target_file = $target_dri . basename($_FILES[$image_upload]["name"]);
         $upload_ok = 1;
         $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -93,8 +92,10 @@ function image_upload($image_upload = null)
         }
 
         if (file_exists($target_file)) {
-            $error[$image_upload] = "Sorry, file already exists.";
-            $upload_ok = 0;
+            //$error[$image_upload] = "Sorry, file already exists.";
+            //$upload_ok = 0;
+            unlink($target_file);
+            $upload_ok = 1;
         }
 
         if ($_FILES[$image_upload]["size"] > 5000000000) {
@@ -112,12 +113,15 @@ function image_upload($image_upload = null)
             // if everything is ok, try to upload file
         } else {
             if (move_uploaded_file($_FILES[$image_upload]["tmp_name"], $target_file)) {
-                $photo = htmlspecialchars(basename($_FILES[$image_upload]["name"]));
+                $error['photo'] = htmlspecialchars(basename($_FILES[$image_upload]["name"]));
             } else {
                 $error[$image_upload] = "Sorry, there was an error uploading your file.";
             }
         }
+    }else{
+        $error['photo'] = $previous_image;
     }
 
-    return @$photo;
+    return @$error;
+    
 }
