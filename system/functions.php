@@ -78,7 +78,7 @@ function show_error($error = null, $error_style = null, $error_style_icon = null
 function image_upload($image_upload = null, $target_dri = null, $previous_image = null)
 {
 
-    if (empty($error) && !empty($_FILES[$image_upload]['name'])) {
+    if (!empty($_FILES[$image_upload]['name'])) {
         $target_file = $target_dri . basename($_FILES[$image_upload]["name"]);
         $upload_ok = 1;
         $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));

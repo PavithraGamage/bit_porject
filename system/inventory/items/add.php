@@ -79,30 +79,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     }
 
     // basic validation
+    if (empty($_FILES['item_image']['name'])) {
+        $error['error_tem_image'] = "Item Image Should not be empty";
+    }
+
     if (empty($item_name)) {
         $error['error_item_name'] = "Item Name Should not be empty";
     }
+
     if (empty($category)) {
         $error['error_category'] = "Select a Category";
     }
+
     if (empty($brand)) {
         $error['error_brand'] = "Select a Brand";
     }
+
     if (empty($model)) {
         $error['error_model'] = "Select a Model ";
     }
+
     if (empty($sku)) {
         $error['error_sku'] = "SKU Should not be empty";
     }
+
     if (empty($reorder_level)) {
         $error['error_reorder_level'] = "Reorder Level Should not be empty";
     }
+
     if (empty($unit_price)) {
         $error['error_unit_price'] = "Unit Price Should not be empty";
     }
+
     if (empty($sale_price)) {
         $error['error_sale_price'] = "Sale Price Should not be empty";
     }
+
     foreach ($specs as $key => $value) {
 
         if (empty($spec[$key])) {
@@ -135,16 +147,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         }
     }
 
-    // image upload function
-    $photo =  image_upload("item_image", "../../../assets/images/");
 
-    if (array_key_exists("photo", $photo)) {
+    if (!empty($_FILES['item_image']['name']) && empty($error)) {
 
-        $photo = $photo['photo'];
+        // image upload function
+        $photo =  image_upload("item_image", "../../../assets/images/");
+
+        if (array_key_exists("photo", $photo)) {
+
+            $photo = $photo['photo'];
+        } else {
+
+            $error['item_image'] = $photo['item_image'];
+        }
     } else {
-
-        $error['item_image'] = $photo['item_image'];
+        $photo = @$previous_item_image;
     }
+
+
 
     //discount rate calculation function
     $discount = discount($unit_price, $sale_price);
@@ -158,6 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         //run database query
         $db->query($sql);
 
+        //capture last insert ID
         $item_id = $db->insert_id;
 
         foreach ($specs as $key => $value) {
@@ -209,6 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
         $unit_price = $row['unit_price'];
         $sale_price = $row['sale_price'];
         $additional_info = $row['item_description'];
+        $item_image = $row['item_image'];
     }
 }
 
@@ -224,30 +246,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     if (empty($item_name)) {
         $error['error_item_name'] = "Item Name Should not be empty";
     }
+
     if (empty($category)) {
         $error['error_category'] = "Select a Category";
     }
+
     if (empty($brand)) {
         $error['error_brand'] = "Select a Brand";
     }
+
     if (empty($model)) {
         $error['error_model'] = "Select a Model ";
     }
+
     if (empty($sku)) {
         $error['error_sku'] = "SKU Should not be empty";
     }
+
     if (empty($reorder_level)) {
         $error['error_reorder_level'] = "Reorder Level Should not be empty";
     }
+
     if (empty($unit_price)) {
         $error['error_unit_price'] = "Unit Price Should not be empty";
     }
+
     if (empty($sale_price)) {
         $error['error_sale_price'] = "Sale Price Should not be empty";
     }
 
+    foreach ($specs as $key => $value) {
+
+        if (empty($spec[$key])) {
+
+            $error['spec_empty'] = "$value Spec Items not be blank";
+        }
+    }
+
     // Advance validation
-    if (!empty($item_name) && $previous_item_name != $item_name) {
+    if (!empty($item_name) && @$previous_item_name != $item_name) {
 
         $sql = "SELECT * FROM items WHERE item_name = '$item_name'";
 
@@ -269,50 +306,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         }
     }
 
+    if (!empty($_FILES['item_image']['name']) && empty($error)) {
+
+        // image upload function
+        $photo =  image_upload("item_image", "../../../assets/images/");
+
+        if (array_key_exists("photo", $photo)) {
+
+            $photo = $photo['photo'];
+        } else {
+
+            $error['item_image'] = $photo['item_image'];
+        }
+    } else {
+        $photo = @$previous_item_image;
+    }
+
     //discount rate calculation
     $discount = discount($unit_price, $sale_price);
-
-    // image upload
-    if (empty($error)) {
-        $target_dri = "../../../assets/images/";
-        $target_file = $target_dri . basename($_FILES["item_image"]["name"]);
-        $upload_ok = 1;
-        $image_file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        $check = getimagesize($_FILES['item_image']['tmp_name']);
-        if ($check !== false) {
-            //Multi-purpose Internet Mail Extensions          
-            $upload_ok = 1;
-        } else {
-            $error['item_image'] = "File is not an image.";
-            $upload_ok = 0;
-        }
-
-        if (file_exists($target_file)) {
-            $error['item_image'] = "Sorry, file already exists.";
-            $upload_ok = 0;
-        }
-
-        if ($_FILES["item_image"]["size"] > 5000000) {
-            $error['item_image'] = "Sorry, your file is too large.";
-            $upload_ok = 0;
-        }
-
-        if ($image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg" && $image_file_type != "gif") {
-            $error['item_image'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-            $upload_ok = 0;
-        }
-
-        if ($upload_ok == 0) {
-            echo "Sorry, your file was not uploaded.";
-            // if everything is ok, try to upload file
-        } else {
-            if (move_uploaded_file($_FILES["item_image"]["tmp_name"], $target_file)) {
-                $photo = htmlspecialchars(basename($_FILES["item_image"]["name"]));
-            } else {
-                $error['item_image'] = "Sorry, there was an error uploading your file.";
-            }
-        }
-    }
 
     // update query
     if (empty($error)) {
@@ -322,6 +333,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
         // run database query
         $query = $db->query($sql);
+
+        foreach ($specs as $key => $value) {
+
+            $sql = "UPDATE spec_items SET value = '$value' WHERE spec_id = '$key' AND item_id = '$item_id';";
+
+            $db->query($sql);
+        }
 
         // success message styles
         $error_style['success'] = "alert-success";
@@ -412,40 +430,119 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     <!-- form start -->
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                         <div class="card-body">
-
-
-
-
                             <div class="card card-primary card-outline card-tabs">
                                 <div class="card-header p-0 pt-1 border-bottom-0">
                                     <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Home</a>
+                                            <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Item Details</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Profile</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="custom-tabs-three-messages-tab" data-toggle="pill" href="#custom-tabs-three-messages" role="tab" aria-controls="custom-tabs-three-messages" aria-selected="false">Messages</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="custom-tabs-three-settings-tab" data-toggle="pill" href="#custom-tabs-three-settings" role="tab" aria-controls="custom-tabs-three-settings" aria-selected="false">Settings</a>
+                                            <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Item Specifications</a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="card-body">
                                     <div class="tab-content" id="custom-tabs-three-tabContent">
                                         <div class="tab-pane fade active show" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur.
+                                            <div class="form-group">
+                                                <label class="form-label" for="image">Item Image <span style="color: red;">*</span></label>
+                                                <input type="file" class="form-control" id="item_image" style="height: auto;" name="item_image" />
+                                                <input type="hidden" class="form-control" id="previous_item_image" name="previous_item_image" value="<?php echo @$item_image ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Item Name <span style="color: red;">*</span></label>
+                                                <input type="text" class="form-control" id="item_name" placeholder="Item Name" name="item_name" value="<?php echo @$item_name ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Category <span style="color: red;">*</span></label>
+                                                <select class="form-control select2" style="width: 100%;" name="category">
+                                                    <option value="">- Select Category -</option>
+                                                    <?php
+
+                                                    // fletch data
+                                                    if ($cat_result->num_rows > 0) {
+                                                        while ($cat_row = $cat_result->fetch_assoc()) {
+                                                    ?>
+                                                            <option value="<?php echo $cat_row['category_id'] ?>" <?php if ($cat_row['category_id'] == @$category) { ?> selected <?php } ?>><?php echo $cat_row['category_name']; ?></option>
+                                                    <?php
+
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Brand <span style="color: red;">*</span></label>
+                                                <select class="form-control select2" style="width: 100%;" name="brand">
+                                                    <option value="">- Select Brand -</option>
+                                                    <?php
+
+                                                    // fletch data
+                                                    if ($brand_result->num_rows > 0) {
+                                                        while ($brand_row = $brand_result->fetch_assoc()) {
+                                                    ?>
+                                                            <option value="<?php echo $brand_row['brand_id'] ?>" <?php if ($brand_row['brand_id'] == @$brand) { ?> selected <?php } ?>><?php echo $brand_row['brand_name']; ?></option>
+                                                    <?php
+
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Model <span style="color: red;">*</span></label>
+                                                <select class="form-control select2" style="width: 100%;" name="model">
+                                                    <option value="">- Select Model -</option>
+                                                    <?php
+
+                                                    // fletch data
+                                                    if ($model_result->num_rows > 0) {
+                                                        while ($model_row = $model_result->fetch_assoc()) {
+                                                    ?>
+                                                            <option value="<?php echo $model_row['model_id'] ?>" <?php if ($model_row['model_id'] == @$model) { ?> selected <?php } ?>><?php echo $model_row['model_name']; ?></option>
+                                                    <?php
+
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">SKU <span style="color: red;">*</span></label>
+                                                <input type="text" class="form-control" id="sku" placeholder="Enter Brand Name" name="sku" value="<?php echo @$sku ?>">
+                                                <input type="hidden" class="form-control" id="previous_sku" placeholder="Enter Brand Name" name="previous_sku" value="<?php echo @$sku ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Reorder Level <span style="color: red;">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="reorder_level" value="<?php echo @$reorder_level ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Unit Price <span style="color: red;">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="unit_price" value="<?php echo @$unit_price ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Sale Price <span style="color: red;">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="sale_price" value="<?php echo @$sale_price ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Product Description</label>
+                                                <textarea class="form-control" rows="3" placeholder="Enter ..." name="additional_info"><?php echo @$additional_info ?></textarea>
+                                            </div>
                                         </div>
                                         <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
-                                            Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
-                                        </div>
-                                        <div class="tab-pane fade" id="custom-tabs-three-messages" role="tabpanel" aria-labelledby="custom-tabs-three-messages-tab">
-                                            Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
-                                        </div>
-                                        <div class="tab-pane fade" id="custom-tabs-three-settings" role="tabpanel" aria-labelledby="custom-tabs-three-settings-tab">
-                                            Pellentesque vestibulum commodo nibh nec blandit. Maecenas neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi euismod molestie tristique. Vestibulum consectetur dolor a vestibulum pharetra. Donec interdum placerat urna nec pharetra. Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam. Nunc et felis ut nisl commodo dignissim. In hac habitasse platea dictumst. Praesent imperdiet accumsan ex sit amet facilisis.
+                                            <?php
+                                            if ($item_spec->num_rows > 0) {
+                                                while ($spec_row = $item_spec->fetch_assoc()) {
+                                            ?>
+                                                    <div class="form-group">
+                                                        <label for="exampleInputEmail1"><?php echo $spec_row['spec'] ?> <span style="color: red;">*</span></label>
+                                                        <input type="text" class="form-control" id="specs<?php echo $spec_row['spec_id']; ?>" placeholder="Enter <?php echo $spec_row['spec'] ?> " name="specs[<?php echo $spec_row['spec_id']; ?>]">
+                                                    </div>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
+
                                         </div>
                                     </div>
                                 </div>
@@ -459,102 +556,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
 
 
-                            <div class="form-group">
-                                <label class="form-label" for="image">Item Image <span style="color: red;">*</span></label>
-                                <input type="file" class="form-control" id="item_image" style="height: auto;" name="item_image" />
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Item Name <span style="color: red;">*</span></label>
-                                <input type="text" class="form-control" id="item_name" placeholder="Item Name" name="item_name" value="<?php echo @$item_name ?>">
-                                <input type="hidden" class="form-control" id="previous_item_name" placeholder="Item Name" name="previous_item_name" value="<?php echo @$item_name ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Category <span style="color: red;">*</span></label>
-                                <select class="form-control select2" style="width: 100%;" name="category">
-                                    <option value="">- Select Category -</option>
-                                    <?php
 
-                                    // fletch data
-                                    if ($cat_result->num_rows > 0) {
-                                        while ($cat_row = $cat_result->fetch_assoc()) {
-                                    ?>
-                                            <option value="<?php echo $cat_row['category_id'] ?>" <?php if ($cat_row['category_id'] == @$category) { ?> selected <?php } ?>><?php echo $cat_row['category_name']; ?></option>
-                                    <?php
 
-                                        }
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Brand <span style="color: red;">*</span></label>
-                                <select class="form-control select2" style="width: 100%;" name="brand">
-                                    <option value="">- Select Brand -</option>
-                                    <?php
-
-                                    // fletch data
-                                    if ($brand_result->num_rows > 0) {
-                                        while ($brand_row = $brand_result->fetch_assoc()) {
-                                    ?>
-                                            <option value="<?php echo $brand_row['brand_id'] ?>" <?php if ($brand_row['brand_id'] == @$brand) { ?> selected <?php } ?>><?php echo $brand_row['brand_name']; ?></option>
-                                    <?php
-
-                                        }
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Model <span style="color: red;">*</span></label>
-                                <select class="form-control select2" style="width: 100%;" name="model">
-                                    <option value="">- Select Model -</option>
-                                    <?php
-
-                                    // fletch data
-                                    if ($model_result->num_rows > 0) {
-                                        while ($model_row = $model_result->fetch_assoc()) {
-                                    ?>
-                                            <option value="<?php echo $model_row['model_id'] ?>" <?php if ($model_row['model_id'] == @$model) { ?> selected <?php } ?>><?php echo $model_row['model_name']; ?></option>
-                                    <?php
-
-                                        }
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">SKU <span style="color: red;">*</span></label>
-                                <input type="text" class="form-control" id="sku" placeholder="Enter Brand Name" name="sku" value="<?php echo @$sku ?>">
-                                <input type="hidden" class="form-control" id="previous_sku" placeholder="Enter Brand Name" name="previous_sku" value="<?php echo @$sku ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Reorder Level <span style="color: red;">*</span></label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="reorder_level" value="<?php echo @$reorder_level ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Unit Price <span style="color: red;">*</span></label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="unit_price" value="<?php echo @$unit_price ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Sale Price <span style="color: red;">*</span></label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="sale_price" value="<?php echo @$sale_price ?>">
-                            </div>
-                            <?php
-                            if ($item_spec->num_rows > 0) {
-                                while ($spec_row = $item_spec->fetch_assoc()) {
-                            ?>
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $spec_row['spec'] ?> <span style="color: red;">*</span></label>
-                                        <input type="text" class="form-control" id="specs<?php echo $spec_row['spec_id']; ?>" placeholder="Enter <?php echo $spec_row['spec'] ?> " name="specs[<?php echo $spec_row['spec_id']; ?>]">
-                                    </div>
-                            <?php
-                                }
-                            }
-                            ?>
-                            <div class="form-group">
-                                <label>Product Description</label>
-                                <textarea class="form-control" rows="3" placeholder="Enter ..." name="additional_info"><?php echo @$additional_info ?></textarea>
-                            </div>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
