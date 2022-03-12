@@ -135,10 +135,12 @@ session_start();
                         <!-- /.col -->
                     </div>
                 </form>
+               
             </div>
             <!-- /.card-body -->
         </div>
         <!-- /.card -->
+        go to U-Star Digital Website
     </div>
     <!-- /.login-box -->
 

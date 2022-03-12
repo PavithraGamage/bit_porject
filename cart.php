@@ -185,7 +185,7 @@
                                 </div>
                                 <hr>
                                 <div>
-                                    <h6>Warranty & Service:</h6>
+                                    <h6>Discount</h6>
                                 </div>
                                 <hr>
                                 <div>

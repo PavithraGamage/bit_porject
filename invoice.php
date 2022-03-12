@@ -128,38 +128,38 @@
                                 <tr>
                                     <th>Qty</th>
                                     <th>Product</th>
-                                    <th>Serial #</th>
-                                    <th>Description</th>
+                                    <th>Warranty</th>
+                                    <th>Discount</th>
                                     <th>Subtotal</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>1</td>
-                                    <td>Call of Duty</td>
-                                    <td>455-981-221</td>
-                                    <td>El snort testosterone trophy driving gloves handsome</td>
+                                    <td>AMD RYZEN 9 3950X</td>
+                                    <td>3 Years</td>
+                                    <td>15%</td>
                                     <td>$64.50</td>
                                 </tr>
                                 <tr>
                                     <td>1</td>
-                                    <td>Need for Speed IV</td>
-                                    <td>247-925-726</td>
-                                    <td>Wes Anderson umami biodiesel</td>
+                                    <td>ASUS ROG MAXIMUS Z690 EXTREME GLACIAL</td>
+                                    <td>3 Years</td>
+                                    <td>15%</td>
                                     <td>$50.00</td>
                                 </tr>
                                 <tr>
                                     <td>1</td>
-                                    <td>Monsters DVD</td>
-                                    <td>735-845-642</td>
-                                    <td>Terry Richardson helvetica tousled street art master</td>
+                                    <td>ASUS ROG MAXIMUS Z690 EXTREME</td>
+                                    <td>3 Years</td>
+                                    <td>15%</td>
                                     <td>$10.70</td>
                                 </tr>
                                 <tr>
                                     <td>1</td>
-                                    <td>Grown Ups Blue Ray</td>
-                                    <td>422-568-642</td>
-                                    <td>Tousled lomo letterpress</td>
+                                    <td>INTEL CORE I9-12900K</td>
+                                    <td>3 Years</td>
+                                    <td>15%</td>
                                     <td>$25.99</td>
                                 </tr>
                             </tbody>
@@ -190,11 +190,11 @@
                                     <td>$250.30</td>
                                 </tr>
                                 <tr>
-                                    <th>Tax (9.3%)</th>
-                                    <td>$10.34</td>
+                                    <th>Discount:</th>
+                                    <td>(-$10.34)</td>
                                 </tr>
                                 <tr>
-                                    <th>Shipping:</th>
+                                    <th>Delivery:</th>
                                     <td>$5.80</td>
                                 </tr>
                                 <tr>
@@ -212,9 +212,9 @@
                 <div class="row no-print">
                     <div class="col-12">
                         <a href="dashboard.php">
-                        <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Dashboard</button>
+                            <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Dashboard</button>
                         </a>
-                        
+
                         <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
                         <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
                             <i class="fas fa-download"></i> Generate PDF

@@ -46,6 +46,29 @@ if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "appointments") {
     $dash['path'] = pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME);
 }
 
+if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "create_appointment") {
+
+    $dash['dash_icon'] = '<i class="fas fa-calendar-check"></i>';
+    $dash['path'] = 'Create Appointment';
+}
+
+if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "view_appointment") {
+
+    $dash['dash_icon'] = '<i class="fas fa-calendar-check"></i>';
+    $dash['path'] = 'View Appointment';
+}
+
+if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "app_single_item") {
+
+    $dash['dash_icon'] = '<i class="fas fa-calendar-check"></i>';
+    $dash['path'] = 'Appointment for Item';
+}
+
+if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "troubleshoots") {
+
+    $dash['dash_icon'] = '<i class="fas fa-tools"></i>';
+    $dash['path'] = pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME);
+}
 ?>
 
 <div class="container">
@@ -91,27 +114,27 @@ if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "appointments") {
                     </a>
                 </div>
                 <div class="dash_left_nav">
-                    <a href="orders.php">
+                    <a href="orders.php" style="text-decoration:none; color:black">
                         <i class="fas fa-shopping-cart"></i> Orders
                     </a>
                 </div>
                 <div class="dash_left_nav">
-                    <a href="delivery.php">
+                    <a href="delivery.php" style="text-decoration:none; color:black">
                         <i class="fas fa-truck"></i> Delivery
                     </a>
                 </div>
                 <div class="dash_left_nav">
-                    <a href="warranty.php">
+                    <a href="warranty.php" style="text-decoration:none; color:black">
                         <i class="fas fa-charging-station"></i> Warranty
                     </a>
                 </div>
                 <div class="dash_left_nav">
-                    <a href="appointments.php">
+                    <a href="appointments.php" style="text-decoration:none; color:black">
                         <i class="fas fa-calendar-check"></i> Appointments
                     </a>
                 </div>
                 <div class="dash_left_nav">
-                <a href="appointments.php">
+                <a href="troubleshoots.php" style="text-decoration:none; color:black">
                     <i class="fas fa-tools"></i> Troubleshoots
                 </a>
                 </div>

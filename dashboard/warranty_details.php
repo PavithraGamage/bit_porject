@@ -50,7 +50,7 @@ include "dashboard_nav.php";
                 <hr>
                 <h5>Make Appointment to Claim Warranty </h5>
                 <a href="appointments.php">
-                    <button type="button" class="btn btn-secondary float-right" style="margin-top: 10px;"><i class="fas fa-calendar-check"></i> Appointments</button>
+                    <button type="button" class="btn btn-secondary float-right" style="margin-top: 10px;"><i class="fas fa-calendar-check"></i> Appointment</button>
                 </a>
             </div>
 
