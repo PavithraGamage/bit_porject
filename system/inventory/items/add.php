@@ -73,6 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     $reorder_level = data_clean($reorder_level);
     $unit_price = data_clean($unit_price);
     $sale_price = data_clean($sale_price);
+
+    // specification data clean
     foreach ($specs as $key => $value) {
 
         $spec[$key] = data_clean($value);
@@ -147,10 +149,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         }
     }
 
-
+    // image upload function
     if (!empty($_FILES['item_image']['name']) && empty($error)) {
 
-        // image upload function
         $photo =  image_upload("item_image", "../../../assets/images/");
 
         if (array_key_exists("photo", $photo)) {

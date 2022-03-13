@@ -9,11 +9,11 @@ extract($_POST);
 $db = db_con();
 
 // empty check
-if(!empty($category_id)){
+if (!empty($category_id)) {
 
-// sql query
- $sql = "SELECT * FROM `items` WHERE category_id = $category_id;";
-}else{
+    // sql query
+    $sql = "SELECT * FROM `items` WHERE category_id = $category_id;";
+} else {
 
     header('location:index.php');
 }
@@ -397,8 +397,12 @@ $result = $db->query($sql);
                                         <form action="single_item_page.php" method="post">
                                             <input type="hidden" name="item_id" value=" <?php echo $row['item_id'] ?>">
                                             <div class="row">
-                                                <div class="col"><button type="submit" class="btn btn-secondary card_button">View Item</button></div>
-                                                <div class="col"><h6 style="text-align: right;">LKR: <?php echo $row['unit_price'] ?></h6></div>
+                                                <div class="col">
+                                                    <button type="submit" class="btn btn-secondary card_button">View Item</button>
+                                                </div>
+                                                <div class="col">
+                                                    <h6 style="text-align: right;">LKR: <?php echo $row['unit_price'] ?></h6>
+                                                </div>
                                             </div>
                                         </form>
                                         </a>

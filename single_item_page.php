@@ -1,11 +1,8 @@
 <?php
 
-//session start
 session_start();
 
-
 include 'system/functions.php';
-
 
 // extract variables
 extract($_POST);
@@ -13,12 +10,50 @@ extract($_POST);
 // DB Connection
 $db = db_con();
 
-if(!empty($item_id)){
-    // Items data fletch 
-$sql = "SELECT * FROM `items`  WHERE `item_id` = '$item_id'";
-}else{
+// error message container
+$error = array();
 
-    header('location:index.php');
+// mange item id
+if (!empty($item_id)) {
+
+    $_SESSION['item_id'] = $item_id;
+} else {
+
+    $item_id = $_SESSION['item_id'];
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'add_to_cart') {
+
+    $sql = "SELECT * FROM `items`  WHERE `item_id` = '$item_id'";
+    $result = $db->query($sql);
+
+    if ($result->num_rows > 0) {
+
+        $row = $result->fetch_assoc();
+
+        $item_id = $row['item_id'];
+        $item_name = $row['item_name'];
+        $item_sku = $row['sku'];
+        $item_price = $row['unit_price'];
+        $item_qty = 1;
+        $item_image = $row['item_image'];
+
+        $cart = array($item_id => array("item_id" => $item_id, "item_name" => $item_name, "item_sku" => $item_sku, "item_price" => $item_price, "item_qty" => $item_qty, "item_image" => $item_image));
+
+        if (empty($_SESSION['cart'])) {
+
+            $_SESSION['cart'] = $cart;
+        } else {
+
+            $array_key = array_keys($_SESSION['cart']);
+            if (in_array($item_id, $array_key)) {
+
+                echo "this product already in the cart";
+            } else {
+                $_SESSION['cart'] += $cart;
+            }
+        }
+    }
 }
 
 // Items data fletch 
@@ -95,7 +130,17 @@ $row = $stock_count_result->fetch_assoc();
                             <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php"> <i class="fas fa-cart-arrow-down"></i> Cart</a>
+                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php">
+                                <i class="fas fa-cart-arrow-down"></i> Cart
+                                <?php
+
+                                if (!empty($_SESSION['cart'])) {
+                                    
+                                    echo count(array_keys($_SESSION['cart']));
+                                }
+
+                                ?>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -113,17 +158,10 @@ $row = $stock_count_result->fetch_assoc();
                     <?php
                     if ($result->num_rows > 0) {
                         $row = $result->fetch_assoc();
-
-                        // sessions
-                        $_SESSION['item_image'] = $row['item_image'];
-                        $_SESSION['item_name'] = $row['item_name'];
-                        $_SESSION['price'] = $row['unit_price'];
-
                     ?>
                         <div class="image_box">
                             <img src="assets/images/<?php echo $row['item_image'] ?>" alt="" class="item_image" />
                         </div>
-
                 </div>
 
                 <!--second content box-->
@@ -139,8 +177,9 @@ $row = $stock_count_result->fetch_assoc();
                     }
                 ?>
                 <div class="col cart_button">
-                    <form action="cart.php" method="post">
-                        <button type="submit" class="btn btn-secondary item_btn">Add to Cart <i class="fas fa-cart-arrow-down"></i></button>
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                        <input type="hidden" name="product_id" value="<?php echo $row['item_id'] ?>">
+                        <button type="submit" name="action" value="add_to_cart" class="btn btn-secondary item_btn">Add to Cart <i class="fas fa-cart-arrow-down"></i></button>
                     </form>
                 </div>
                 </div>

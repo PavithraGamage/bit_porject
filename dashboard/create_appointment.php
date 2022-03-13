@@ -26,7 +26,7 @@ include "dashboard_nav.php";
             <div class="col-sm-10">
                 <div class="row">
                     <div class="col-6">
-                        <input type="date" class="form-control" id="inputEmail3" placeholder="Email">
+                        <input type="date" class="form-control" id="inputEmail3" placeholder="date" min="<?php echo date("Y-m-d")?>" >                     
                     </div>
                     <div class="col-6">
                         <select class="form-control" id="exampleFormControlSelect1">
