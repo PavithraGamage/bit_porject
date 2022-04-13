@@ -33,6 +33,7 @@ $sql_modules = "SELECT * FROM `modules` WHERE length(module_id) = '2'";
 $modules_result = $db->query($sql_modules);
 
 
+
 // date
 $date = date('Y-m-d');
 
@@ -56,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
     $m_m_id = data_clean($m_m_id);
     $m_m_name =  data_clean($m_m_name);
-    //$m_m_folder_path = data_clean($m_m_folder_path);
     $m_m_file_path = data_clean($m_m_file_path);
 
 
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     //insert data to db
     if (empty($error)) {
 
-        $sql = "INSERT INTO `modules` (`module_id`, `description`, `path`, `view`, `icon`, `status`) VALUES ('$m_m_id', '$m_m_name', '$path', '$m_m_file_path', '$m_m_icon', '1');";
+        $sql = "INSERT INTO `modules` (`module_id`, `description`, `path`, `view`, `status`) VALUES ('$m_m_id', '$m_m_name', '$path', '$m_m_file_path', '1');";
 
         //run database query
         $db->query($sql);
@@ -147,6 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 
         $row = $result->fetch_assoc();
 
+
         $m_m_id = $row['module_id'];
         $m_m_name =  $row['description'];
         $m_m_folder_path = $row['path'];
@@ -158,6 +159,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 // update the edit data
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
+    // module path
+    $sql_path = "SELECT path FROM `modules` WHERE module_id = $main_module";
+    $path_result = $db->query($sql_path);
+
+    if ($path_result->num_rows > 0) {
+        $row = $path_result->fetch_assoc();
+        $path =  $row['path'];
+    }
+
     // error styles
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
@@ -166,9 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
     $m_m_id = data_clean($m_m_id);
     $m_m_name =  data_clean($m_m_name);
-    $m_m_folder_path = data_clean($m_m_folder_path);
     $m_m_file_path = data_clean($m_m_file_path);
-    $m_m_icon = data_clean($m_m_icon);
 
     // basic validation
     if (empty($m_m_id)) {
@@ -179,10 +187,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         $error['m_m_name'] = "Module Name Should not be empty";
     }
 
-    if (empty($m_m_folder_path)) {
-        $error['m_m_folder_path'] = "Folder Path Should not be empty";
-    }
-
     // Advance validation
 
     if (!preg_match("/^[0-9]*$/", $m_m_id)) {
@@ -190,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     }
 
     if (!empty($m_m_id)) {
-        if (strlen($m_m_id) > 2) {
+        if (strlen($m_m_id) > 4) {
             $error['m_m_id'] = "Maximum length should be 2 number";
         }
     }
@@ -230,7 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
     // update query
     if (empty($error)) {
-        $sql = "UPDATE `modules` SET `module_id` = '$m_m_id', `description` = '$m_m_name', `path` = '$m_m_folder_path', `view` = '$m_m_file_path' `icon` = '$m_m_icon' WHERE `module_id` = '$m_m_id';";
+        $sql = "UPDATE `modules` SET `module_id` = '$m_m_id', `description` = '$m_m_name', `path` = '$m_m_folder_path', `path` = '$path', `view` = '$m_m_file_path' WHERE `module_id` = '$m_m_id';";
 
         // run database query
         $query = $db->query($sql);
@@ -331,7 +335,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     if ($modules_result->num_rows > 0) {
                                         while ($modules_row = $modules_result->fetch_assoc()) {
                                     ?>
-                                            <option value="<?php echo $modules_row['module_id'] ?>" <?php if ($modules_row['module_id'] == @$category) { ?> selected <?php } ?>><?php echo $modules_row['description']; ?></option>
+                                            <option value="<?php echo $modules_row['module_id'] ?>" <?php if ($modules_row['module_id'] == @$main_module) { ?> selected <?php } ?>>
+                                                <?php echo $modules_row['description']; ?>
+                                            </option>
                                     <?php
 
                                         }
@@ -341,12 +347,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Sub Module ID</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="4 Digits" name="m_m_id" value="<?php echo @$s_m_id ?>">
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="4 Digits" name="m_m_id" value="<?php echo @$m_m_id ?>">
                                 <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="4 Digits" name="m_m_id_previous" value="<?php echo @$m_m_id ?>">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Sub Module Name</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Staff Management" name="m_m_name" value="<?php echo @$s_m_name ?>">
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Staff Management" name="m_m_name" value="<?php echo @$m_m_name ?>">
                                 <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="Staff Management" name="m_m_name_previous" value="<?php echo @$m_m_name ?>">
                             </div>
                             <div class="form-group">

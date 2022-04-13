@@ -9,7 +9,7 @@ extract($_POST);
 $db = db_con();
 
 // form Name
-$form_name = 'Insert New Staff Member';
+$form_name = 'Insert New Staff Permission';
 
 // form button name change
 $btn_name = "Insert";
@@ -436,11 +436,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Staff</h1>
+                    <h1 class="m-0">Staff Permissions</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Staff</a></li>
+                        <li class="breadcrumb-item"><a href="#">Staff Permissions</a></li>
                         <li class="breadcrumb-item active">Add</li>
                     </ol>
                 </div><!-- /.col -->
@@ -605,7 +605,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 ?>
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Staff List</h3>
+                        <h3 class="card-title">Staff Permissions List</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
