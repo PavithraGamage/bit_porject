@@ -37,8 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'add_to_cart') {
         $item_price = $row['unit_price'];
         $item_qty = 1;
         $item_image = $row['item_image'];
+        $discount_rate = $row['discount_rate'];
 
-        $cart = array($item_id => array("item_id" => $item_id, "item_name" => $item_name, "item_sku" => $item_sku, "item_price" => $item_price, "item_qty" => $item_qty, "item_image" => $item_image));
+        $cart = array($item_id => array("item_id" => $item_id, "item_name" => $item_name, "item_sku" => $item_sku, "item_price" => $item_price, "item_qty" => $item_qty, "item_image" => $item_image, "item_discount" => $discount_rate));
 
         if (empty($_SESSION['cart'])) {
 
@@ -48,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'add_to_cart') {
             $array_key = array_keys($_SESSION['cart']);
             if (in_array($item_id, $array_key)) {
 
-                echo "this product already in the cart";
+                $error['already'] = "This product already in the cart";
             } else {
                 $_SESSION['cart'] += $cart;
             }
@@ -98,6 +99,7 @@ $row = $stock_count_result->fetch_assoc();
 </head>
 
 <body>
+
     <!--Navigation Start-->
     <div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
@@ -135,7 +137,7 @@ $row = $stock_count_result->fetch_assoc();
                                 <?php
 
                                 if (!empty($_SESSION['cart'])) {
-                                    
+
                                     echo count(array_keys($_SESSION['cart']));
                                 }
 
@@ -151,7 +153,24 @@ $row = $stock_count_result->fetch_assoc();
 
     <!-- content start-->
     <div class="container">
+        <?php
+        if (!empty($error)) {
+        ?>
+            <div class="row empty_cart" style="margin-top: 80px; background-color: #f8f9fa; border: 2px solid red; color: red">
+                <div class="col">
+                    <div> <?php echo @$error['already']; ?></div>
+                </div>
+                <div class="col empry_cart_btn_col">
+                    <a href="cart.php">
+                        <button type="button" class="btn btn-secondary card_button"><b>View Cart</b></button>
+                    </a>
+                </div>
+            </div>
+        <?php
+        }
+        ?>
         <div class="row item_row_main">
+
             <div class="row">
                 <!--product image-->
                 <div class="col-6">

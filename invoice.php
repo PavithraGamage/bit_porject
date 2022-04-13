@@ -1,3 +1,11 @@
+<?php
+
+
+session_start();
+
+
+
+?>
 <!doctype html>
 <html lang="en">
 
@@ -55,7 +63,17 @@
                             <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php"> <i class="fas fa-cart-arrow-down"></i> Cart</a>
+                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php">
+                                <i class="fas fa-cart-arrow-down"></i> Cart
+                                <?php
+
+                                if (!empty($_SESSION['cart'])) {
+
+                                    echo count(array_keys($_SESSION['cart']));
+                                }
+
+                                ?>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -80,7 +98,7 @@
                     <div class="col-12" style="margin-bottom: 15px;">
                         <h4>
                             <i class="fas fa-globe"></i> U-Star Digital
-                            <small class="float-right" style="float: right;">Date: 2/10/2014</small>
+                            <small class="float-right" style="float: right;">Date: <?php echo date("d-m-Y") ?></small>
                         </h4>
                     </div>
                     <!-- /.col -->
@@ -123,47 +141,45 @@
                 <!-- Table row -->
                 <div class="row">
                     <div class="col-12 table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Qty</th>
-                                    <th>Product</th>
-                                    <th>Warranty</th>
-                                    <th>Discount</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>AMD RYZEN 9 3950X</td>
-                                    <td>3 Years</td>
-                                    <td>15%</td>
-                                    <td>$64.50</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>ASUS ROG MAXIMUS Z690 EXTREME GLACIAL</td>
-                                    <td>3 Years</td>
-                                    <td>15%</td>
-                                    <td>$50.00</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>ASUS ROG MAXIMUS Z690 EXTREME</td>
-                                    <td>3 Years</td>
-                                    <td>15%</td>
-                                    <td>$10.70</td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>INTEL CORE I9-12900K</td>
-                                    <td>3 Years</td>
-                                    <td>15%</td>
-                                    <td>$25.99</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <?php
+                        if (!empty($_SESSION['cart'])) {
+                        ?>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Qty</th>
+                                        <th>Product</th>
+                                        <th>Warranty</th>
+                                        <th>Discount</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $grand_total = 0;
+                                    foreach ($_SESSION['cart'] as $product) {
+                                    ?>
+                                        <tr>
+                                            <td><?php echo $product['item_qty'] ?></td>
+                                            <td><?php echo $product['item_name'] ?></td>
+                                            <td>3 Years</td>
+                                            <td><?php echo $product['item_discount'] ?>%</td>
+                                            <td>
+                                                <?php
+                                                $amount = $product['item_price'] * $product['item_qty'];
+                                                echo "LKR: " . number_format($amount, 2);
+                                                $grand_total += $amount;
+                                                ?>
+                                            </td>
+                                        </tr>
+                                    <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        <?php
+                        }
+                        ?>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -187,7 +203,7 @@
                             <table class="table">
                                 <tr>
                                     <th style="width:50%">Subtotal:</th>
-                                    <td>$250.30</td>
+                                    <td>LKR: <?php echo number_format($grand_total, 2); ?></td>
                                 </tr>
                                 <tr>
                                     <th>Discount:</th>

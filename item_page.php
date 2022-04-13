@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 include "system/functions.php";
 
@@ -80,7 +81,17 @@ $result = $db->query($sql);
                             <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php"> <i class="fas fa-cart-arrow-down"></i> Cart</a>
+                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php">
+                                <i class="fas fa-cart-arrow-down"></i> Cart
+                                <?php
+
+                                if (!empty($_SESSION['cart'])) {
+                                    
+                                    echo count(array_keys($_SESSION['cart']));
+                                }
+
+                                ?>
+                            </a>
                         </li>
                     </ul>
                 </div>

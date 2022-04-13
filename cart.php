@@ -1,5 +1,33 @@
+<?php
+
+session_start();
+
+
+extract($_POST);
+
+// change the product item quantity
+if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "update_qty") {
+    foreach ($_SESSION['cart'] as &$value) {
+        if ($value['item_id'] == $item_id) {
+            $value['item_qty'] = $qty;
+            break;
+        }
+    }
+}
+
+// remove items form cart
+if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
+    foreach ($_SESSION['cart'] as $key=>$value) {
+        if ($value['item_id'] == $item_id) {
+            unset($_SESSION['cart'][$key]);
+        }
+    }
+}
+
+?>
 <!doctype html>
 <html lang="en">
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -12,6 +40,7 @@
     <!-- fontawesome icons-->
     <link href="assets/icons/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet" type="text/css" />
 </head>
+
 <body>
     <!--Navigation Start-->
     <div>
@@ -45,7 +74,17 @@
                             <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php"> <i class="fas fa-cart-arrow-down"></i> Cart</a>
+                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php">
+                                <i class="fas fa-cart-arrow-down"></i> Cart
+                                <?php
+
+                                if (!empty($_SESSION['cart'])) {
+
+                                    echo count(array_keys($_SESSION['cart']));
+                                }
+
+                                ?>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -57,162 +96,139 @@
     <!-- content start-->
     <div class="container">
         <div class="row item_row_main">
-            <!--empty cart warnning start-->
-            <!--        <div class="row empty_cart">
-                    <div class="col">
-                        <div> Your Cart Empty !</div>
-                    </div>
-                    <div class="col empry_cart_btn_col">
-                        <a href="processors.php">
-                            <button type="button" class="btn btn-secondary card_button">Shop Now</button>
-                        </a>    
-                    </div>
-                </div>-->
-            <!--empty cart warnning end-->
             <!--cart content start-->
             <div class="row">
-                <div class="row">
-                    <div class="col">
-                        <h3>10 Items in Your Cart</h3>
-                    </div>
-                    <div class="col cart_remove_all">
-                        <a href="">
-                            <button type="button" class="btn btn-secondary card_button"> <i class="fa fa-trash" aria-hidden="true"></i> Remove All</button>
-                        </a>
-                    </div>
-                </div>
 
-                <!--cart item start-->
-                <div class="row cart_items">
-                    <div class="col-2">
-                        <img src="images/amd_ryzen_r9_3900x.png" alt="" class="cart_item_image" />
-                    </div>
-                    <div class="col-5">
-                        <div>
-                            <h6>AMD Ryzen 9 3rd Gen - RYZEN 9 3900X</h6>
-                        </div>
-                        <div>
-                            5 Items in Stock
-                        </div>
-                    </div>
-                    <div class="col-1">
-                        <h6>No Items</h6>
-                        <input type="text" class="form-control" id="formGroupExampleInput">
-                    </div>
-                    <div class="col-2 ">
 
-                        <div class="cart_price">
-                            <h6>156,000 LKR</h6>
+                <?php
+                if (!empty($_SESSION['cart'])) {
+                ?>
+                    <div class="row">
+                        <div class="col">
+                            <h3>Items in Your Cart</h3>
                         </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="col empry_cart_btn_col">
-                            <a href="">
-                                <button type="button" class="btn btn-secondary card_button"> <i class="fa fa-trash" aria-hidden="true"></i> Remove Item</button>
+                        <div class="col cart_remove_all">
+                            <a href="shop.php">
+                                <button type="button" class="btn btn-secondary card_button" style="border-width: 2px;font-weight: 500"><i class="fas fa-cart-arrow-down"></i> Continue Shopping</button>
                             </a>
                         </div>
                     </div>
-                </div>
-                <!--cart item end-->
-                <div class="row cart_items">
-                    <div class="col-2">
-                        <img src="images/1919-20210908081112-add.png" alt="" class="cart_item_image" />
-                    </div>
-                    <div class="col-5">
-                        <div>
-                            <h6>Addlink Spider 4 32GB (16X2) DDR4 3200Mhz Gaming Memory</h6>
-                        </div>
-                        <div>
-                            5 Items in Stock
-                        </div>
-                    </div>
-                    <div class="col-1">
-                        <h6>No Items</h6>
-                        <input type="text" class="form-control" id="formGroupExampleInput">
-                    </div>
-                    <div class="col-2 ">
-                        <div class="cart_price">
-                            <h6>156,000 LKR</h6>
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="col empry_cart_btn_col">
-                            <a href="">
-                                <button type="button" class="btn btn-secondary card_button"> <i class="fa fa-trash" aria-hidden="true"></i> Remove Item</button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="row cart_items">
-                    <div class="col-2">
+                    <!--cart item start-->
+                    <?php
+                    $grand_total = 0;
+                    foreach ($_SESSION['cart'] as $product) {
 
-                        <img src="images/1959-20210603122835-ROG-STRIX-RTX3060-12G-GAMING_box+vga+logo 2000.png" alt="" class="cart_item_image" />
-                    </div>
-                    <div class="col-5">
-                        <div>
-                            <h6>AMD Ryzen 9 3rd Gen - RYZEN 9 3900X</h6>
-                        </div>
-                        <div>
-                            5 Items in Stock
-                        </div>
-                    </div>
-                    <div class="col-1">
-                        <h6>No Items</h6>
-                        <input type="text" class="form-control" id="formGroupExampleInput">
-                    </div>
-                    <div class="col-2 ">
+                    ?>
 
-                        <div class="cart_price">
-                            <h6>156,000 LKR</h6>
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="col empry_cart_btn_col">
-                            <a href="">
-                                <button type="button" class="btn btn-secondary card_button"> <i class="fa fa-trash" aria-hidden="true"></i> Remove Item</button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6"></div>
-                    <div class="col-6 cart_total">
-                        <h4 class="cart_summary">Cart Summary</h4>
-                        <div class="row">
-                            <div class="col-5">
+
+                        <div class="row cart_items">
+                            <div class="col-2">
+                                <img src="assets/images/<?php echo $product['item_image']; ?>" alt="" class="cart_item_image" />
+                            </div>
+                            <div class="col-5" style="display: flex; flex-direction: column; justify-content: center;">
                                 <div>
-                                    <h6>Item(s):</h6>
+                                    <h6><?php echo $product['item_name']; ?></h6>
                                 </div>
-                                <hr>
-                                <div>
-                                    <h6>Discount</h6>
-                                </div>
-                                <hr>
-                                <div>
-                                    <h4>Est. Total:</h4>
+
+                            </div>
+                            <div class="col-1" style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+                                <h6 style="margin-right: 10px;">Qty</h6>
+
+                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                    <input type="hidden" name="item_id" value="<?php echo $product['item_id']; ?>">
+                                    <input type="hidden" name="action" value="update_qty">
+                                    <select name="qty" id="qty" onchange="this.form.submit();">
+                                        <option value="1" <?php if ($product['item_qty'] == 1) { ?> selected <?php } ?>>1</option>
+                                        <option value="2" <?php if ($product['item_qty'] == 2) { ?> selected <?php } ?>>2</option>
+                                        <option value="3" <?php if ($product['item_qty'] == 3) { ?> selected <?php } ?>>3</option>
+                                        <option value="4" <?php if ($product['item_qty'] == 4) { ?> selected <?php } ?>>4</option>
+                                        <option value="5" <?php if ($product['item_qty'] == 5) { ?> selected <?php } ?>>5</option>
+                                    </select>
+                                </form>
+                            </div>
+                            <div class="col-2" style="display: flex; flex-direction: column; justify-content: center;">
+                                <div class="cart_price">
+                                    <?php
+                                    $amount = $product['item_price'] * $product['item_qty'];
+                                    echo "<h6> LKR: " . number_format($amount, 2) . "</h6>";
+                                    $grand_total += $amount;
+                                    ?>
                                 </div>
                             </div>
-                            <div class="col-7">
-                                <div>
-                                    <h6>156,000 LKR</h6>
+                            <div class="col-2" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center;">
+                                <div class="col empry_cart_btn_col">
+                                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                        <input type="hidden" name="item_id" value="<?php echo $product['item_id']; ?>">
+                                        <button type="submit" name="action" value="delete_product" class="btn btn-secondary card_button"> <i class="fa fa-trash" aria-hidden="true"></i> Remove Item</button>
+                                    </form>
                                 </div>
-                                <hr>
-                                <div>
-                                    <h6>8,000 LKR</h6>
-                                </div>
-                                <hr>
+                            </div>
+                        </div>
 
 
-                                <div>
-                                    <h4>267,500 LKR</h4>
+
+                    <?php
+                    }
+                    ?>
+                    <!--cart item end-->
+                    <div class="row">
+                        <div class="col-6"></div>
+                        <div class="col-6 cart_total">
+                            <h4 class="cart_summary">Cart Summary</h4>
+                            <div class="row">
+                                <div class="col-5">
+                                    <div>
+                                        <h6>Item(s):</h6>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <h6>Discount</h6>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <h4>Est. Total:</h4>
+                                    </div>
                                 </div>
-                                <a href="checkout.php">
-                                    <button type="button" class="btn btn-secondary cart_checkout_button"> CHECKOUT ORDER </button>
-                                </a>
+                                <div class="col-7">
+                                    <div>
+                                        <h6>
+                                            LKR: <?php echo number_format($grand_total, 2); ?>
+                                        </h6>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <h6>LKR: 8,000</h6>
+                                    </div>
+                                    <hr>
+
+
+                                    <div>
+                                        <h4>LKR: <?php echo number_format($grand_total, 2); ?></h4>
+                                    </div>
+                                    <a href="checkout.php">
+                                        <button type="button" class="btn btn-secondary cart_checkout_button"> CHECKOUT ORDER </button>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                <?php
+                } else { ?>
+                    <!--empty cart warnning start-->
+                    <div class="row empty_cart">
+                        <div class="col">
+                            <div> Your Cart Empty !</div>
+                        </div>
+                        <div class="col empry_cart_btn_col">
+                            <a href="shop.php">
+                                <button type="button" class="btn btn-secondary card_button">Shop Now</button>
+                            </a>
+                        </div>
+                    </div>
+                    <!--empty cart warnning end-->
+                <?php
+                }
+                ?>
             </div>
             <!--cart content end-->
         </div>
