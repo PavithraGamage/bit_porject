@@ -412,7 +412,7 @@ $result = $db->query($sql);
                                                     <button type="submit" class="btn btn-secondary card_button">View Item</button>
                                                 </div>
                                                 <div class="col">
-                                                    <h6 style="text-align: right;">LKR: <?php echo $row['unit_price'] ?></h6>
+                                                    <h6 style="text-align: right;">LKR: <?php echo number_format($row['unit_price'] , 2)  ?></h6>
                                                 </div>
                                             </div>
                                         </form>

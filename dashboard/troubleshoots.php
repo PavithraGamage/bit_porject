@@ -19,10 +19,10 @@ include "dashboard_nav.php";
                     <div class="col-sm-4">
                         <select class="form-control" id="exampleFormControlSelect1">
                             <option>- Select - </option>
-                            <option>AMD RYZEN 9 3950X</option>
-                            <option>INTEL CORE I9-12900KF</option>
-                            <option>AMD RYZEN 9 5950X</option>
-                            <option>INTEL CORE I9-12900K</option>
+                            <option>No Power</option>
+                            <option>No Display</option>
+                            <option>3 Shote Beeps</option>
+                            <option>Continues Beeps</option>
                         </select>
                     </div>
                 </div>

@@ -234,7 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
     // update query
     if (empty($error)) {
-        $sql = "UPDATE `modules` SET `module_id` = '$m_m_id', `description` = '$m_m_name', `path` = '$m_m_folder_path', `path` = '$path', `view` = '$m_m_file_path' WHERE `module_id` = '$m_m_id';";
+        $sql = "UPDATE `modules` SET `module_id` = '$m_m_id', `description` = '$m_m_name', `path` = '$path', `view` = '$m_m_file_path' WHERE `module_id` = '$m_m_id';";
 
         // run database query
         $query = $db->query($sql);

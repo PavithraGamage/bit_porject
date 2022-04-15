@@ -190,7 +190,7 @@ $row = $stock_count_result->fetch_assoc();
                     <p>
                         <?php echo $row['item_description']  ?>
                     </p>
-                    <h4 class="price_hedding">LKR <?php echo $row['unit_price']; ?></h4>
+                    <h4 class="price_hedding">LKR <?php echo number_format($row['unit_price'] , 2) ; ?></h4>
 
                 <?php
                     }

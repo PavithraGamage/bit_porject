@@ -1,29 +1,22 @@
 <?php
-
+session_start();
 include "system/functions.php";
-
-
-// extract form data
-extract($_POST);
 
 // db connect
 $db = db_con();
 
-// empty check
-if(!empty($search)){
-
 // sql query
- $sql = "SELECT * FROM `items` WHERE item_name LIKE'%$search%'";
-}else{
-
-    header('location:home.php');
-}
-
+$sql = "SELECT * FROM `categories`";
 
 // fletch data
 $result = $db->query($sql);
 
+// categories drop down data fletch 
+$cat_result = $db->query($sql);
+
 ?>
+
+
 <!doctype html>
 <html lang="en">
 
@@ -36,21 +29,17 @@ $result = $db->query($sql);
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
 
     <title><?php echo ucfirst(pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME));  ?></title>
-
     <! -- main style -->
         <link href="assets/css/style.css" rel="stylesheet" type="text/css" />
 
-
         <!--fontawesome icons-->
         <link href="assets/icons/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet" type="text/css" />
-
-
-
 </head>
 
 <body>
-    <!--Navigation Start-->
-    <div>
+    
+   <!--Navigation Start-->
+   <div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
             <div class="container-fluid">
                 <a class="navbar-brand" href="http://localhost/bit/">
@@ -81,7 +70,17 @@ $result = $db->query($sql);
                             <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php"> <i class="fas fa-cart-arrow-down"></i> Cart</a>
+                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php">
+                                <i class="fas fa-cart-arrow-down"></i> Cart
+                                <?php
+
+                                if (!empty($_SESSION['cart'])) {
+
+                                    echo count(array_keys($_SESSION['cart']));
+                                }
+
+                                ?>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -89,48 +88,76 @@ $result = $db->query($sql);
         </nav>
     </div>
     <!--Navigation End-->
+    
 
-    <!-- content start -->
-    <div class="container">
-        <div class="row shop_row" style="padding-bottom: 80px;">
-        <h4><i class="fas fa-search"></i> Search Resault for:  <?php echo $search ?></h4>
+    
+
+    <!--card start-->
+    <div class="container-fluid" style="width:90vw; margin-bottom:150px">
+        <div class="row" style="padding: 40px;">
             <div class="col">
-                <div class="row shop_main_row">
-                    <!-- items -->
-                    <?php
 
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                    ?>
-                            <div class="col-3">
-                                <div class="card card_styles" style="margin-top: 70px;">
-                                    <img src="assets/images/<?php echo $row['item_image'] ?>" class="card-img-top" style="background-color: #E9EAEF; padding: 25px;" alt="...">
-                                    <div class="card-body">
-                                        <h1 class="catagory_card_title"><?php echo strtoupper($row['item_name'])  ?></h1>
-                                        <p class="card_discription"><?php echo $row['item_description']  ?></p>
-                                        <form action="single_item_page.php" method="post">
-                                            <input type="hidden" name="item_id" value=" <?php echo $row['item_id'] ?>">
-                                            <div class="row">
-                                                <div class="col"><button type="submit" class="btn btn-secondary card_button">View Item</button></div>
-                                                <div class="col"><h6 style="text-align: right;">LKR: <?php echo $row['unit_price'] ?></h6></div>
+                <h2 class="text-center display-4" style="margin-bottom: 30px; font-weight:400">Search Item</h2>
+                <form action="search_result.php" method="post">
+                    <div class="row">
+                        <div class="col-md-10 offset-md-1">
+                            <div class="row">
+
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="search" aria-describedby="emailHelp" placeholder="Search by Item Name" name="search">
                                             </div>
-                                        </form>
-                                        </a>
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="submit" class="btn btn-secondary float-right"><i class="fas fa-search"></i> Search</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                    <?php
-                        }
-                    }else{
-                        echo "No Items Found";
-                    }
-                    ?>
+                        </div>
+                    </div>
+                </form>
 
-                </div>
             </div>
         </div>
+        <div class="row catagory_row">
+
+            <?php
+            // category name
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+
+                    // count of items
+                    $cat_id = $row['category_id'];
+                    $count_sql = "SELECT COUNT(items.item_id) AS total FROM items WHERE items.category_id = '$cat_id';";
+                    $count_result = $db->query($count_sql);
+                    if ($count_result->num_rows > 0) {
+                        while ($row_count = $count_result->fetch_assoc()) {
+            ?>
+                            <div class="col-3">
+                                <div class="card card_styles" style="width: auto;">
+                                    <img src="assets/images/<?php echo $row['cat_image'] ?>" class="card-img-top" alt="..." style="height: 250px; object-fit: cover;">
+                                    <div class="card-body">
+                                        <h1 class="card_title"><?php echo strtoupper($row['category_name']); ?> (<?php echo strtoupper($row_count['total']); ?>)</h1>
+                                        <p class="card_discription"><?php echo $row['category_description'] ?></p>
+                                        <form action="item_page.php" method="post">
+                                            <input type="hidden" name="category_id" value="<?php echo $row['category_id'] ?>">
+                                            <button type="submit" class="btn btn-secondary card_button">View Category</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+            <?php
+                        }
+                    }
+                }
+            }
+            ?>
+        </div>
     </div>
-    <!-- content end -->
+    <!--card end-->
 
     <!-- footer start -->
     <footer>

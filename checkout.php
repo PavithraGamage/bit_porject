@@ -1,3 +1,8 @@
+<?php
+
+session_start();
+
+?>
 <!doctype html>
 <html lang="en">
 
@@ -55,7 +60,17 @@
                             <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php"> <i class="fas fa-cart-arrow-down"></i> Cart</a>
+                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php">
+                                <i class="fas fa-cart-arrow-down"></i> Cart
+                                <?php
+
+                                if (!empty($_SESSION['cart'])) {
+
+                                    echo count(array_keys($_SESSION['cart']));
+                                }
+
+                                ?>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -67,136 +82,241 @@
     <!--Hero Section End-->
     <!-- content start-->
     <div class="container">
-
-
-        <div class="row item_row_main">
-
-
-            <form action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
-
-
-                <div class="row">
-                    <div class="col">
-                        <h3> <i class="fas fa-map-marker-alt"></i> Enter Your Delivery Details</h3>
-                    </div>
-                    <div class="col cart_remove_all">
-
-                        <button type="reset" class="btn btn-secondary card_button">Delivery to different address</button>
-
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-4">
-                        <label for="inputCity">Frist Name</label>
-                        <input type="text" class="form-control" id="frist_name" name="frist_name">
-                    </div>
-                    <div class="col-4">
-                        <label for="inputState">Last Name</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name">
-
-                    </div>
-                    <div class="col-4">
-                        <label for="inputState">Phone</label>
-                        <input type="tel" class="form-control" id="phone" name="phone">
-                    </div>
-
-                </div>
-                <div class="form-group">
-                    <label for="inputAddress">Address Line 1</label>
-                    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address_line_1">
-                </div>
-                <div class="form-group">
-                    <label for="inputAddress2">Address Line 2</label>
-                    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="address_line_2">
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <label for="inputCity">City</label>
-                        <input type="text" class="form-control" id="inputCity" name="city">
-                    </div>
-                    <div class="col-4">
-                        <label for="inputState">Province</label>
-                        <select id="inputState" class="form-control" name="province">
-                            <option selected>Choose...</option>
-                            <option>Western</option>
-                            <option>Western</option>
-                            <option>Western</option>
-                            <option>Western</option>
-                            <option>Western</option>
-                            <option>Western</option>
-                            <option>Western</option>
-                            <option>Western</option>
-                            <option>Western</option>
-                            <option>Western</option>
-                        </select>
-                    </div>
-                    <div class="col-4">
-                        <label for="inputZip">Zip</label>
-                        <input type="text" class="form-control" id="inputZip" name="zip">
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-6"></div>
-                    <div class="col-6 cart_total">
-                        <h4 class="cart_summary">Order Summary</h4>
-                        <div class="row">
-                            <div class="col-4">
-                                <div>
-                                    <h6>Item(s):</h6>
-                                </div>
-                                <hr>
-                                <div>
-                                    <h6>Discount:</h6>
-                                </div>
-                                <hr>
-                                <div>
-                                    <h6>Delivery Charges:</h6>
-                                </div>
-                                <hr>
-
-                                <div>
-                                    <h4>Est. Total:</h4>
-                                </div>
+        <?php
+        $x = 1;
+        if ($x == 10) {
+        ?>
+            <div class="row" style="margin-top: 80px; margin-bottom: 80px">
+                <div class="col">
+                    <div class="login-box">
+                        <!-- /.login-logo -->
+                        <div class="card card-outline card-primary">
+                            <div class="card-header text-center">
+                                <h1>Login</h1>
                             </div>
-                            <div class="col-8">
-                                <div>
-                                    <h6>156,000 LKR</h6>
-                                </div>
-                                <hr>
-                                <div>
-                                    <h6>8,000 LKR</h6>
-                                </div>
-                                <hr>
-                                <div>
-                                    <h6>3,000 LKR</h6>
-                                </div>
-                                <hr>
+                            <div class="card-body">
+                                <p class="login-box-msg">Sign in to start your session</p>
+
+                                <form action="dashboard.php" method="post">
+                                    <div class="input-group mb-3">
+                                        <input type="email" class="form-control" placeholder="Email">
+
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" placeholder="Password">
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="icheck-primary">
+                                                <input type="checkbox" id="remember">
+                                                <label for="remember">
+                                                    Remember Me
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-4" style="display: flex; flex-direction: row; justify-content: flex-end;">
+                                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                </form>
+
+                                <!-- /.social-auth-links -->
+
+                                <p class="mb-1">
+                                    <a href="forgot-password.html">I forgot my password</a>
+                                </p>
+
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="register-box">
+                        <div class="card card-outline card-primary">
+                            <div class="card-header text-center">
+                                <h1>Register</h1>
+                            </div>
+                            <div class="card-body">
+                                <p class="login-box-msg">Register a new membership</p>
+
+                                <form action="../../index.html" method="post">
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Full name">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="email" class="form-control" placeholder="Email">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" placeholder="Password">
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" placeholder="Retype password">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="icheck-primary">
+                                                <input type="checkbox" id="agreeTerms" name="terms" value="agree">
+                                                <label for="agreeTerms">
+                                                    I agree to the <a href="#">terms</a>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-4" style="display: flex; flex-direction: row; justify-content: flex-end;">
+                                            <button type="submit" class="btn btn-primary btn-block">Register</button>
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                </form>
 
 
-                                <div>
-                                    <h4>267,500 LKR</h4>
+
+                            </div>
+                            <!-- /.form-box -->
+                        </div><!-- /.card -->
+                    </div>
+                </div>
+            </div>
+
+        <?php
+        } else {
+
+        ?>
+            <div class="row item_row_main">
+
+
+                <form action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
+
+
+                    <div class="row">
+                        <div class="col">
+                            <h3> <i class="fas fa-map-marker-alt"></i> Enter Your Delivery Details</h3>
+                        </div>
+                        <div class="col cart_remove_all">
+
+                            <button type="reset" class="btn btn-secondary card_button">Delivery to different address</button>
+
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="inputCity">Frist Name</label>
+                            <input type="text" class="form-control" id="frist_name" name="frist_name">
+                        </div>
+                        <div class="col-4">
+                            <label for="inputState">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name">
+
+                        </div>
+                        <div class="col-4">
+                            <label for="inputState">Phone</label>
+                            <input type="tel" class="form-control" id="phone" name="phone">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="inputAddress">Address Line 1</label>
+                        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address_line_1">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputAddress2">Address Line 2</label>
+                        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="address_line_2">
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="inputCity">City</label>
+                            <input type="text" class="form-control" id="inputCity" name="city">
+                        </div>
+                        <div class="col-4">
+                            <label for="inputState">Province</label>
+                            <select id="inputState" class="form-control" name="province">
+                                <option selected>Choose...</option>
+                                <option>Western</option>
+                                <option>Western</option>
+                                <option>Western</option>
+                                <option>Western</option>
+                                <option>Western</option>
+                                <option>Western</option>
+                                <option>Western</option>
+                                <option>Western</option>
+                                <option>Western</option>
+                                <option>Western</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label for="inputZip">Zip</label>
+                            <input type="text" class="form-control" id="inputZip" name="zip">
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-6"></div>
+                        <div class="col-6 cart_total">
+                            <h4 class="cart_summary">Order Summary</h4>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div>
+                                        <h6>Item(s):</h6>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <h6>Discount:</h6>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <h6>Delivery Charges:</h6>
+                                    </div>
+                                    <hr>
+
+                                    <div>
+                                        <h4>Est. Total:</h4>
+                                    </div>
                                 </div>
-                                <a href="payment.php">
-                                    <button type="button" class="btn btn-secondary cart_checkout_button"> PAY YOUR ORDER </button>
-                                </a>
+                                <div class="col-8">
+                                    <div>
+                                        <h6>156,000 LKR</h6>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <h6>8,000 LKR</h6>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <h6>3,000 LKR</h6>
+                                    </div>
+                                    <hr>
 
 
+                                    <div>
+                                        <h4>267,500 LKR</h4>
+                                    </div>
+                                    <a href="payment.php">
+                                        <button type="button" class="btn btn-secondary cart_checkout_button"> PAY YOUR ORDER </button>
+                                    </a>
+
+
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-            </form>
+                </form>
 
-        </div>
-
+            </div>
         <?php
-
-        print_r($_POST)
-
+        }
         ?>
+
+
+
+
+
     </div>
     <!-- content end-->
     <!-- footer start -->
