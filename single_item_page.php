@@ -35,11 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'add_to_cart') {
         $item_name = $row['item_name'];
         $item_sku = $row['sku'];
         $item_price = $row['unit_price'];
+        $sale_price = $row['sale_price'];
         $item_qty = 1;
         $item_image = $row['item_image'];
         $discount_rate = $row['discount_rate'];
 
-        $cart = array($item_id => array("item_id" => $item_id, "item_name" => $item_name, "item_sku" => $item_sku, "item_price" => $item_price, "item_qty" => $item_qty, "item_image" => $item_image, "item_discount" => $discount_rate));
+        $cart = array($item_id => array("item_id" => $item_id, "item_name" => $item_name, "item_sku" => $item_sku, "item_price" => $item_price, "sales_price" => $sale_price ,"item_qty" => $item_qty, "item_image" => $item_image, "item_discount" => $discount_rate));
 
         if (empty($_SESSION['cart'])) {
 
@@ -190,7 +191,14 @@ $row = $stock_count_result->fetch_assoc();
                     <p>
                         <?php echo $row['item_description']  ?>
                     </p>
-                    <h4 class="price_hedding">LKR <?php echo number_format($row['unit_price'] , 2) ; ?></h4>
+                    <h4 class="price_hedding">LKR <?php echo number_format($row['unit_price'], 2); ?></h4>
+                    <h4 class="price_hedding">
+                        <?php
+                        if (!$row['sale_price'] == 0) {
+                            echo "Sale LKR " . number_format($row['sale_price'], 2);
+                        }
+                        ?>
+                    </h4>
 
                 <?php
                     }

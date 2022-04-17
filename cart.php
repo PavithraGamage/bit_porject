@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "update_qty") {
 
 // remove items form cart
 if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
-    foreach ($_SESSION['cart'] as $key=>$value) {
+    foreach ($_SESSION['cart'] as $key => $value) {
         if ($value['item_id'] == $item_id) {
             unset($_SESSION['cart'][$key]);
         }
@@ -116,6 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                     <!--cart item start-->
                     <?php
                     $grand_total = 0;
+                    $grand_total_sale = 0;
+                    $amount_sale = 0;
                     foreach ($_SESSION['cart'] as $product) {
 
                     ?>
@@ -149,9 +151,25 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                             <div class="col-2" style="display: flex; flex-direction: column; justify-content: center;">
                                 <div class="cart_price">
                                     <?php
-                                    $amount = $product['item_price'] * $product['item_qty'];
-                                    echo "<h6> LKR: " . number_format($amount, 2) . "</h6>";
-                                    $grand_total += $amount;
+                                    if (!$product['sales_price'] == 0) {
+
+
+                                        $amount = $product['sales_price'] * $product['item_qty'];
+                                        echo "<h6> Sale LKR: " . number_format($amount, 2) . "</h6>";
+                                        $grand_total += $amount;
+
+                                        // discount price calculation
+                                        $amount_sale = ($product['item_price'] * $product['item_qty']) - $amount;
+                                        $grand_total_sale += $amount_sale;
+                                    } else {
+
+                                        $amount = $product['item_price'] * $product['item_qty'];
+                                        echo "<h6> LKR: " . number_format($amount, 2) . "</h6>";
+                                        $grand_total += $amount;
+                                    }
+
+
+
                                     ?>
                                 </div>
                             </div>
@@ -182,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                                     </div>
                                     <hr>
                                     <div>
-                                        <h6>Discount</h6>
+                                        <h6>Discount:</h6>
                                     </div>
                                     <hr>
                                     <div>
@@ -192,18 +210,24 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                                 <div class="col-7">
                                     <div>
                                         <h6>
-                                            LKR: <?php echo number_format($grand_total, 2); ?>
+                                            LKR: <?php echo number_format($grand_total, 2); $_SESSION['grand_total'] = $grand_total; ?>
                                         </h6>
                                     </div>
                                     <hr>
                                     <div>
-                                        <h6>LKR: 8,000</h6>
+                                        <h6>
+                                            <?php
+                                            echo "LKR: (-". number_format($grand_total_sale, 2) . ")" ;
+                                            $_SESSION['grand_total_sale'] = $grand_total_sale
+
+                                            ?>
+                                        </h6>
                                     </div>
                                     <hr>
 
 
                                     <div>
-                                        <h4>LKR: <?php echo number_format($grand_total, 2); ?></h4>
+                                        <h4>LKR: <?php echo number_format($grand_total - $grand_total_sale, 2) ; ?></h4>
                                     </div>
                                     <a href="checkout.php">
                                         <button type="button" class="btn btn-secondary cart_checkout_button"> CHECKOUT ORDER </button>

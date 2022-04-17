@@ -86,7 +86,7 @@ $result = $db->query($sql);
                                 <?php
 
                                 if (!empty($_SESSION['cart'])) {
-                                    
+
                                     echo count(array_keys($_SESSION['cart']));
                                 }
 
@@ -408,11 +408,18 @@ $result = $db->query($sql);
                                         <form action="single_item_page.php" method="post">
                                             <input type="hidden" name="item_id" value=" <?php echo $row['item_id'] ?>">
                                             <div class="row">
-                                                <div class="col">
+                                                <div class="col-4">
                                                     <button type="submit" class="btn btn-secondary card_button">View Item</button>
                                                 </div>
-                                                <div class="col">
-                                                    <h6 style="text-align: right;">LKR: <?php echo number_format($row['unit_price'] , 2)  ?></h6>
+                                                <div class="col-8">
+                                                <h6 style="text-align: right;"><?php echo "LKR " . number_format($row['unit_price'], 2); ?></h6>
+                                                    <h6 style="text-align: right;">
+                                                        <?php
+                                                        if (!$row['sale_price'] == 0) {
+                                                            echo "Sale LKR " . number_format($row['sale_price'], 2);
+                                                        }
+                                                        ?>
+                                                    </h6>
                                                 </div>
                                             </div>
                                         </form>

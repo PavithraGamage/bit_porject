@@ -518,12 +518,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="reorder_level" value="<?php echo @$reorder_level ?>">
                                             </div>
                                             <div class="form-group">
+                                                <label for="exampleInputEmail1">GRN Price <span style="color: red;">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="grn_price" value="<?php echo @$grn_price ?>">
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="exampleInputEmail1">Unit Price <span style="color: red;">*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="unit_price" value="<?php echo @$unit_price ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1">Sale Price <span style="color: red;">*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="sale_price" value="<?php echo @$sale_price ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Warranty Period <span style="color: red;">*</span></label>
+                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="warranty_period" value="<?php echo @$warranty_period ?>">
                                             </div>
                                             <div class="form-group">
                                                 <label>Product Description</label>

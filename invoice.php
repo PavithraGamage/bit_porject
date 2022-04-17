@@ -3,6 +3,10 @@
 
 session_start();
 
+// redirect
+if(empty($_SESSION['cart'])) {
+    header('Location: http://localhost/bit/cart.php');
+}
 
 
 ?>
@@ -119,11 +123,11 @@ session_start();
                     <div class="col-sm-4 invoice-col">
                         To
                         <address>
-                            <strong>John Doe</strong><br>
-                            795 Folsom Ave, Suite 600<br>
-                            San Francisco, CA 94107<br>
-                            Phone: (555) 539-1037<br>
-                            Email: john.doe@example.com
+                            <strong><?php echo $_SESSION['first_name'] ." " .$_SESSION['last_name'];  ?></strong><br>
+                            <?php echo $_SESSION['address_l1']?><br>
+                            <?php echo $_SESSION['address_l2']?><br>
+                            Phone: <?php echo $_SESSION['contact_nmuber']?><br>
+                            Email: <?php echo $_SESSION['email']?>
                         </address>
                     </div>
                     <!-- /.col -->

@@ -2,6 +2,266 @@
 
 session_start();
 
+include "system/functions.php";
+
+extract($_POST);
+
+// DB Connection
+$db = db_con();
+
+// create error variable to store error messages
+$error =  array();
+
+// redirect
+if (empty($_SESSION['cart'])) {
+    header('Location: http://localhost/bit/cart.php');
+}
+
+// date
+$date = date('Y-m-d');
+
+// provinces drop down data fletch 
+$sql_pay = "SELECT * FROM `payment_methord`";
+$pay_result = $db->query($sql_pay);
+
+//order number
+
+$order_number = date('Ymd0');
+
+$order_number + 1;
+
+// session cart extract
+foreach ($_SESSION['cart'] as $product) {
+
+    echo $product['item_id'] . "<br>";
+    echo $product['item_qty'] . "<br>";
+
+
+    //item quantity missing
+}
+
+// login form
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
+
+    // call data clean function
+    $user_name = data_clean($username);
+
+    //check user name is empty
+    if (empty($username)) {
+        $error['username'] = "User Name Should not be empty";
+    }
+
+    // check password is empty
+    if (empty($password)) {
+        $error['password'] = "Password not empty";
+    }
+
+    // advance validation
+    if (empty($error)) {
+
+        $sql = "SELECT * FROM users WHERE user_name = '$username' AND password = '" . sha1($password) . "'";
+
+        // run database query
+        $result = $db->query($sql);
+
+        // check the data in database
+        if ($result->num_rows == 1) {
+
+            $row = $result->fetch_assoc();
+
+            $_SESSION['user_id'] = $row['user_id'];
+            $_SESSION['user_name'] = $row['user_name'];
+            $_SESSION['password'] = $row['password'];
+            $_SESSION['first_name'] = $row['first_name'];
+            $_SESSION['last_name'] = $row['last_name'];
+            $_SESSION['email'] = $row['email'];
+        } else {
+
+            $error['password'] = "invalided password";
+        }
+    }
+
+    @$user_id =  $_SESSION['user_id'];
+
+    if (empty($error)) {
+
+        $sql =  "SELECT * FROM `customers` WHERE customers.user_id = $user_id;";
+
+        // run database query
+        $result = $db->query($sql);
+
+        if ($result->num_rows == 1) {
+
+            $row = $result->fetch_assoc();
+
+            $_SESSION['cus_id'] = $row['cus_id'];
+            $_SESSION['contact_nmuber'] = $row['contact_nmuber'];
+            $_SESSION['address_l1'] = $row['address_l1'];
+            $_SESSION['address_l2'] = $row['address_l2'];
+            $_SESSION['city'] = $row['city'];
+            $_SESSION['postal_code'] = $row['postal_code'];
+        }
+    }
+}
+
+
+// insert billing details
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
+
+    // call data clean function
+    $frist_name =  data_clean($frist_name);
+    $last_name =  data_clean($last_name);
+    $phone =  data_clean($phone);
+    $email =  data_clean($email);
+    $address_line_1 =  data_clean($address_line_1);
+    $address_line_2 =  data_clean($address_line_2);
+    $city =  data_clean($city);
+    $province =  data_clean($province);
+    $zip =  data_clean($zip);
+
+    $d_frist_name = data_clean($d_frist_name);
+    $d_last_name = data_clean($d_last_name);
+    $d_phone =  data_clean($d_phone);
+    $d_address_line_1 =  data_clean($d_address_line_1);
+    $d_address_line_2 =  data_clean($d_address_line_2);
+    $d_city =  data_clean($d_city);
+    $d_province =  data_clean($d_province);
+    $d_zip =  data_clean($d_zip);
+
+    // basic validation Billing Details
+    if (empty($frist_name)) {
+        $error['frist_name'] = "First Name Should Not Be Empty";
+    }
+
+    if (empty($last_name)) {
+        $error['last_name'] = "Last Name Should Not Be Empty";
+    }
+    if (empty($phone)) {
+        $error['phone'] = "phone Should Not Be Empty";
+    }
+    if (empty($email)) {
+        $error['email'] = "email Should Not Be Empty";
+    }
+    if (empty($address_line_1)) {
+        $error['address_line_1'] = "Address line 1 Should Not Be Empty";
+    }
+    if (empty($address_line_2)) {
+        $error['address_line_2'] = "Address line 2 Should Not Be Empty";
+    }
+    if (empty($city)) {
+        $error['city'] = "city Should Not Be Empty";
+    }
+    if (empty($province)) {
+        $error['province'] = "Province Should Not Be Empty";
+    }
+    if (empty($zip)) {
+        $error['zip'] = "zip Should Not Be Empty";
+    }
+
+    // basic validation Delivery Details
+    if (empty($d_frist_name)) {
+        $error['d_frist_name'] = "First Name Should Not Be Empty";
+    }
+
+    if (empty($d_last_name)) {
+        $error['d_last_name'] = "Last Name Should Not Be Empty";
+    }
+    if (empty($d_phone)) {
+        $error['d_phone'] = "phone Should Not Be Empty";
+    }
+    if (empty($d_email)) {
+        $error['d_email'] = "email Should Not Be Empty";
+    }
+    if (empty($d_address_line_1)) {
+        $error['d_address_line_1'] = "Address line 1 Should Not Be Empty";
+    }
+    if (empty($d_address_line_2)) {
+        $error['d_address_line_2'] = "Address line 2 Should Not Be Empty";
+    }
+    if (empty($d_city)) {
+        $error['d_city'] = "city Should Not Be Empty";
+    }
+    if (empty($d_province)) {
+        $error['d_province'] = "Province Should Not Be Empty";
+    }
+    if (empty($d_zip)) {
+        $error['d_zip'] = "zip Should Not Be Empty";
+    }
+
+    // Advance Validations Billing Details
+
+    if (!preg_match("/^[a-zA-Z ]*$/", $frist_name)) {
+        $error['frist_name'] = "Only Letters allowed for First Name";
+    }
+
+    if (!preg_match("/^[a-zA-Z ]*$/", $last_name)) {
+        $error['last_name'] = "Only Letters allowed for Last Name";
+    }
+
+    if (!preg_match("/^[0-9]*$/", $phone)) {
+        $error['phone'] = "Phone number not valid";
+    }
+
+    if (!preg_match("/^[a-zA-Z ]*$/", $city)) {
+        $error['city'] = "Only Letters allowed for city";
+    }
+
+    if (!preg_match("/^[0-9]*$/", $zip)) {
+        $error['zip'] = "Postal Code not valid";
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error['email'] = "Postal Code not valid";
+    }
+
+    // Advance Validations Billing Details
+
+    if (!preg_match("/^[a-zA-Z ]*$/", $d_frist_name)) {
+        $error['frist_name'] = "Only Letters allowed for First Name";
+    }
+
+    if (!preg_match("/^[a-zA-Z ]*$/", $d_last_name)) {
+        $error['last_name'] = "Only Letters allowed for Last Name";
+    }
+
+    if (!preg_match("/^[0-9]*$/", $d_phone)) {
+        $error['phone'] = "Phone number not valid";
+    }
+
+    if (!preg_match("/^[a-zA-Z ]*$/", $d_city)) {
+        $error['city'] = "Only Letters allowed for city";
+    }
+
+    if (!preg_match("/^[0-9]*$/", $d_zip)) {
+        $error['zip'] = "Postal Code not valid";
+    }
+
+    if (!filter_var($d_email, FILTER_VALIDATE_EMAIL)) {
+        $error['email'] = "Postal Code not valid";
+    }
+
+    if (empty($error)) {
+
+        $discount = $_SESSION['grand_total_sale'];
+        // insert order
+        $sql_order = "INSERT INTO `orders` (`order_id`, `order_number`, `order_total`, `total_discount`, `delivery_charge`, `order_date`, `order_time`) VALUES (NULL, '$order_number', '100', '$discount', '300', '$date', '17:14:48');";
+        // run database query
+        $query = $db->query($sql_order);
+
+        // insert billing
+        $sql_billing = "INSERT INTO `billing_details` (`id`, `first_name`, `last_name`, `phone`, `email`, `address_line_1`, `address_line_2`, `city`, `province_id`, `zip`) VALUES (NULL, '$frist_name', '$last_name', '$phone', '$email', '$address_line_1', '$address_line_2', '$city', '$province', '$zip');";
+        // run database query
+        $query = $db->query($sql_billing);
+
+        // insert delivery 
+        $sql_delivery = "INSERT INTO `delivery_details` (`id`, `frist_name`, `last_name`, `phone`, `email`, `address_line_1`, `address_line_2`, `city`, `province_id`, `zip`) VALUES (NULL, '$d_frist_name', '$d_last_name', '$d_phone', '$d_email', '$d_address_line_1', '$d_address_line_2', '$d_city', '$d_province', '$d_zip');";
+        // run database query
+        $query = $db->query($sql_delivery);
+    }
+}
+
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -83,8 +343,8 @@ session_start();
     <!-- content start-->
     <div class="container">
         <?php
-        $x = 1;
-        if ($x == 10) {
+
+        if (empty($_SESSION['user_id'])) {
         ?>
             <div class="row" style="margin-top: 80px; margin-bottom: 80px">
                 <div class="col">
@@ -97,27 +357,28 @@ session_start();
                             <div class="card-body">
                                 <p class="login-box-msg">Sign in to start your session</p>
 
-                                <form action="dashboard.php" method="post">
+                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                     <div class="input-group mb-3">
-                                        <input type="email" class="form-control" placeholder="Email">
-
+                                        <input type="text" class="form-control" placeholder="Username" name="username">
+                                        <br>
+                                        <?php echo @$error['username'] ?>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <input type="password" class="form-control" placeholder="Password">
-
+                                        <input type="password" class="form-control" placeholder="Password" name="password">
+                                        <br>
+                                        <?php echo @$error['password'] ?>
                                     </div>
                                     <div class="row">
                                         <div class="col-8">
                                             <div class="icheck-primary">
-                                                <input type="checkbox" id="remember">
-                                                <label for="remember">
-                                                    Remember Me
-                                                </label>
+                                                <p class="mb-1">
+                                                    <a href="forgot-password.html">I forgot my password</a>
+                                                </p>
                                             </div>
                                         </div>
                                         <!-- /.col -->
                                         <div class="col-4" style="display: flex; flex-direction: row; justify-content: flex-end;">
-                                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                                            <button type="submit" class="btn btn-primary btn-block" name="action" value="login">Sign In</button>
                                         </div>
                                         <!-- /.col -->
                                     </div>
@@ -125,9 +386,6 @@ session_start();
 
                                 <!-- /.social-auth-links -->
 
-                                <p class="mb-1">
-                                    <a href="forgot-password.html">I forgot my password</a>
-                                </p>
 
                             </div>
                             <!-- /.card-body -->
@@ -146,6 +404,9 @@ session_start();
 
                                 <form action="../../index.html" method="post">
                                     <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Username">
+                                    </div>
+                                    <div class="input-group mb-3">
                                         <input type="text" class="form-control" placeholder="Full name">
                                     </div>
                                     <div class="input-group mb-3">
@@ -159,12 +420,7 @@ session_start();
                                     </div>
                                     <div class="row">
                                         <div class="col-8">
-                                            <div class="icheck-primary">
-                                                <input type="checkbox" id="agreeTerms" name="terms" value="agree">
-                                                <label for="agreeTerms">
-                                                    I agree to the <a href="#">terms</a>
-                                                </label>
-                                            </div>
+
                                         </div>
                                         <!-- /.col -->
                                         <div class="col-4" style="display: flex; flex-direction: row; justify-content: flex-end;">
@@ -173,90 +429,161 @@ session_start();
                                         <!-- /.col -->
                                     </div>
                                 </form>
-
-
-
                             </div>
                             <!-- /.form-box -->
                         </div><!-- /.card -->
                     </div>
                 </div>
             </div>
-
         <?php
         } else {
 
         ?>
             <div class="row item_row_main">
-
-
-                <form action="<?php $_SERVER['PHP_SELF']; ?>" method="post">
-
-
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                     <div class="row">
                         <div class="col">
-                            <h3> <i class="fas fa-map-marker-alt"></i> Enter Your Delivery Details</h3>
-                        </div>
-                        <div class="col cart_remove_all">
-
-                            <button type="reset" class="btn btn-secondary card_button">Delivery to different address</button>
-
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-4">
+                            <h3> <i class="fa fa-shopping-cart" aria-hidden="true"></i> Enter Your Billing Details</h3>
+                            <hr>
                             <label for="inputCity">Frist Name</label>
-                            <input type="text" class="form-control" id="frist_name" name="frist_name">
-                        </div>
-                        <div class="col-4">
+                            <input type="text" class="form-control" id="frist_name" name="frist_name" value="<?php echo @$_SESSION['user_name'] ?>">
+                            <?php echo @$error['frist_name'] ?><br>
+
                             <label for="inputState">Last Name</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name">
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo @$_SESSION['last_name'] ?>">
+                            <?php echo @$error['last_name'] ?><br>
 
-                        </div>
-                        <div class="col-4">
                             <label for="inputState">Phone</label>
-                            <input type="tel" class="form-control" id="phone" name="phone">
-                        </div>
+                            <input type="tel" class="form-control" id="phone" name="phone" value="<?php echo @$_SESSION['contact_nmuber'] ?>">
+                            <?php echo @$error['phone'] ?><br>
 
-                    </div>
-                    <div class="form-group">
-                        <label for="inputAddress">Address Line 1</label>
-                        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address_line_1">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputAddress2">Address Line 2</label>
-                        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="address_line_2">
-                    </div>
-                    <div class="row">
-                        <div class="col-4">
+                            <label for="inputState">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" value="<?php echo @$_SESSION['email'] ?>">
+                            <?php echo @$error['email'] ?><br>
+
+                            <label for="inputAddress">Address Line 1</label>
+                            <input type="text" class="form-control" id="address_line_1" placeholder="Street Name" name="address_line_1" value="<?php echo @$_SESSION['address_l1'] ?>">
+                            <?php echo @$error['address_line_1'] ?><br>
+
+                            <label for="inputAddress2">Address Line 2</label>
+                            <input type="text" class="form-control" id="address_line_2" placeholder="Apartment, Studio, or Floor" name="address_line_2" value="<?php echo @$_SESSION['address_l2'] ?>">
+                            <?php echo @$error['address_line_2'] ?><br>
+
                             <label for="inputCity">City</label>
-                            <input type="text" class="form-control" id="inputCity" name="city">
-                        </div>
-                        <div class="col-4">
-                            <label for="inputState">Province</label>
-                            <select id="inputState" class="form-control" name="province">
-                                <option selected>Choose...</option>
-                                <option>Western</option>
-                                <option>Western</option>
-                                <option>Western</option>
-                                <option>Western</option>
-                                <option>Western</option>
-                                <option>Western</option>
-                                <option>Western</option>
-                                <option>Western</option>
-                                <option>Western</option>
-                                <option>Western</option>
-                            </select>
-                        </div>
-                        <div class="col-4">
-                            <label for="inputZip">Zip</label>
-                            <input type="text" class="form-control" id="inputZip" name="zip">
-                        </div>
+                            <input type="text" class="form-control" id="city" name="city" value="<?php echo @$_SESSION['city'] ?>">
+                            <?php echo @$error['city'] ?><br>
 
+                            <label for="inputState">Province</label>
+                            <select class="form-control select2" style="width: 100%;" name="province" id="province">
+                                <option value="">- Select Province -</option>
+                                <?php
+
+                                // provinces drop down data fletch 
+                                $sql_pro = "SELECT * FROM `province`";
+                                $pro_result = $db->query($sql_pro);
+
+                                // fletch data
+                                if ($pro_result->num_rows > 0) {
+                                    while ($pro_row = $pro_result->fetch_assoc()) {
+                                ?>
+                                        <option value="<?php echo $pro_row['id'] ?>" <?php if ($pro_row['id'] == @$province) { ?> selected <?php } ?>><?php echo $pro_row['name']; ?></option>
+                                <?php
+
+                                    }
+                                }
+                                ?>
+                            </select>
+                            <?php echo @$error['province'] ?><br>
+
+                            <label for="inputZip">Zip</label>
+                            <input type="text" class="form-control" id="zip" name="zip" value="<?php echo @$_SESSION['postal_code'] ?>">
+                            <?php echo @$error['zip'] ?><br>
+
+                            <br>
+                            <input type="checkbox" class="form-check-input" id="check_box" style="margin-right: 10px;" onchange="fill_delivery_details()">
+                            <label class="form-check-label" for="exampleCheck1">Use same address as a delivery address</label>
+                        </div>
+                        <div class="col">
+                            <h3> <i class="fa fa-map-marker" aria-hidden="true"></i> Enter Your Delivery Details</h3>
+                            <hr>
+                            <label for="inputCity">Frist Name</label>
+                            <input type="text" class="form-control" id="d_frist_name" name="d_frist_name" value="<?php echo @$d_frist_name ?>">
+                            <?php echo @$error['d_frist_name'] ?><br>
+
+                            <label for="inputState">Last Name</label>
+                            <input type="text" class="form-control" id="d_last_name" name="d_last_name" value="<?php echo @$d_last_name ?>">
+                            <?php echo @$error['d_last_name'] ?><br>
+
+                            <label for="inputState">Phone</label>
+                            <input type="tel" class="form-control" id="d_phone" name="d_phone" value="<?php echo @$d_phone ?>">
+                            <?php echo @$error['d_phone'] ?><br>
+
+                            <label for="inputState">Email Address</label>
+                            <input type="email" class="form-control" id="d_email" name="d_email" value="<?php echo @$d_email ?>">
+                            <?php echo @$error['d_email'] ?><br>
+
+                            <label for="inputAddress">Address Line 1</label>
+                            <input type="text" class="form-control" id="d_address_line_1" placeholder="Street Name" name="d_address_line_1" value="<?php echo @$d_address_line_1 ?>">
+                            <?php echo @$error['d_address_line_1'] ?><br>
+
+                            <label for="inputAddress2">Address Line 2</label>
+                            <input type="text" class="form-control" id="d_address_line_2" placeholder="Apartment, Studio, or Floor" name="d_address_line_2" value="<?php echo @$d_address_line_2 ?>">
+                            <?php echo @$error['d_address_line_2'] ?><br>
+
+                            <label for="inputCity">City</label>
+                            <input type="text" class="form-control" id="d_city" name="d_city" value="<?php echo @$d_city ?>">
+                            <?php echo @$error['d_city'] ?><br>
+
+                            <label for="inputState">Province</label>
+                            <select class="form-control select2" style="width: 100%;" name="d_province" id="d_province">
+                                <option value="">- Select Province -</option>
+                                <?php
+
+                                // provinces drop down data fletch 
+                                $sql_pro = "SELECT * FROM `province`";
+                                $pro_result = $db->query($sql_pro);
+                                // fletch data
+                                if ($pro_result->num_rows > 0) {
+                                    while ($pro_row = $pro_result->fetch_assoc()) {
+                                ?>
+                                        <option value="<?php echo $pro_row['id'] ?>" id="<?php echo $pro_row['price']; ?>" <?php if ($pro_row['id'] == @$d_province) { ?> selected <?php } ?>><?php echo $pro_row['name']; ?></option>
+                                        
+                                <?php
+
+                                    }
+                                }
+                                ?>
+                            </select>
+                            <?php echo @$error['province'] ?><br>
+
+                            <label for="inputZip">Zip</label>
+                            <input type="text" class="form-control" id="d_zip" name="d_zip" value="<?php echo @$d_zip ?>">
+                            <?php echo @$error['d_zip'] ?><br>
+                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-6"></div>
+                        <div class="col-6 cart_total">
+                            <h4 class="cart_summary">Payment Method</h4>
+                            <div class="r_button">
+
+                                <?php
+
+                                if ($pay_result->num_rows > 0) {
+                                    while ($pay_row = $pay_result->fetch_assoc()) {
+                                ?>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="payment_method" id="<?php echo $pay_row['id']; ?>" value="<?php echo $pay_row['id']; ?>">
+                                            <label class="form-check-label r_label" for="<?php echo $pay_row['id']; ?>">
+                                                <?php echo $pay_row['name']; ?>
+                                            </label>
+                                        </div>
+                                <?php
+                                    }
+                                }
+                                ?>
+
+                            </div>
+                        </div>
                         <div class="col-6 cart_total">
                             <h4 class="cart_summary">Order Summary</h4>
                             <div class="row">
@@ -273,34 +600,27 @@ session_start();
                                         <h6>Delivery Charges:</h6>
                                     </div>
                                     <hr>
-
                                     <div>
                                         <h4>Est. Total:</h4>
                                     </div>
                                 </div>
                                 <div class="col-8">
                                     <div>
-                                        <h6>156,000 LKR</h6>
+                                        <h6><?php echo  $_SESSION['grand_total']; ?></h6>
                                     </div>
                                     <hr>
                                     <div>
-                                        <h6>8,000 LKR</h6>
+                                        <h6><?php echo $_SESSION['grand_total_sale'] ?></h6>
                                     </div>
                                     <hr>
                                     <div>
                                         <h6>3,000 LKR</h6>
                                     </div>
                                     <hr>
-
-
                                     <div>
-                                        <h4>267,500 LKR</h4>
+                                        <h4>LKR <?php echo number_format($_SESSION['grand_total'], 2); ?></h4>
                                     </div>
-                                    <a href="payment.php">
-                                        <button type="button" class="btn btn-secondary cart_checkout_button"> PAY YOUR ORDER </button>
-                                    </a>
-
-
+                                    <button type="submit" name="action" value="insert" class="btn btn-secondary cart_checkout_button"> PAY YOUR ORDER </button>
                                 </div>
                             </div>
                         </div>
@@ -310,6 +630,8 @@ session_start();
 
             </div>
         <?php
+
+            var_dump($_POST);
         }
         ?>
 
@@ -354,7 +676,40 @@ session_start();
             </div>
         </div>
     </footer>
+    <script src="system/plugins/jquery/jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <script>
+        // move values form billing details to delivery details
+        function fill_delivery_details() {
+
+
+            var copy = $('#check_box').is(":checked");
+
+            if (copy === true) {
+                $("#d_frist_name").val($("#frist_name").val());
+                $("#d_last_name").val($("#last_name").val());
+                $("#d_phone").val($("#phone").val());
+                $("#d_email").val($("#email").val());
+                $("#d_address_line_1").val($("#address_line_1").val());
+                $("#d_address_line_2").val($("#address_line_2").val());
+                $("#d_city").val($("#city").val());
+                $("#d_province").val($("#province").val());
+                $("#d_zip").val($("#zip").val());
+
+            } else {
+                $("#d_frist_name").val("");
+                $("#d_last_name").val("");
+                $("#d_phone").val("");
+                $("#d_email").val("");
+                $("#d_address_line_1").val("");
+                $("#d_address_line_2").val("");
+                $("#d_city").val("");
+                $("#d_province").val("");
+                $("#d_zip").val("");
+
+            }
+        }
+    </script>
 
 
 </body>
