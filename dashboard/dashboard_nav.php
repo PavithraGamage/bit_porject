@@ -3,6 +3,11 @@
 // dashboard icon with name
 $dash = array();
 
+if(empty( $_SESSION['user_id'])){
+    header('Location:index.php');
+
+}
+
 if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "dashboard") {
 
     $dash['dash_icon'] = '<i class="fas fa-tachometer-alt"></i>';
@@ -88,7 +93,7 @@ if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "troubleshoots") {
                                 <img src="http://localhost/bit/assets/images/sulitha_w-1.jpg" class="dash_image" alt="" />
                             </div>
                             <div class="col-6 dash_name_box">
-                                <h6>A.P.K Samaranayake</h6>
+                                <h6><?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?></h6>
                             </div>
                         </div>
                     </div>
@@ -96,7 +101,9 @@ if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "troubleshoots") {
                         <i class="fas fa-bell"></i>
                     </div>
                     <div class="col-2 dash_notifcation_box">
-                        <i class="fas fa-sign-out-alt"></i>
+                         <a href="logout.php">
+                         <i class="fas fa-sign-out-alt"></i>
+                        </a>
                     </div>
                 </div>
             </div>

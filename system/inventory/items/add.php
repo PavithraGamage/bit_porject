@@ -557,16 +557,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                 </div>
                                 <!-- /.card -->
                             </div>
-
-
-
-
-
-
-
-
-
-
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
