@@ -258,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 <?php
 
                 // sql query
-                $sql = "SELECT * FROM `brands`";
+                $sql = "SELECT u.user_name, s.status, ap.date, ap.id, t.time FROM users u, appoiments ap, app_status s, app_time t";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -277,6 +277,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <th>Customers Name</th>
 
                                     <th>App Date</th>
+                                    <th>App Time</th>
+                                    <th>Status</th>
 
                                     <th style="width: 85px !important;">View</th>
                                     <th style="width: 85px !important;">Edit</th>
@@ -292,31 +294,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     while ($row = $result->fetch_assoc()) {
                                 ?>
                                         <tr>
-                                            <td><?php echo $row['brand_name'] ?> </td>
+                                            <td><?php echo $row['id'] ?> </td>
                                             <td>
-                                                APK Samaranayake
+                                            <?php echo $row['user_name'] ?>
                                             </td>
 
                                             <td>
-                                                2022/12/18
+                                            <?php echo $row['date'] ?>
+                                            <td>
+                                            <?php echo $row['time'] ?>
+                                            </td>
+                                            </td>
+                                            <td>
+                                            <?php echo $row['status'] ?>
                                             </td>
 
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="brand_id" value="<?php echo $row['brand_id'] ?>">
+                                                    <input type="hidden" name="brand_id" value="<?php echo $row['id'] ?>">
                                                     <button type="submit" name="action" value="edit" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button>
                                                 </form>
                                             </td>
 
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="brand_id" value="<?php echo $row['brand_id'] ?>">
+                                                    <input type="hidden" name="brand_id" value="<?php echo $row['id'] ?>">
                                                     <button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button>
                                                 </form>
                                             </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="brand_id" value="<?php echo $row['brand_id'] ?>">
+                                                    <input type="hidden" name="brand_id" value="<?php echo $row['id'] ?>">
                                                     <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
                                                 </form>
                                             </td>

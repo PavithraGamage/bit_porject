@@ -1,18 +1,16 @@
-<?php 
+<?php
 
 // dashboard icon with name
 $dash = array();
 
-if(empty( $_SESSION['user_id'])){
+if (empty($_SESSION['user_id'])) {
     header('Location:index.php');
-
 }
 
 if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "dashboard") {
 
     $dash['dash_icon'] = '<i class="fas fa-tachometer-alt"></i>';
     $dash['path'] = pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME);
-
 }
 
 if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "orders") {
@@ -81,7 +79,7 @@ if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "troubleshoots") {
         <!--headder row start-->
         <div class="row dash_hedding_row">
             <div class="col-6">
-                <h4> <?php echo $dash['dash_icon']?> <?php echo ucfirst($dash['path']) ;  ?></h4>
+                <h4> <?php echo $dash['dash_icon'] ?> <?php echo ucfirst($dash['path']);  ?></h4>
             </div>
             <!-- header section nav -->
             <div class="col-6">
@@ -101,8 +99,8 @@ if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "troubleshoots") {
                         <i class="fas fa-bell"></i>
                     </div>
                     <div class="col-2 dash_notifcation_box">
-                         <a href="logout.php">
-                         <i class="fas fa-sign-out-alt"></i>
+                        <a href="logout.php">
+                            <i class="fas fa-sign-out-alt"></i>
                         </a>
                     </div>
                 </div>
@@ -141,9 +139,9 @@ if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "troubleshoots") {
                     </a>
                 </div>
                 <div class="dash_left_nav">
-                <a href="troubleshoots.php" style="text-decoration:none; color:black">
-                    <i class="fas fa-tools"></i> Troubleshoots
-                </a>
+                    <a href="troubleshoots.php" style="text-decoration:none; color:black">
+                        <i class="fas fa-tools"></i> Troubleshoots
+                    </a>
                 </div>
                 <div class="dash_left_nav_last">
                     <i class="fas fa-life-ring"></i> Help

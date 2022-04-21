@@ -130,7 +130,7 @@ $row = $stock_count_result->fetch_assoc();
                             <a class="nav-link sys_nav_link" href="http://localhost/bit/contact.php">Contact</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
+                            <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php">
