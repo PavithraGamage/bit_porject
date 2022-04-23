@@ -2,6 +2,12 @@
 
 session_start();
 
+// default time zoon
+date_default_timezone_set("Asia/Colombo");
+
+$order_number = date("Y") . date("m") . date("d");
+
+
 include "system/functions.php";
 
 extract($_POST);
@@ -17,28 +23,29 @@ if (empty($_SESSION['cart'])) {
     header('Location: http://localhost/bit/cart.php');
 }
 
+// session cart extract
+foreach ($_SESSION['cart'] as $product) {
+
+    $item_id =  $product['item_id'];
+    $item_qty = $product['item_qty'];
+    //item quantity missing
+}
+
+
+foreach($_SESSION['cart'] as $key => $values){
+
+    print_r($values);
+
+}
+
+echo $item_id. $item_qty; 
+
 // date
 $date = date('Y-m-d');
 
 // provinces drop down data fletch 
 $sql_pay = "SELECT * FROM `payment_methord`";
 $pay_result = $db->query($sql_pay);
-
-//order number
-
-$order_number = date('Ymd0');
-
-$order_number + 1;
-
-// session cart extract
-foreach ($_SESSION['cart'] as $product) {
-
-    echo $product['item_id'] . "<br>";
-    echo $product['item_qty'] . "<br>";
-
-
-    //item quantity missing
-}
 
 // login form
 
@@ -105,7 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
     }
 }
 
-
 // insert billing details
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
@@ -128,6 +134,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     $d_city =  data_clean($d_city);
     $d_province =  data_clean($d_province);
     $d_zip =  data_clean($d_zip);
+
+    $payment_method = data_clean($payment_method);
 
     // basic validation Billing Details
     if (empty($frist_name)) {
@@ -244,20 +252,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     if (empty($error)) {
 
         $discount = $_SESSION['grand_total_sale'];
+        $user_id = $_SESSION['user_id'];
+        $order_total = $_SESSION['grand_total'];
+        $time = date("H:i:s");
+        $grand_total =  $_SESSION['order_grand_total'];
+
         // insert order
-        $sql_order = "INSERT INTO `orders` (`order_id`, `order_number`, `order_total`, `total_discount`, `delivery_charge`, `order_date`, `order_time`) VALUES (NULL, '$order_number', '100', '$discount', '300', '$date', '17:14:48');";
+        $sql_order = "INSERT INTO `orders` (`order_id`, `order_number`, `order_total`, `total_discount`, `delivery_charge`, `order_date`, `order_time`, `user_id`, `payment_id`, `grand_total`) VALUES (NULL, '$order_number', '$order_total', '$discount', '$d_province', '$date', '$time','$user_id', '$payment_method', '$grand_total');";
         // run database query
         $query = $db->query($sql_order);
 
+        // capture last insert ID
+        $order_id = $db->insert_id;
+
+        // change order number
+        $order_number = $order_number . sprintf('%04d', $order_id);
+        // order number update
+        $sql = "UPDATE orders SET order_number = '$order_number' WHERE order_id = '$order_id'";
+        // run database query
+        $query = $db->query($sql);
+
         // insert billing
-        $sql_billing = "INSERT INTO `billing_details` (`id`, `first_name`, `last_name`, `phone`, `email`, `address_line_1`, `address_line_2`, `city`, `province_id`, `zip`) VALUES (NULL, '$frist_name', '$last_name', '$phone', '$email', '$address_line_1', '$address_line_2', '$city', '$province', '$zip');";
+        $sql_billing = "INSERT INTO `billing_details` (`id`, `first_name`, `last_name`, `phone`, `email`, `address_line_1`, `address_line_2`, `provinces`, `city`, `zip`, `order_id`) VALUES (NULL, '$frist_name', '$last_name', '$phone', '$email', '$address_line_1', '$address_line_2', '$province', '$city', '$zip', '$order_id');";
         // run database query
         $query = $db->query($sql_billing);
 
         // insert delivery 
-        $sql_delivery = "INSERT INTO `delivery_details` (`id`, `frist_name`, `last_name`, `phone`, `email`, `address_line_1`, `address_line_2`, `city`, `province_id`, `zip`) VALUES (NULL, '$d_frist_name', '$d_last_name', '$d_phone', '$d_email', '$d_address_line_1', '$d_address_line_2', '$d_city', '$d_province', '$d_zip');";
+        $sql_delivery = "INSERT INTO `delivery_details` (`id`, `frist_name`, `last_name`, `phone`, `email`, `address_line_1`, `address_line_2`, `city`, `province_id`, `zip`, `order_id`) VALUES (NULL, '$d_frist_name', '$d_last_name', '$d_phone', '$d_email', '$d_address_line_1', '$d_address_line_2', '$d_city', '$d_province', '$d_zip', '$order_id');";
         // run database query
         $query = $db->query($sql_delivery);
+
+
+
     }
 }
 
@@ -361,12 +387,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                     <div class="input-group mb-3">
                                         <input type="text" class="form-control" placeholder="Username" name="username">
                                         <br>
-                                        <?php echo @$error['username'] ?>
+                                        <p style="color: red;"> <?php echo @$error['username'] ?> </p>
                                     </div>
                                     <div class="input-group mb-3">
                                         <input type="password" class="form-control" placeholder="Password" name="password">
                                         <br>
-                                        <?php echo @$error['password'] ?>
+                                        <p style="color: red;"> <?php echo @$error['password'] ?> </p>
                                     </div>
                                     <div class="row">
                                         <div class="col-8">
@@ -440,7 +466,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
         ?>
             <div class="row item_row_main">
-                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" id="checkout_form">
                     <div class="row">
                         <div class="col">
                             <h3> <i class="fa fa-shopping-cart" aria-hidden="true"></i> Enter Your Billing Details</h3>
@@ -535,7 +561,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                             <?php echo @$error['d_city'] ?><br>
 
                             <label for="inputState">Province</label>
-                            <select class="form-control select2" style="width: 100%;" name="d_province" id="d_province">
+                            <select class="form-control select2" style="width: 100%;" name="d_province" id="d_province" onchange="delivery_price()">
                                 <option value="">- Select Province -</option>
                                 <?php
 
@@ -546,8 +572,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                 if ($pro_result->num_rows > 0) {
                                     while ($pro_row = $pro_result->fetch_assoc()) {
                                 ?>
-                                        <option value="<?php echo $pro_row['id'] ?>" id="<?php echo $pro_row['price']; ?>" <?php if ($pro_row['id'] == @$d_province) { ?> selected <?php } ?>><?php echo $pro_row['name']; ?></option>
-                                        
+                                        <option value="<?php echo $pro_row['id'] ?>" <?php if ($pro_row['id'] == @$d_province) { ?> selected <?php } ?>><?php echo $pro_row['name']; ?></option>
+
                                 <?php
 
                                     }
@@ -584,7 +610,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
                             </div>
                         </div>
-                        <div class="col-6 cart_total">
+                        <div class="col-6 cart_total" id="order_summary">
                             <h4 class="cart_summary">Order Summary</h4>
                             <div class="row">
                                 <div class="col-4">
@@ -601,24 +627,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                     </div>
                                     <hr>
                                     <div>
-                                        <h4>Est. Total:</h4>
+                                        <h4>Total:</h4>
                                     </div>
                                 </div>
                                 <div class="col-8">
                                     <div>
-                                        <h6><?php echo  $_SESSION['grand_total']; ?></h6>
+                                        <h6> LKR: <?php echo  number_format($_SESSION['grand_total'], 2); ?></h6>
                                     </div>
                                     <hr>
                                     <div>
-                                        <h6><?php echo $_SESSION['grand_total_sale'] ?></h6>
+                                        <h6>LKR: <?php echo  number_format($_SESSION['grand_total_sale']);  ?></h6>
                                     </div>
                                     <hr>
                                     <div>
-                                        <h6>3,000 LKR</h6>
+                                        <h6 id="delivery_price">LKR: 0</h6>
                                     </div>
                                     <hr>
                                     <div>
-                                        <h4>LKR <?php echo number_format($_SESSION['grand_total'], 2); ?></h4>
+                                        <h4>LKR: <?php echo number_format($_SESSION['grand_total'] - $_SESSION['grand_total_sale'], 2); ?></h4>
                                     </div>
                                     <button type="submit" name="action" value="insert" class="btn btn-secondary cart_checkout_button"> PAY YOUR ORDER </button>
                                 </div>
@@ -695,6 +721,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                 $("#d_city").val($("#city").val());
                 $("#d_province").val($("#province").val());
                 $("#d_zip").val($("#zip").val());
+                delivery_price();
 
             } else {
                 $("#d_frist_name").val("");
@@ -708,6 +735,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                 $("#d_zip").val("");
 
             }
+        }
+
+        // change the delivery price
+        function delivery_price() {
+
+            var d_province = $("#d_province").val();
+            var dt = "d_province=" + d_province + "&";
+
+            $.ajax({
+                type: 'POST',
+                data: dt,
+                url: 'ajax/province_price.php',
+                success: function(response) {
+                    $("#order_summary").html(response)
+                },
+                error: function(request, status, error) {
+                    alert(error);
+                }
+            });
         }
     </script>
 

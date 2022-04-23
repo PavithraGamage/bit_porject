@@ -227,7 +227,18 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
 
 
                                     <div>
-                                        <h4>LKR: <?php echo number_format($grand_total - $grand_total_sale, 2) ; ?></h4>
+                                        <h4>LKR: <?php 
+
+
+                                            $est_total = $grand_total - $grand_total_sale;
+
+                                            // session for est total
+
+                                            $_SESSION['est_total'] = $est_total;
+                                            
+                                            echo number_format($est_total, 2) ; 
+                                        
+                                        ?></h4>
                                     </div>
                                     <a href="checkout.php">
                                         <button type="button" class="btn btn-secondary cart_checkout_button"> CHECKOUT ORDER </button>
