@@ -23,22 +23,10 @@ if (empty($_SESSION['cart'])) {
     header('Location: http://localhost/bit/cart.php');
 }
 
-// session cart extract
-foreach ($_SESSION['cart'] as $product) {
-
-    $item_id =  $product['item_id'];
-    $item_qty = $product['item_qty'];
-    //item quantity missing
-}
 
 
-foreach($_SESSION['cart'] as $key => $values){
 
-    print_r($values);
-
-}
-
-echo $item_id. $item_qty; 
+//$item_id . $item_qty;
 
 // date
 $date = date('Y-m-d');
@@ -135,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     $d_province =  data_clean($d_province);
     $d_zip =  data_clean($d_zip);
 
-    $payment_method = data_clean($payment_method);
+    @$payment_method = data_clean($payment_method);
 
     // basic validation Billing Details
     if (empty($frist_name)) {
@@ -195,6 +183,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     }
     if (empty($d_zip)) {
         $error['d_zip'] = "zip Should Not Be Empty";
+    }
+
+
+    if (empty($payment_method)) {
+        $error['payment_method'] = "Select Your Payment Method";
     }
 
     // Advance Validations Billing Details
@@ -265,6 +258,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         // capture last insert ID
         $order_id = $db->insert_id;
 
+        $_SESSION['order_id'] = $order_id;
+
         // change order number
         $order_number = $order_number . sprintf('%04d', $order_id);
         // order number update
@@ -283,7 +278,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $query = $db->query($sql_delivery);
 
 
+        // session cart extract
+        foreach ($_SESSION['cart'] as $product) {
 
+            $item_id =  $product['item_id'];
+            $item_price = $product['item_price'];
+            $item_sale_price = $product['sales_price'];
+            $grn_price = $product['grn_price'];
+            $item_qty = $product['item_qty'];
+
+            $sql = "INSERT INTO `orders_items` (`orders_items_id`, `order_id`, `item_id`, `item_qty`, `grn_price`, `unit_price`, `sale_price`) VALUES (NULL, '$order_id', '$item_id', '$item_qty', '$grn_price', '$item_price', '$item_sale_price');";
+
+            $db->query($sql);
+        }
+    }
+
+    // redirect to dashboard
+    if (empty($error)) {
+
+        header('Location:invoice.php');
     }
 }
 
@@ -318,9 +331,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     <div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
             <div class="container-fluid">
-                <a class="navbar-brand" href="http://localhost/bit/">
-                    <!--                        <img src="images/logo.png" alt="" class="nav_logo">-->
-                    <img src="images/logo_new.png" alt="" class="nav_logo" />
+                <a class="navbar-brand" style="color: white;" href="http://localhost/bit/">
+                    <i class="fas fa-globe"></i> U-Star Digital
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -604,10 +616,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                             </label>
                                         </div>
                                 <?php
+
+
                                     }
                                 }
                                 ?>
-
+                                <?php echo @$error['payment_method']; ?>
                             </div>
                         </div>
                         <div class="col-6 cart_total" id="order_summary">
@@ -657,7 +671,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
             </div>
         <?php
 
-            var_dump($_POST);
+
         }
         ?>
 
@@ -668,40 +682,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     </div>
     <!-- content end-->
     <!-- footer start -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-8">
-                    <!--<img src="images/cmaplus-logo-blue-big copy._w.png" alt="" class="footer_logo"/>-->
-                    <img src="images/logo_new.png" alt="" class="footer_logo" />
-                    <hr class="footer_hr">
-                    <p class="footer_company">
-
-                        We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                        We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                        We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                        We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                    </p>
-                </div>
-                <div class="col-2">
-                    <h2 class="footer_title">Company</h2>
-                    <hr class="footer_hr_2">
-                    <p class="footer_items">About</p>
-                    <p class="footer_items">Contact</p>
-                    <p class="footer_items">Service</p>
-                    <p class="footer_items">Company</p>
-                </div>
-                <div class="col-2">
-                    <h2 class="footer_title">Quick Links</h2>
-                    <hr class="footer_hr_2">
-                    <p class="footer_items">FAQ</p>
-                    <p class="footer_items">Privacy Policy</p>
-                    <p class="footer_items">Return Policy</p>
-                    <p class="footer_items">Company</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <?php 
+   
+   include "footer.php";
+   
+   ?>
     <script src="system/plugins/jquery/jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
     <script>

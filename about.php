@@ -22,9 +22,8 @@
     <div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="http://localhost/bit/">
-                    <!--<img src="images/logo.png" alt="" class="nav_logo">-->
-                    <img src="images/logo_new.png" alt="" class="nav_logo" />
+                <a class="navbar-brand" style="color: white;" href="http://localhost/bit/">
+                    <i class="fas fa-globe"></i> U-Star Digital
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -58,75 +57,75 @@
         </nav>
     </div>
     <!--Navigation End-->
-<!--Hero Section Start-->
-<div class="hero">
-    <div class="container">
-        <h2 class="hero_headding">About</h2>
-        <hr class="hero_hr">
-        <p class="hero_para">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book</p>
-    </div>
-</div>
-<!--Hero Section End-->
-<!-- content start -->
-<div class="container">
-    <div class="row contact_row">
-        <div class="col">
-            <h2>EST: 1998</h2>
-            <hr>
-            <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book's
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book's
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book's
-                <br><br>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book
-            </p>
+    <!--Hero Section Start-->
+    <div class="hero">
+        <div class="container">
+            <h2 class="hero_headding">About</h2>
+            <hr class="hero_hr">
+            <p class="hero_para">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book</p>
         </div>
-        <div class="col">
-            <a href="images/rajni-computer-shop-jaunpur-d058j6qbsv.webp"></a>
-            <img src="images/HTB1eLH9V7zoK1RjSZFlq6yi4VXaw.jpg" alt=""/>
-        </div>
-
     </div>
-</div>
-<!-- content end -->
-<footer>
+    <!--Hero Section End-->
+    <!-- content start -->
     <div class="container">
-        <div class="row">
-            <div class="col-8">
-                <!--<img src="images/cmaplus-logo-blue-big copy._w.png" alt="" class="footer_logo"/>-->
-                <img src="images/logo_new.png" alt="" class="footer_logo" />
-                <hr class="footer_hr">
-                <p class="footer_company">
-
-                    We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                    We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                    We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                    We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
+        <div class="row contact_row">
+            <div class="col">
+                <h2>EST: 1998</h2>
+                <hr>
+                <p>
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book's
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book's
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book's
+                    <br><br>
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book
                 </p>
             </div>
-            <div class="col-2">
-                <h2 class="footer_title">Company</h2>
-                <hr class="footer_hr_2">
-                <p class="footer_items">About</p>
-                <p class="footer_items">Contact</p>
-                <p class="footer_items">Service</p>
-                <p class="footer_items">Company</p>
+            <div class="col">
+                <a href="images/rajni-computer-shop-jaunpur-d058j6qbsv.webp"></a>
+                <img src="images/HTB1eLH9V7zoK1RjSZFlq6yi4VXaw.jpg" alt="" />
             </div>
-            <div class="col-2">
-                <h2 class="footer_title">Quick Links</h2>
-                <hr class="footer_hr_2">
-                <p class="footer_items">FAQ</p>
-                <p class="footer_items">Privacy Policy</p>
-                <p class="footer_items">Return Policy</p>
-                <p class="footer_items">Company</p>
-            </div>
+
         </div>
     </div>
-</footer>
-<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <!-- content end -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-8">
+                    <!--<img src="images/cmaplus-logo-blue-big copy._w.png" alt="" class="footer_logo"/>-->
+                    <img src="images/logo_new.png" alt="" class="footer_logo" />
+                    <hr class="footer_hr">
+                    <p class="footer_company">
+
+                        We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
+                        We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
+                        We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
+                        We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
+                    </p>
+                </div>
+                <div class="col-2">
+                    <h2 class="footer_title">Company</h2>
+                    <hr class="footer_hr_2">
+                    <p class="footer_items">About</p>
+                    <p class="footer_items">Contact</p>
+                    <p class="footer_items">Service</p>
+                    <p class="footer_items">Company</p>
+                </div>
+                <div class="col-2">
+                    <h2 class="footer_title">Quick Links</h2>
+                    <hr class="footer_hr_2">
+                    <p class="footer_items">FAQ</p>
+                    <p class="footer_items">Privacy Policy</p>
+                    <p class="footer_items">Return Policy</p>
+                    <p class="footer_items">Company</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
 
 
 </body>
-</html>
 
+</html>

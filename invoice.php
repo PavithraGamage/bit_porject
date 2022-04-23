@@ -3,10 +3,16 @@
 
 session_start();
 
+$order_id = $_SESSION['order_id'];
+
+include "system/functions.php";
+
+$db = db_con();
 // redirect
-if(empty($_SESSION['cart'])) {
+if (empty($_SESSION['cart'])) {
     header('Location: http://localhost/bit/cart.php');
 }
+
 
 
 ?>
@@ -39,9 +45,8 @@ if(empty($_SESSION['cart'])) {
     <div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
             <div class="container-fluid">
-                <a class="navbar-brand" href="http://localhost/bit/">
-                    <!--                        <img src="images/logo.png" alt="" class="nav_logo">-->
-                    <img src="images/logo_new.png" alt="" class="nav_logo" />
+                <a class="navbar-brand" style="color: white;" href="http://localhost/bit/">
+                    <i class="fas fa-globe"></i> U-Star Digital
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -91,10 +96,23 @@ if(empty($_SESSION['cart'])) {
     <div class="container">
         <div class="row item_row_main">
             <div class="row">
-                <div class="col">
-                    <h3> <i class="fas fa-map-marker-alt"></i> Invoice for your Order</h3>
-                </div>
-                <hr style="margin-top:10px">
+
+                <?php
+
+                //individual order data fletch
+               $sql = "SELECT o.order_date, u.first_name, u.last_name, c.address_l1, c.address_l2, c.contact_nmuber, u.email, o.order_number FROM orders o INNER JOIN users u ON o.user_id = u.user_id INNER JOIN customers c ON u.user_id = c.user_id WHERE o.order_id = $order_id;";
+
+                $result = $db->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+
+                ?>
+
+                        <div class="col">
+                            <h3> <i class="fas fa-map-marker-alt"></i> Invoice for your Order</h3>
+                        </div>
+                        <hr style="margin-top:10px">
             </div>
             <div class="invoice p-3 mb-3">
                 <!-- title row -->
@@ -102,7 +120,7 @@ if(empty($_SESSION['cart'])) {
                     <div class="col-12" style="margin-bottom: 15px;">
                         <h4>
                             <i class="fas fa-globe"></i> U-Star Digital
-                            <small class="float-right" style="float: right;">Date: <?php echo date("d-m-Y") ?></small>
+                            <small class="float-right" style="float: right;">Date: <?php echo $row['order_date'] ?></small>
                         </h4>
                     </div>
                     <!-- /.col -->
@@ -123,124 +141,152 @@ if(empty($_SESSION['cart'])) {
                     <div class="col-sm-4 invoice-col">
                         To
                         <address>
-                            <strong><?php echo $_SESSION['first_name'] ." " .$_SESSION['last_name'];  ?></strong><br>
-                            <?php echo $_SESSION['address_l1']?><br>
-                            <?php echo $_SESSION['address_l2']?><br>
-                            Phone: <?php echo $_SESSION['contact_nmuber']?><br>
-                            Email: <?php echo $_SESSION['email']?>
+                            <strong><?php echo $row['first_name'] . " " . $row['last_name']; ?></strong><br>
+                            <?php echo $row['address_l1'] ?><br>
+                            <?php echo $row['address_l2'] ?><br>
+                            Phone: <?php echo $row['contact_nmuber'] ?><br>
+                            Email: <?php echo $row['email'] ?>
                         </address>
                     </div>
                     <!-- /.col -->
                     <div class="col-sm-4 invoice-col">
-                        <b>Invoice #007612</b><br>
-                        <br>
-                        <b>Order ID:</b> 4F3S8J<br>
-                        <b>Payment Due:</b> 2/22/2014<br>
+                        <b>Invoice No: <?php echo $row['order_number'] ?></b><br>
                         <b>Account:</b> 968-34567
                     </div>
                     <!-- /.col -->
                 </div>
                 <!-- /.row -->
+        <?php
+                    }
+                }
+        ?>
+        <!-- Table row -->
+        <div class="row">
+            <div class="col-12 table-responsive">
 
-                <!-- Table row -->
-                <div class="row">
-                    <div class="col-12 table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Qty</th>
+                            <th>Product</th>
+                            <th>Warranty (Days)</th>
+                            <th>Discount</th>
+                            <th>Sale Price (LKR)</th>
+                            <th>Unit Price (LKR)</th>
+                            <th>Subtotal (LKR)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         <?php
-                        if (!empty($_SESSION['cart'])) {
+
+                       $sql = "SELECT oi.item_qty, i.item_name, i.warranty, i.discount_rate, i.sale_price, i.unit_price FROM orders_items oi INNER JOIN orders o ON o.order_id = oi.order_id INNER JOIN users u ON o.user_id = u.user_id INNER JOIN province p ON o.delivery_charge = p.id INNER JOIN customers c ON u.user_id = c.user_id INNER JOIN items i ON oi.item_id = i.item_id WHERE o.order_id = $order_id;";
+
+                        $result = $db->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
                         ?>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Qty</th>
-                                        <th>Product</th>
-                                        <th>Warranty</th>
-                                        <th>Discount</th>
-                                        <th>Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+
+                                <tr>
+                                    <td><?php echo $row['item_qty']; ?></td>
+                                    <td><?php echo $row['item_name']; ?></td>
+                                    <td><?php echo $row['warranty']; ?></td>
+                                    <td><?php echo $row['discount_rate']; ?>%</td>
+                                    <td><?php echo number_format($row['sale_price'], 2); ?></td>
+                                    <td><?php echo number_format($row['unit_price'], 2); ?></td>
+
                                     <?php
-                                    $grand_total = 0;
-                                    foreach ($_SESSION['cart'] as $product) {
-                                    ?>
-                                        <tr>
-                                            <td><?php echo $product['item_qty'] ?></td>
-                                            <td><?php echo $product['item_name'] ?></td>
-                                            <td>3 Years</td>
-                                            <td><?php echo $product['item_discount'] ?>%</td>
-                                            <td>
-                                                <?php
-                                                $amount = $product['item_price'] * $product['item_qty'];
-                                                echo "LKR: " . number_format($amount, 2);
-                                                $grand_total += $amount;
-                                                ?>
-                                            </td>
-                                        </tr>
-                                    <?php
+
+                                    if ($row['sale_price'] == 0) {
+                                        $total =  $row['unit_price'] * $row['item_qty'];
+                                        echo "<td>" . number_format($total, 2)  . "</td>";
+                                    } else {
+                                        $sale_total = $row['sale_price'] * $row['item_qty'];
+                                        echo "<td>" . number_format($sale_total, 2)  . "</td>";
                                     }
                                     ?>
-                                </tbody>
-                            </table>
+                                </tr>
                         <?php
+                            }
                         }
                         ?>
-                    </div>
-                    <!-- /.col -->
-                </div>
-                <!-- /.row -->
+                    </tbody>
+                </table>
 
-                <div class="row" style="margin-top: 25px">
-                    <!-- accepted payments column -->
-                    <div class="col-6">
-                        <p class="lead">Payment Method: Cash On Delivery</p>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row" style="margin-top: 25px">
+            <!-- accepted payments column -->
+            <div class="col-6">
+
+                <?php
+
+                $sql = "SELECT pm.name, o.order_total, o.total_discount, p.price, o.grand_total FROM orders o INNER JOIN payment_methord pm ON o.payment_id = pm.id INNER JOIN province p ON o.delivery_charge = p.id WHERE o.order_id = $order_id;";
+
+                $result = $db->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+
+
+                ?>
+                        <p class="lead">Payment Method: <?php echo $row['name'] ?></p>
                         <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
                             Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
                             plugg
                             dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
                         </p>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-6">
-                        <p class="lead">Amount Due 2/22/2014</p>
+            </div>
+            <!-- /.col -->
+            <div class="col-6">
 
-                        <div class="table-responsive">
-                            <table class="table">
-                                <tr>
-                                    <th style="width:50%">Subtotal:</th>
-                                    <td>LKR: <?php echo number_format($grand_total, 2); ?></td>
-                                </tr>
-                                <tr>
-                                    <th>Discount:</th>
-                                    <td>(-$10.34)</td>
-                                </tr>
-                                <tr>
-                                    <th>Delivery:</th>
-                                    <td>$5.80</td>
-                                </tr>
-                                <tr>
-                                    <th>Total:</th>
-                                    <td>$265.24</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- /.col -->
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th style="width:50%">Subtotal:</th>
+                            <td>LKR: <?php echo number_format($row['order_total'], 2); ?></td>
+                        </tr>
+                        <tr>
+                            <th>Discount:</th>
+                            <td>LKR: (-<?php echo number_format($row['total_discount'], 2); ?>)</td>
+                        </tr>
+                        <tr>
+                            <th>Delivery:</th>
+                            <td>LKR: <?php echo number_format($row['price'], 2); ?></td>
+                        </tr>
+                        <tr>
+                            <th>Total:</th>
+                            <td>LKR: <?php echo number_format($row['grand_total'], 2); ?></td>
+                        </tr>
+                    </table>
                 </div>
-                <!-- /.row -->
+            </div>
+            <!-- /.col -->
+        </div>
 
-                <!-- this row will not appear when printing -->
-                <div class="row no-print">
-                    <div class="col-12">
-                        <a href="dashboard.php">
-                            <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Dashboard</button>
-                        </a>
+<?php
+                    }
+                }
+?>
+<!-- /.row -->
 
-                        <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-                        <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-                            <i class="fas fa-download"></i> Generate PDF
-                        </button>
-                    </div>
-                </div>
+<!-- this row will not appear when printing -->
+<div class="row no-print">
+    <div class="col-12">
+        <a href="dashboard.php">
+            <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Dashboard</button>
+        </a>
+
+        <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
+        <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
+            <i class="fas fa-download"></i> Generate PDF
+        </button>
+    </div>
+</div>
             </div>
 
         </div>

@@ -53,9 +53,8 @@ $result = $db->query($sql);
     <div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
             <div class="container-fluid">
-                <a class="navbar-brand" href="http://localhost/bit/">
-                    <!--                        <img src="images/logo.png" alt="" class="nav_logo">-->
-                    <img src="images/logo_new.png" alt="" class="nav_logo" />
+                <a class="navbar-brand" style="color: white;" href="http://localhost/bit/">
+                    <i class="fas fa-globe"></i> U-Star Digital
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -412,7 +411,7 @@ $result = $db->query($sql);
                                                     <button type="submit" class="btn btn-secondary card_button">View Item</button>
                                                 </div>
                                                 <div class="col-8">
-                                                <h6 style="text-align: right;"><?php echo "LKR " . number_format($row['unit_price'], 2); ?></h6>
+                                                    <h6 style="text-align: right;"><?php echo "LKR " . number_format($row['unit_price'], 2); ?></h6>
                                                     <h6 style="text-align: right;">
                                                         <?php
                                                         if (!$row['sale_price'] == 0) {
@@ -439,40 +438,11 @@ $result = $db->query($sql);
     <!-- content end -->
 
     <!-- footer start -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-8">
-                    <!--<img src="images/cmaplus-logo-blue-big copy._w.png" alt="" class="footer_logo"/>-->
-                    <img src="images/logo_new.png" alt="" class="footer_logo" />
-                    <hr class="footer_hr">
-                    <p class="footer_company">
-
-                        We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                        We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                        We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                        We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                    </p>
-                </div>
-                <div class="col-2">
-                    <h2 class="footer_title">Company</h2>
-                    <hr class="footer_hr_2">
-                    <p class="footer_items">About</p>
-                    <p class="footer_items">Contact</p>
-                    <p class="footer_items">Service</p>
-                    <p class="footer_items">Company</p>
-                </div>
-                <div class="col-2">
-                    <h2 class="footer_title">Quick Links</h2>
-                    <hr class="footer_hr_2">
-                    <p class="footer_items">FAQ</p>
-                    <p class="footer_items">Privacy Policy</p>
-                    <p class="footer_items">Return Policy</p>
-                    <p class="footer_items">Company</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <?php 
+   
+   include "footer.php";
+   
+   ?>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
 
 

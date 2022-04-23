@@ -1,22 +1,17 @@
 <?php
 session_start();
+
 include "system/functions.php";
+
+// extract form data
+extract($_POST);
 
 // db connect
 $db = db_con();
 
-// sql query
-$sql = "SELECT * FROM `categories`";
 
-// fletch data
-$result = $db->query($sql);
-
-// categories drop down data fletch 
-$cat_result = $db->query($sql);
 
 ?>
-
-
 <!doctype html>
 <html lang="en">
 
@@ -29,17 +24,22 @@ $cat_result = $db->query($sql);
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
 
     <title><?php echo ucfirst(pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME));  ?></title>
+
     <! -- main style -->
         <link href="assets/css/style.css" rel="stylesheet" type="text/css" />
 
+
         <!--fontawesome icons-->
         <link href="assets/icons/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet" type="text/css" />
+
+
+
 </head>
 
 <body>
     <!--Navigation Start-->
-    <div style="background-color:black">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
             <div class="container-fluid">
                 <a class="navbar-brand" style="color: white;" href="http://localhost/bit/">
                     <i class="fas fa-globe"></i> U-Star Digital
@@ -87,55 +87,14 @@ $cat_result = $db->query($sql);
     </div>
     <!--Navigation End-->
 
-    <!--Carousel Start-->
-
-    <!--Carousel End-->
-
-    <!--card start-->
-    <!-- search start -->
-    <div class="container-fluid" style="width:90vw; margin-bottom:150px; margin-top:150px">
-
-        <!-- category start -->
-        <div class="row catagory_row">
-            <h1 style="padding-bottom:25px;">Catagories</h1>
-            <hr style="margin-bottom:40px;">
-            <?php
-            // category name
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-
-                    // count of items
-                    $cat_id = $row['category_id'];
-                    $count_sql = "SELECT COUNT(items.item_id) AS total FROM items WHERE items.category_id = '$cat_id';";
-                    $count_result = $db->query($count_sql);
-                    if ($count_result->num_rows > 0) {
-                        while ($row_count = $count_result->fetch_assoc()) {
-            ?>
-                            <div class="col-3">
-                                <div class="card card_styles" style="width: auto;">
-                                    <img src="assets/images/<?php echo $row['cat_image'] ?>" class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                        <h1 class="card_title"><?php echo strtoupper($row['category_name']); ?> (<?php echo strtoupper($row_count['total']); ?>)</h1>
-                                        <p class="card_discription"><?php echo $row['category_description'] ?></p>
-                                        <form action="item_page.php" method="post">
-                                            <input type="hidden" name="category_id" value="<?php echo $row['category_id'] ?>">
-                                            <button type="submit" class="btn btn-secondary card_button">View Category</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-            <?php
-                        }
-                    }
-                }
-            }
-            ?>
-        </div>
+    <!-- content start -->
+    <div class="container">
+        profile wizard
     </div>
-    <!--card end-->
+    <!-- content end -->
 
     <!-- footer start -->
-   <?php 
+    <?php 
    
    include "footer.php";
    

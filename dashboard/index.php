@@ -47,9 +47,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
             $_SESSION['profile_image'] = $row['profile_image'];
             $_SESSION['created_date'] = $row['created_date'];
             $_SESSION['status'] = $row['status'];
+            $_SESSION['email'] = $row['email'];
         } else {
 
             $error['password'] = "invalided password";
+        }
+    }
+
+    @$user_id =  $_SESSION['user_id'];
+
+    if (empty($error)) {
+
+        $sql =  "SELECT * FROM `customers` WHERE customers.user_id = $user_id;";
+
+        // run database query
+        $result = $db->query($sql);
+
+        if ($result->num_rows == 1) {
+
+            $row = $result->fetch_assoc();
+
+            $_SESSION['cus_id'] = $row['cus_id'];
+            $_SESSION['contact_nmuber'] = $row['contact_nmuber'];
+            $_SESSION['address_l1'] = $row['address_l1'];
+            $_SESSION['address_l2'] = $row['address_l2'];
+            $_SESSION['city'] = $row['city'];
+            $_SESSION['postal_code'] = $row['postal_code'];
         }
     }
 
