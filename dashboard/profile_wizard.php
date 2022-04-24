@@ -1,7 +1,7 @@
 <?php
-session_start();
 
-include "system/functions.php";
+
+include "site_nav.php";
 
 // extract form data
 extract($_POST);
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
 
     if (empty($error)) {
 
-      $sql = "INSERT INTO `customers` (`cus_id`, `contact_nmuber`, `address_l1`, `address_l2`, `city`, `postal_code`, `user_id`, `province_id`) VALUES (NULL, '$contact_number', '$address_line_1', '$address_line_2', '$city', '$postal_code', '$req_user_id', '$province');";
+        $sql = "INSERT INTO `customers` (`cus_id`, `contact_nmuber`, `address_l1`, `address_l2`, `city`, `postal_code`, `user_id`, `province_id`) VALUES (NULL, '$contact_number', '$address_line_1', '$address_line_2', '$city', '$postal_code', '$req_user_id', '$province');";
 
         //run database query
         $db->query($sql);
@@ -85,10 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
     // redirect to dashboard
     if (empty($error)) {
 
-        header('Location:checkout.php');
+        header('Location:index.php');
     }
-
-
 }
 
 ?>
@@ -117,56 +115,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
 </head>
 
 <body>
-    <!--Navigation Start-->
-    <div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
-            <div class="container-fluid">
-                <a class="navbar-brand" style="color: white;" href="http://localhost/bit/">
-                    <i class="fas fa-globe"></i> U-Star Digital
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" aria-current="page" href="http://localhost/bit/">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/shop.php">Shop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/about.php">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/services.php">Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/contact.php">Contact</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php">
-                                <i class="fas fa-cart-arrow-down"></i> Cart
-                                <?php
-
-                                if (!empty($_SESSION['cart'])) {
-
-                                    echo count(array_keys($_SESSION['cart']));
-                                }
-
-                                ?>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </div>
-    <!--Navigation End-->
-
     <!-- content start -->
     <div class="container">
         <div class="row">
@@ -180,29 +128,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
                             <p class="login-box-msg">Complete your profile to continue the shopping</p>
                             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="Contact Number" name="contact_number" value="<?php echo @$contact_number?>">
+                                    <input type="text" class="form-control" placeholder="Contact Number" name="contact_number" value="<?php echo @$contact_number ?>">
                                 </div>
                                 <div>
                                     <p style="color: red;"> <?php echo @$error['contact_number'] ?> </p>
                                 </div>
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="Address Line 1" name="address_line_1" value="<?php echo @$address_line_1?>">
+                                    <input type="text" class="form-control" placeholder="Address Line 1" name="address_line_1" value="<?php echo @$address_line_1 ?>">
                                 </div>
                                 <div>
                                     <p style="color: red;"> <?php echo @$error['address_line_1'] ?> </p>
                                 </div>
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="Address Line 2" name="address_line_2" value="<?php echo @$address_line_2?>">
+                                    <input type="text" class="form-control" placeholder="Address Line 2" name="address_line_2" value="<?php echo @$address_line_2 ?>">
                                 </div>
 
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="City" name="city" value="<?php echo @$city?>">
+                                    <input type="text" class="form-control" placeholder="City" name="city" value="<?php echo @$city ?>">
                                 </div>
                                 <div>
                                     <p style="color: red;"> <?php echo @$error['city'] ?> </p>
                                 </div>
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="Postal Code" name="postal_code" value="<?php echo @$postal_code?>">
+                                    <input type="text" class="form-control" placeholder="Postal Code" name="postal_code" value="<?php echo @$postal_code ?>">
                                 </div>
                                 <div>
                                     <p style="color: red;"> <?php echo @$error['postal_code'] ?> </p>
@@ -256,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
     <!-- footer start -->
     <?php
 
-    include "footer.php";
+    include "site_footer.php";
 
     ?>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>

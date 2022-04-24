@@ -3,14 +3,13 @@ include "site_nav.php";
 
 extract($_POST);
 
-print_r($_POST);
-
 // db connection
 $db = db_con();
 
 // create error variable to store error messages
 $error =  array();
 
+// login form
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
 
     // call data clean function
@@ -50,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
             $_SESSION['email'] = $row['email'];
         } else {
 
-            $error['password'] = "invalided password";
+            $error['password'] = "invalided username or password";
         }
     }
 
@@ -73,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
             $_SESSION['address_l2'] = $row['address_l2'];
             $_SESSION['city'] = $row['city'];
             $_SESSION['postal_code'] = $row['postal_code'];
+            $_SESSION['province_id'] = $row['province_id'];
         }
     }
 
@@ -80,6 +80,110 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
     if (empty($error)) {
 
         header('Location:dashboard.php');
+    }
+}
+
+// register form
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'register') {
+
+    $reg_username = data_clean($reg_username);
+    $reg_first_name = data_clean($reg_first_name);
+    $reg_last_name = data_clean($reg_last_name);
+    $reg_username = data_clean($reg_username);
+    $reg_email = data_clean($reg_email);
+    $reg_password = data_clean($reg_password);
+    $reg_con_password = data_clean($reg_con_password);
+
+    // basic validation Billing Details
+    if (empty($reg_first_name)) {
+        $error['reg_first_name'] = "First Name Should Not Be Empty";
+    }
+
+    if (empty($reg_last_name)) {
+        $error['reg_last_name'] = "Last Name Should Not Be Empty";
+    }
+
+    if (empty($reg_username)) {
+        $error['reg_username'] = "User Name Should not be empty";
+    }
+
+    if (empty($reg_email)) {
+        $error['reg_email'] = "email Should Not Be Empty";
+    }
+
+    if (empty($reg_password)) {
+        $error['reg_password'] = "Password not empty";
+    }
+
+    if (empty($reg_con_password)) {
+        $error['reg_con_password'] = "Password not empty";
+    }
+
+    //password typo check
+    if (!empty($reg_password and $reg_con_password)) {
+
+        if ($reg_password != $reg_con_password) {
+            $error['reg_con_password'] = "Password not match";
+        }
+    }
+
+    // Advance validation
+    if (!preg_match("/^[a-zA-Z ]*$/", $reg_first_name)) {
+        $error['reg_first_name'] = "Only Letters allowed for First Name";
+    }
+
+    if (!preg_match("/^[a-zA-Z ]*$/", $reg_last_name)) {
+        $error['reg_last_name'] = "Only Letters allowed for Last Name";
+    }
+
+    if (!empty($reg_email) && @$reg_previous_email != $reg_email) {
+
+        if (!filter_var($reg_email, FILTER_VALIDATE_EMAIL)) {
+
+            $error['reg_email'] = "Email Address is not valid";
+        } else {
+
+            $sql_e = "SELECT * FROM users WHERE email = '$reg_email'";
+            $result_e = $db->query($sql_e);
+            if ($result_e->num_rows > 0) {
+                $error['reg_email'] = "Email Already Exists";
+            }
+        }
+    }
+
+    if (!empty($reg_username)) {
+
+        $sql = "SELECT * FROM users WHERE user_name = '$reg_username'";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['reg_username'] = "<b> $reg_username </b> User Already Exists";
+        }
+    }
+
+    if (!empty($reg_password)) {
+        if (strlen($reg_password) < 8) {
+            $error['reg_password'] = "Password Should be at least 8 characters";
+        }
+    }
+
+    if (empty($error)) {
+
+        $sql = "INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `first_name`, `last_name`, `profile_image`, `created_date`, `status`) VALUES (NULL, '$reg_username', '$reg_email', SHA1('$reg_password'), '$reg_first_name', '$reg_last_name', '', '$date', '1');";
+
+        //run database query
+        $db->query($sql);
+
+        //capture last insert ID
+        echo $user_id = $db->insert_id;
+       echo $_SESSION['req_user_id'] = $user_id;
+    }
+
+     // redirect to dashboard
+     if (empty($error)) {
+
+        header('Location: profile_wizard.php');
     }
 }
 
@@ -117,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-4" style="display: flex; flex-direction: row; justify-content: flex-end;">
-                                    <button type="submit" name="action" value="login" class="btn btn-primary btn-block">Sign In</button>
+                                    <button type="submit" name="action" value="login" class="btn btn-secondary btn-block">Sign In</button>
                                 </div>
                                 <!-- /.col -->
                             </div>
@@ -134,56 +238,67 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
             </div>
         </div>
         <div class="col">
-            <div class="register-box">
-                <div class="card card-outline card-primary">
-                    <div class="card-header text-center">
-                        <h1>Register</h1>
-                    </div>
-                    <div class="card-body">
-                        <p class="login-box-msg">Register a new membership</p>
+                    <div class="register-box">
+                        <div class="card card-outline card-primary">
+                            <div class="card-header text-center">
+                                <h1>Register</h1>
+                            </div>
+                            <div class="card-body">
+                                <p class="login-box-msg">Register a new membership</p>
 
-                        <form action="../../index.html" method="post">
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="First Name">
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Last name">
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Username">
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="email" class="form-control" placeholder="Email">
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="password" class="form-control" placeholder="Password">
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="password" class="form-control" placeholder="Retype password">
-                            </div>
-                            <div class="row">
-                                <div class="col-8">
-                                    <div class="icheck-primary">
-                                        <label for="agreeTerms">
-                                             <a href="#">Terms and Conditions</a>
-                                        </label>
+                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="First Name" name="reg_first_name" value="<?php echo @$reg_first_name ?>">
                                     </div>
-                                </div>
-                                <!-- /.col -->
-                                <div class="col-4" style="display: flex; flex-direction: row; justify-content: flex-end;">
-                                    <button type="submit" class="btn btn-primary btn-block">Register</button>
-                                </div>
-                                <!-- /.col -->
+                                    <div>
+                                        <p style="color: red;"> <?php echo @$error['reg_first_name'] ?> </p>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Last Name" name="reg_last_name" value="<?php echo @$reg_last_name ?>">
+                                    </div>
+                                    <div>
+                                        <p style="color: red;"> <?php echo @$error['reg_last_name'] ?> </p>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Username" name="reg_username" value="<?php echo @$reg_username ?>">
+                                    </div>
+                                    <div>
+                                        <p style="color: red;"> <?php echo @$error['reg_username'] ?> </p>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="email" class="form-control" placeholder="Email" name="reg_email" value="<?php echo @$reg_email ?>">
+                                    </div>
+                                    <div>
+                                        <p style="color: red;"> <?php echo @$error['reg_email'] ?> </p>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" placeholder="Password" name="reg_password">
+                                    </div>
+                                    <div>
+                                        <p style="color: red;"> <?php echo @$error['reg_password'] ?> </p>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" placeholder="Retype password" name="reg_con_password">
+                                    </div>
+                                    <div>
+                                        <p style="color: red;"> <?php echo @$error['reg_con_password'] ?> </p>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-8">
+
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-4" style="display: flex; flex-direction: row; justify-content: flex-end;">
+                                            <button type="submit" class="btn btn-secondary btn-block" name="action" value="register">Register</button>
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                </form>
                             </div>
-                        </form>
-
-
-
+                            <!-- /.form-box -->
+                        </div><!-- /.card -->
                     </div>
-                    <!-- /.form-box -->
-                </div><!-- /.card -->
-            </div>
-        </div>
+                </div>
     </div>
 
 </div>

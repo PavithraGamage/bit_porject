@@ -24,10 +24,6 @@ if (empty($_SESSION['cart'])) {
 }
 
 
-
-
-//$item_id . $item_qty;
-
 // date
 $date = date('Y-m-d');
 
@@ -36,7 +32,6 @@ $sql_pay = "SELECT * FROM `payment_methord`";
 $pay_result = $db->query($sql_pay);
 
 // login form
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
 
     // call data clean function
@@ -73,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
             $_SESSION['email'] = $row['email'];
         } else {
 
-            $error['password'] = "invalided password";
+            $error['password'] = "invalided username or password";
         }
     }
 
@@ -96,11 +91,116 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
             $_SESSION['address_l2'] = $row['address_l2'];
             $_SESSION['city'] = $row['city'];
             $_SESSION['postal_code'] = $row['postal_code'];
+            $_SESSION['province_id'] = $row['province_id'];
         }
     }
 }
 
-// insert billing details
+// register form
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'register') {
+
+    $reg_username = data_clean($reg_username);
+    $reg_first_name = data_clean($reg_first_name);
+    $reg_last_name = data_clean($reg_last_name);
+    $reg_username = data_clean($reg_username);
+    $reg_email = data_clean($reg_email);
+    $reg_password = data_clean($reg_password);
+    $reg_con_password = data_clean($reg_con_password);
+
+    // basic validation Billing Details
+    if (empty($reg_first_name)) {
+        $error['reg_first_name'] = "First Name Should Not Be Empty";
+    }
+
+    if (empty($reg_last_name)) {
+        $error['reg_last_name'] = "Last Name Should Not Be Empty";
+    }
+
+    if (empty($reg_username)) {
+        $error['reg_username'] = "User Name Should not be empty";
+    }
+
+    if (empty($reg_email)) {
+        $error['reg_email'] = "email Should Not Be Empty";
+    }
+
+    if (empty($reg_password)) {
+        $error['reg_password'] = "Password not empty";
+    }
+
+    if (empty($reg_con_password)) {
+        $error['reg_con_password'] = "Password not empty";
+    }
+
+    //password typo check
+    if (!empty($reg_password and $reg_con_password)) {
+
+        if ($reg_password != $reg_con_password) {
+            $error['reg_con_password'] = "Password not match";
+        }
+    }
+
+    // Advance validation
+    if (!preg_match("/^[a-zA-Z ]*$/", $reg_first_name)) {
+        $error['reg_first_name'] = "Only Letters allowed for First Name";
+    }
+
+    if (!preg_match("/^[a-zA-Z ]*$/", $reg_last_name)) {
+        $error['reg_last_name'] = "Only Letters allowed for Last Name";
+    }
+
+    if (!empty($reg_email) && @$reg_previous_email != $reg_email) {
+
+        if (!filter_var($reg_email, FILTER_VALIDATE_EMAIL)) {
+
+            $error['reg_email'] = "Email Address is not valid";
+        } else {
+
+            $sql_e = "SELECT * FROM users WHERE email = '$reg_email'";
+            $result_e = $db->query($sql_e);
+            if ($result_e->num_rows > 0) {
+                $error['reg_email'] = "Email Already Exists";
+            }
+        }
+    }
+
+    if (!empty($reg_username)) {
+
+        $sql = "SELECT * FROM users WHERE user_name = '$reg_username'";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['reg_username'] = "<b> $reg_username </b> User Already Exists";
+        }
+    }
+
+    if (!empty($reg_password)) {
+        if (strlen($reg_password) < 8) {
+            $error['reg_password'] = "Password Should be at least 8 characters";
+        }
+    }
+
+    if (empty($error)) {
+
+        $sql = "INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `first_name`, `last_name`, `profile_image`, `created_date`, `status`) VALUES (NULL, '$reg_username', '$reg_email', SHA1('$reg_password'), '$reg_first_name', '$reg_last_name', '', '$date', '1');";
+
+        //run database query
+        $db->query($sql);
+
+        //capture last insert ID
+        $user_id = $db->insert_id;
+        $_SESSION['req_user_id'] = $user_id;
+    }
+
+     // redirect to dashboard
+     if (empty($error)) {
+
+        header('Location:profile_wizard.php');
+    }
+}
+
+// insert billing and delivery details
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
     // call data clean function
@@ -142,9 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     if (empty($address_line_1)) {
         $error['address_line_1'] = "Address line 1 Should Not Be Empty";
     }
-    if (empty($address_line_2)) {
-        $error['address_line_2'] = "Address line 2 Should Not Be Empty";
-    }
+    
     if (empty($city)) {
         $error['city'] = "city Should Not Be Empty";
     }
@@ -172,9 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     if (empty($d_address_line_1)) {
         $error['d_address_line_1'] = "Address line 1 Should Not Be Empty";
     }
-    if (empty($d_address_line_2)) {
-        $error['d_address_line_2'] = "Address line 2 Should Not Be Empty";
-    }
+ 
     if (empty($d_city)) {
         $error['d_city'] = "city Should Not Be Empty";
     }
@@ -397,13 +493,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Username" name="username">
-                                        <br>
+                                        <input type="text" class="form-control" placeholder="Username" name="username" value="<?php echo @$username ?>">
+                                    </div>
+                                    <div>
                                         <p style="color: red;"> <?php echo @$error['username'] ?> </p>
                                     </div>
                                     <div class="input-group mb-3">
                                         <input type="password" class="form-control" placeholder="Password" name="password">
-                                        <br>
+                                    </div>
+                                    <div>
                                         <p style="color: red;"> <?php echo @$error['password'] ?> </p>
                                     </div>
                                     <div class="row">
@@ -416,7 +514,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                         </div>
                                         <!-- /.col -->
                                         <div class="col-4" style="display: flex; flex-direction: row; justify-content: flex-end;">
-                                            <button type="submit" class="btn btn-primary btn-block" name="action" value="login">Sign In</button>
+                                            <button type="submit" class="btn btn-secondary btn-block" name="action" value="login">Sign In</button>
                                         </div>
                                         <!-- /.col -->
                                     </div>
@@ -440,21 +538,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                             <div class="card-body">
                                 <p class="login-box-msg">Register a new membership</p>
 
-                                <form action="../../index.html" method="post">
+                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Username">
+                                        <input type="text" class="form-control" placeholder="First Name" name="reg_first_name" value="<?php echo @$reg_first_name ?>">
+                                    </div>
+                                    <div>
+                                        <p style="color: red;"> <?php echo @$error['reg_first_name'] ?> </p>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Full name">
+                                        <input type="text" class="form-control" placeholder="Last Name" name="reg_last_name" value="<?php echo @$reg_last_name ?>">
+                                    </div>
+                                    <div>
+                                        <p style="color: red;"> <?php echo @$error['reg_last_name'] ?> </p>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <input type="email" class="form-control" placeholder="Email">
+                                        <input type="text" class="form-control" placeholder="Username" name="reg_username" value="<?php echo @$reg_username ?>">
+                                    </div>
+                                    <div>
+                                        <p style="color: red;"> <?php echo @$error['reg_username'] ?> </p>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <input type="password" class="form-control" placeholder="Password">
+                                        <input type="email" class="form-control" placeholder="Email" name="reg_email" value="<?php echo @$reg_email ?>">
+                                    </div>
+                                    <div>
+                                        <p style="color: red;"> <?php echo @$error['reg_email'] ?> </p>
                                     </div>
                                     <div class="input-group mb-3">
-                                        <input type="password" class="form-control" placeholder="Retype password">
+                                        <input type="password" class="form-control" placeholder="Password" name="reg_password">
+                                    </div>
+                                    <div>
+                                        <p style="color: red;"> <?php echo @$error['reg_password'] ?> </p>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" placeholder="Retype password" name="reg_con_password">
+                                    </div>
+                                    <div>
+                                        <p style="color: red;"> <?php echo @$error['reg_con_password'] ?> </p>
                                     </div>
                                     <div class="row">
                                         <div class="col-8">
@@ -462,7 +581,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                         </div>
                                         <!-- /.col -->
                                         <div class="col-4" style="display: flex; flex-direction: row; justify-content: flex-end;">
-                                            <button type="submit" class="btn btn-primary btn-block">Register</button>
+                                            <button type="submit" class="btn btn-secondary btn-block" name="action" value="register">Register</button>
                                         </div>
                                         <!-- /.col -->
                                     </div>
@@ -484,7 +603,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                             <h3> <i class="fa fa-shopping-cart" aria-hidden="true"></i> Enter Your Billing Details</h3>
                             <hr>
                             <label for="inputCity">Frist Name</label>
-                            <input type="text" class="form-control" id="frist_name" name="frist_name" value="<?php echo @$_SESSION['user_name'] ?>">
+                            <input type="text" class="form-control" id="frist_name" name="frist_name" value="<?php echo @$_SESSION['first_name'] ?>">
                             <?php echo @$error['frist_name'] ?><br>
 
                             <label for="inputState">Last Name</label>
@@ -524,7 +643,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                 if ($pro_result->num_rows > 0) {
                                     while ($pro_row = $pro_result->fetch_assoc()) {
                                 ?>
-                                        <option value="<?php echo $pro_row['id'] ?>" <?php if ($pro_row['id'] == @$province) { ?> selected <?php } ?>><?php echo $pro_row['name']; ?></option>
+                                        <option value="<?php echo $pro_row['id'] ?>" <?php if ($pro_row['id'] == @$_SESSION['province_id']) { ?> selected <?php } ?>><?php echo $pro_row['name']; ?></option>
                                 <?php
 
                                     }
@@ -682,11 +801,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     </div>
     <!-- content end-->
     <!-- footer start -->
-    <?php 
-   
-   include "footer.php";
-   
-   ?>
+    <?php
+
+    include "footer.php";
+
+    ?>
     <script src="system/plugins/jquery/jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
     <script>
