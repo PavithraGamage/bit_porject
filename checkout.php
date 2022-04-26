@@ -309,7 +309,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error['email'] = "Postal Code not valid";
+        $error['email'] = "Email Code not valid";
     }
 
     // Advance Validations Billing Details
@@ -335,7 +335,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     }
 
     if (!filter_var($d_email, FILTER_VALIDATE_EMAIL)) {
-        $error['email'] = "Postal Code not valid";
+        $error['email'] = "Email not valid";
     }
 
     if (empty($error)) {
@@ -793,10 +793,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
         }
         ?>
-
-
-
-
 
     </div>
     <!-- content end-->

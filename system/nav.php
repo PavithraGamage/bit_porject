@@ -173,12 +173,10 @@
                with font-awesome or any other icon font library -->
                   <?php
 
-                 $sql = "SELECT m.module_id, m.description, m.path, m.view, m.icon, m.status
+                    $sql = "SELECT m.module_id, m.description, m.path, m.view, m.icon, m.status
                     FROM users_modules um
                     INNER JOIN modules m ON m.module_id = um.module_id
-                    WHERE length(m.module_id) = '2' AND um.user_id ='".$_SESSION['user_id']."' AND m.status = '1'";
-
-                 
+                    WHERE length(m.module_id) = '2' AND um.user_id ='" . $_SESSION['user_id'] . "' AND m.status = '1'";
 
                     // database connection call
                     $db = db_con();
@@ -186,7 +184,6 @@
                     // assign the query
                     $result = $db->query($sql);
 
-               
                     ?>
 
                   <?php
@@ -217,33 +214,33 @@
                                     $sql_sub = "SELECT m.module_id, m.description, m.path, m.view, m.icon, m.status
                                                 FROM users_modules um
                                                 INNER JOIN modules m ON m.module_id = um.module_id
-                                                WHERE length(m.module_id) = '4' AND um.user_id ='".$_SESSION['user_id']."' AND substr(m.module_id, 1,2) = '". $row['module_id'] ."' AND m.status = '1'";
+                                                WHERE length(m.module_id) = '4' AND um.user_id ='" . $_SESSION['user_id'] . "' AND substr(m.module_id, 1,2) = '" . $row['module_id'] . "' AND m.status = '1'";
 
-                            
+                                    // assign the query
                                     $result_sub = $db->query($sql_sub);
 
                                     ?>
 
-                                    <?php 
-                                    
-                                        if($result_sub->num_rows > 0){
+                                  <?php
 
-                                            while ($row_sub = $result_sub->fetch_assoc()){
-                                                
-                                                // create file path for sub menu 
-                                                $file = $row_sub['path'] ."/". $row_sub['view']. ".php";
+                                    if ($result_sub->num_rows > 0) {
+
+                                        while ($row_sub = $result_sub->fetch_assoc()) {
+
+                                            // create file path for sub menu 
+                                            $file = $row_sub['path'] . "/" . $row_sub['view'] . ".php";
                                     ?>
-                                  <li class="nav-item">
-                                      <a href="<?php echo SITE_URL; ?><?php echo $file; ?>" class="nav-link">
-                                          <i class="far fa-circle nav-icon"></i>
-                                          <p><?php echo $row_sub['description'] ?></p>
-                                      </a>
-                                  </li>
+                                          <li class="nav-item">
+                                              <a href="<?php echo SITE_URL; ?><?php echo $file; ?>" class="nav-link">
+                                                  <i class="far fa-circle nav-icon"></i>
+                                                  <p><?php echo $row_sub['description'] ?></p>
+                                              </a>
+                                          </li>
 
-                                  <?php 
-                                  }
-                                }
-                                  ?>
+                                  <?php
+                                        }
+                                    }
+                                    ?>
                               </ul>
                           </li>
 

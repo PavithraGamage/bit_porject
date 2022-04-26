@@ -177,11 +177,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'register') {
 
         //capture last insert ID
         echo $user_id = $db->insert_id;
-       echo $_SESSION['req_user_id'] = $user_id;
+        echo $_SESSION['req_user_id'] = $user_id;
     }
 
-     // redirect to dashboard
-     if (empty($error)) {
+    // redirect to dashboard
+    if (empty($error)) {
 
         header('Location: profile_wizard.php');
     }
@@ -238,67 +238,66 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'register') {
             </div>
         </div>
         <div class="col">
-                    <div class="register-box">
-                        <div class="card card-outline card-primary">
-                            <div class="card-header text-center">
-                                <h1>Register</h1>
-                            </div>
-                            <div class="card-body">
-                                <p class="login-box-msg">Register a new membership</p>
-
-                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="First Name" name="reg_first_name" value="<?php echo @$reg_first_name ?>">
-                                    </div>
-                                    <div>
-                                        <p style="color: red;"> <?php echo @$error['reg_first_name'] ?> </p>
-                                    </div>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Last Name" name="reg_last_name" value="<?php echo @$reg_last_name ?>">
-                                    </div>
-                                    <div>
-                                        <p style="color: red;"> <?php echo @$error['reg_last_name'] ?> </p>
-                                    </div>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Username" name="reg_username" value="<?php echo @$reg_username ?>">
-                                    </div>
-                                    <div>
-                                        <p style="color: red;"> <?php echo @$error['reg_username'] ?> </p>
-                                    </div>
-                                    <div class="input-group mb-3">
-                                        <input type="email" class="form-control" placeholder="Email" name="reg_email" value="<?php echo @$reg_email ?>">
-                                    </div>
-                                    <div>
-                                        <p style="color: red;"> <?php echo @$error['reg_email'] ?> </p>
-                                    </div>
-                                    <div class="input-group mb-3">
-                                        <input type="password" class="form-control" placeholder="Password" name="reg_password">
-                                    </div>
-                                    <div>
-                                        <p style="color: red;"> <?php echo @$error['reg_password'] ?> </p>
-                                    </div>
-                                    <div class="input-group mb-3">
-                                        <input type="password" class="form-control" placeholder="Retype password" name="reg_con_password">
-                                    </div>
-                                    <div>
-                                        <p style="color: red;"> <?php echo @$error['reg_con_password'] ?> </p>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-8">
-
-                                        </div>
-                                        <!-- /.col -->
-                                        <div class="col-4" style="display: flex; flex-direction: row; justify-content: flex-end;">
-                                            <button type="submit" class="btn btn-secondary btn-block" name="action" value="register">Register</button>
-                                        </div>
-                                        <!-- /.col -->
-                                    </div>
-                                </form>
-                            </div>
-                            <!-- /.form-box -->
-                        </div><!-- /.card -->
+            <div class="register-box">
+                <div class="card card-outline card-primary">
+                    <div class="card-header text-center">
+                        <h1>Register</h1>
                     </div>
-                </div>
+                    <div class="card-body">
+                        <p class="login-box-msg">Register a new membership</p>
+                        <!-- registration form -->
+                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="First Name" name="reg_first_name" value="<?php echo @$reg_first_name ?>">
+                            </div>
+                            <div>
+                                <p style="color: red;"> <?php echo @$error['reg_first_name'] ?> </p>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Last Name" name="reg_last_name" value="<?php echo @$reg_last_name ?>">
+                            </div>
+                            <div>
+                                <p style="color: red;"> <?php echo @$error['reg_last_name'] ?> </p>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Username" name="reg_username" value="<?php echo @$reg_username ?>">
+                            </div>
+                            <div>
+                                <p style="color: red;"> <?php echo @$error['reg_username'] ?> </p>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="email" class="form-control" placeholder="Email" name="reg_email" value="<?php echo @$reg_email ?>">
+                            </div>
+                            <div>
+                                <p style="color: red;"> <?php echo @$error['reg_email'] ?> </p>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="password" class="form-control" placeholder="Password" name="reg_password">
+                            </div>
+                            <div>
+                                <p style="color: red;"> <?php echo @$error['reg_password'] ?> </p>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="password" class="form-control" placeholder="Retype password" name="reg_con_password">
+                            </div>
+                            <div>
+                                <p style="color: red;"> <?php echo @$error['reg_con_password'] ?> </p>
+                            </div>
+                            <div class="row">
+                                <div class="col-8">
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-4" style="display: flex; flex-direction: row; justify-content: flex-end;">
+                                    <button type="submit" class="btn btn-secondary btn-block" name="action" value="register">Register</button>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.form-box -->
+                </div><!-- /.card -->
+            </div>
+        </div>
     </div>
 
 </div>

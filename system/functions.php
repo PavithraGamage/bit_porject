@@ -74,7 +74,6 @@ function show_error($error = null, $error_style = null, $error_style_icon = null
 }
 
 // Image Upload Function------------------------
-
 function image_upload($image_upload = null, $target_dri = null, $previous_image = null)
 {
 
@@ -118,11 +117,9 @@ function image_upload($image_upload = null, $target_dri = null, $previous_image 
                 $error[$image_upload] = "Sorry, there was an error uploading your file.";
             }
         }
-    }else{
+    } else {
         $error['photo'] = $previous_image;
     }
 
     return @$error;
-    
 }
-
