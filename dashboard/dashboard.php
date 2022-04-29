@@ -34,7 +34,7 @@ $user_id =  $_SESSION['user_id'];
                 </div>
             </div>
         </div>
-        <div class="col-3 dash_info_box">
+        <!-- <div class="col-3 dash_info_box">
             <div class="row">
                 <div class="col-9">
                     <h6> <i class="fas fa-charging-station"></i> Warranty</h6>
@@ -43,7 +43,7 @@ $user_id =  $_SESSION['user_id'];
                     <h6 class="dash_info_box_number">25</h6>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="col-3 dash_info_box">
             <div class="row">
                 <div class="col-9">
@@ -57,7 +57,7 @@ $user_id =  $_SESSION['user_id'];
     </div>
     <div class="row dash_info_box_row">
 
-        <div class="col-3 dash_info_box">
+        <!-- <div class="col-3 dash_info_box">
             <div class="row">
                 <div class="col-9">
                     <h6> <i class="fas fa-calendar-check"></i> Appointments</h6>
@@ -66,7 +66,7 @@ $user_id =  $_SESSION['user_id'];
                     <h6 class="dash_info_box_number">12</h6>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="col-3 dash_info_box">
             <div class="row">
                 <div class="col-9">

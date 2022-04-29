@@ -25,21 +25,22 @@
     <div class="row" style="margin-left: 5%; margin-right: 5%;">
         <div class="col" style="display: flex; flex-direction: column; align-content: center; align-items: flex-end;">
             <div class="card" style="width: 350px;">
-                <img class="card-img-top" src="assets/images/960x0.jpg" alt="Card image cap">
+                <img class="card-img-top" src="assets/images/Conversational-AI.png" alt="Card image cap">
                 <div class="card-body">
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <h3>Hardware Support Assistant</h3><hr>
+                    <p class="card-text">Please use this flow if you do not have a solid understanding of computer hardware.</p>
                     <a href="home.php">
                         <button class="btn btn-secondary">Start</button>
-
                     </a>
                 </div>
             </div>
         </div>
         <div class="col" style="display: flex; flex-direction: column; align-content: center; align-items: flex-start;">
             <div class="card" style="width: 350px;">
-                <img class="card-img-top" src="assets/images/960x0.jpg" alt="Card image cap">
+                <img class="card-img-top" src="assets/images/shopping-cart-on-keyboard-feature.jpg" alt="Card image cap">
                 <div class="card-body">
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <h3>Standard Computer Hardware Shopping Cart</h3><hr>
+                    <p class="card-text">If you are well-versed in the hardware of a computer. This flow should be followed.</p>
                     <button class="btn btn-secondary">Start</button>
                 </div>
             </div>

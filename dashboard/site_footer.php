@@ -7,11 +7,7 @@
                 </a>
                 <hr class="footer_hr">
                 <p class="footer_company">
-
-                    We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                    We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                    We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
-                    We can print a range of full color, quality printed products, which you can order online or ask us for a special price.
+                    We believe in your passion, as fellow PC enthusiasts, we would be more than glad to provide you with any assistance when you're looking for branded computer solutions. If you visit our store, it would be possible for you to see for yourself the latest products that we have in our showroom, sourced from the international market. We specialize in making available the latest technology as soon as it is released worldwide. In fact, you would be able to observe that most products on our shelves are less than 30 days old! It is this quality and the service that has earned U-Star Digital Computer Solutions the untarnished reputation that it has had throughout the years.
                 </p>
             </div>
             <div class="col-2">

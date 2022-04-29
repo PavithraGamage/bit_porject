@@ -312,30 +312,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $error['email'] = "Email Code not valid";
     }
 
-    // Advance Validations Billing Details
+    // Advance Validations Delivery Details
 
     if (!preg_match("/^[a-zA-Z ]*$/", $d_frist_name)) {
-        $error['frist_name'] = "Only Letters allowed for First Name";
+        $error['d_frist_name'] = "Only Letters allowed for First Name";
     }
 
     if (!preg_match("/^[a-zA-Z ]*$/", $d_last_name)) {
-        $error['last_name'] = "Only Letters allowed for Last Name";
+        $error['d_last_name'] = "Only Letters allowed for Last Name";
     }
 
     if (!preg_match("/^[0-9]*$/", $d_phone)) {
-        $error['phone'] = "Phone number not valid";
+        $error['d_phone'] = "Phone number not valid";
     }
 
     if (!preg_match("/^[a-zA-Z ]*$/", $d_city)) {
-        $error['city'] = "Only Letters allowed for city";
+        $error['d_city'] = "Only Letters allowed for city";
     }
 
     if (!preg_match("/^[0-9]*$/", $d_zip)) {
-        $error['zip'] = "Postal Code not valid";
+        $error['d_zip'] = "Postal Code not valid";
     }
 
     if (!filter_var($d_email, FILTER_VALIDATE_EMAIL)) {
-        $error['email'] = "Email not valid";
+        $error['d_email'] = "Email not valid";
     }
 
     if (empty($error)) {
@@ -604,31 +604,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                             <hr>
                             <label for="inputCity">Frist Name</label>
                             <input type="text" class="form-control" id="frist_name" name="frist_name" value="<?php echo @$_SESSION['first_name'] ?>">
-                            <?php echo @$error['frist_name'] ?><br>
+                            <p style="color: red;"><?php echo @$error['frist_name'] ?></p>
 
                             <label for="inputState">Last Name</label>
                             <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo @$_SESSION['last_name'] ?>">
-                            <?php echo @$error['last_name'] ?><br>
+                            <p style="color: red;"><?php echo @$error['last_name'] ?></p>
 
                             <label for="inputState">Phone</label>
                             <input type="tel" class="form-control" id="phone" name="phone" value="<?php echo @$_SESSION['contact_nmuber'] ?>">
-                            <?php echo @$error['phone'] ?><br>
-
+                            <p style="color: red;"><?php echo @$error['phone'] ?></p> 
                             <label for="inputState">Email Address</label>
                             <input type="email" class="form-control" id="email" name="email" value="<?php echo @$_SESSION['email'] ?>">
-                            <?php echo @$error['email'] ?><br>
+                            <p style="color: red;"></p> <?php echo @$error['email'] ?>
 
                             <label for="inputAddress">Address Line 1</label>
                             <input type="text" class="form-control" id="address_line_1" placeholder="Street Name" name="address_line_1" value="<?php echo @$_SESSION['address_l1'] ?>">
-                            <?php echo @$error['address_line_1'] ?><br>
+                            <p style="color: red;"><?php echo @$error['address_line_1'] ?></p>
 
                             <label for="inputAddress2">Address Line 2</label>
                             <input type="text" class="form-control" id="address_line_2" placeholder="Apartment, Studio, or Floor" name="address_line_2" value="<?php echo @$_SESSION['address_l2'] ?>">
-                            <?php echo @$error['address_line_2'] ?><br>
+                            <p style="color: red;"><?php echo @$error['address_line_2'] ?></p>
 
                             <label for="inputCity">City</label>
                             <input type="text" class="form-control" id="city" name="city" value="<?php echo @$_SESSION['city'] ?>">
-                            <?php echo @$error['city'] ?><br>
+                            <p style="color: red;"><?php echo @$error['city'] ?></p>
 
                             <label for="inputState">Province</label>
                             <select class="form-control select2" style="width: 100%;" name="province" id="province">
@@ -650,13 +649,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                 }
                                 ?>
                             </select>
-                            <?php echo @$error['province'] ?><br>
+                            <p style="color: red;"><?php echo @$error['province'] ?></p>
 
                             <label for="inputZip">Zip</label>
                             <input type="text" class="form-control" id="zip" name="zip" value="<?php echo @$_SESSION['postal_code'] ?>">
-                            <?php echo @$error['zip'] ?><br>
+                            <p style="color: red;"><?php echo @$error['zip'] ?></p>
 
-                            <br>
+                            
                             <input type="checkbox" class="form-check-input" id="check_box" style="margin-right: 10px;" onchange="fill_delivery_details()">
                             <label class="form-check-label" for="exampleCheck1">Use same address as a delivery address</label>
                         </div>
@@ -665,31 +664,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                             <hr>
                             <label for="inputCity">Frist Name</label>
                             <input type="text" class="form-control" id="d_frist_name" name="d_frist_name" value="<?php echo @$d_frist_name ?>">
-                            <?php echo @$error['d_frist_name'] ?><br>
+                            <p style="color: red;"><?php echo @$error['d_frist_name'] ?></p>
 
                             <label for="inputState">Last Name</label>
                             <input type="text" class="form-control" id="d_last_name" name="d_last_name" value="<?php echo @$d_last_name ?>">
-                            <?php echo @$error['d_last_name'] ?><br>
+                            <p style="color: red;"><?php echo @$error['d_last_name'] ?></p>
 
                             <label for="inputState">Phone</label>
                             <input type="tel" class="form-control" id="d_phone" name="d_phone" value="<?php echo @$d_phone ?>">
-                            <?php echo @$error['d_phone'] ?><br>
+                            <p style="color: red;"><?php echo @$error['d_phone'] ?></p>
 
                             <label for="inputState">Email Address</label>
                             <input type="email" class="form-control" id="d_email" name="d_email" value="<?php echo @$d_email ?>">
-                            <?php echo @$error['d_email'] ?><br>
+                            <p style="color: red;"><?php echo @$error['d_email'] ?></p>
 
                             <label for="inputAddress">Address Line 1</label>
                             <input type="text" class="form-control" id="d_address_line_1" placeholder="Street Name" name="d_address_line_1" value="<?php echo @$d_address_line_1 ?>">
-                            <?php echo @$error['d_address_line_1'] ?><br>
+                            <p style="color: red;"><?php echo @$error['d_address_line_1'] ?></p>
 
                             <label for="inputAddress2">Address Line 2</label>
                             <input type="text" class="form-control" id="d_address_line_2" placeholder="Apartment, Studio, or Floor" name="d_address_line_2" value="<?php echo @$d_address_line_2 ?>">
-                            <?php echo @$error['d_address_line_2'] ?><br>
+                            <p style="color: red;"><?php echo @$error['d_address_line_2'] ?></p>
 
                             <label for="inputCity">City</label>
                             <input type="text" class="form-control" id="d_city" name="d_city" value="<?php echo @$d_city ?>">
-                            <?php echo @$error['d_city'] ?><br>
+                            <p style="color: red;"><?php echo @$error['d_city'] ?></p>
 
                             <label for="inputState">Province</label>
                             <select class="form-control select2" style="width: 100%;" name="d_province" id="d_province" onchange="delivery_price()">
@@ -711,11 +710,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                 }
                                 ?>
                             </select>
-                            <?php echo @$error['province'] ?><br>
+                            <p style="color: red;"><?php echo @$error['province'] ?></p>
 
                             <label for="inputZip">Zip</label>
                             <input type="text" class="form-control" id="d_zip" name="d_zip" value="<?php echo @$d_zip ?>">
-                            <?php echo @$error['d_zip'] ?><br>
+                            <p style="color: red;"><?php echo @$error['d_zip'] ?></p>
                         </div>
                     </div>
                     <div class="row">
@@ -740,7 +739,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                     }
                                 }
                                 ?>
-                                <?php echo @$error['payment_method']; ?>
+                               <p style="color: red;">  <?php echo @$error['payment_method']; ?> </p>
                             </div>
                         </div>
                         <div class="col-6 cart_total" id="order_summary">

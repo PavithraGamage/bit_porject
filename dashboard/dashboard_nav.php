@@ -128,7 +128,7 @@ if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "troubleshoots") {
                         <i class="fas fa-truck"></i> Delivery
                     </a>
                 </div>
-                <div class="dash_left_nav">
+                <!-- <div class="dash_left_nav">
                     <a href="warranty.php" style="text-decoration:none; color:black">
                         <i class="fas fa-charging-station"></i> Warranty
                     </a>
@@ -137,13 +137,13 @@ if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "troubleshoots") {
                     <a href="appointments.php" style="text-decoration:none; color:black">
                         <i class="fas fa-calendar-check"></i> Appointments
                     </a>
-                </div>
+                </div> -->
                 <div class="dash_left_nav">
                     <a href="troubleshoots.php" style="text-decoration:none; color:black">
                         <i class="fas fa-tools"></i> Troubleshoots
                     </a>
                 </div>
                 <div class="dash_left_nav_last">
-                    <i class="fas fa-life-ring"></i> Help
+                    <i class="fas fa-bell"></i> Notification
                 </div>
             </div>
