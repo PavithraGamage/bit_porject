@@ -503,28 +503,476 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 $result = $db->query($sql);
 
                 ?>
-                    <div class="card">
+                <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Item Stock List</h3>
+                        <h3 class="card-title">Items</h3>
                     </div>
 
                     <!-- /.card-header -->
                     <div class="card-body">
                         <form>
-                            <label style="margin-right:8px; margin-bottom:8px">Search Item:</label>
-                            <input type="text">
+                            <!-- <label style="margin-right:8px; margin-bottom:8px">Search Item:</label>
+                            <input type="text"> -->
+                            <label style="margin-right:8px; margin-bottom:8px">Start Date:</label>
+                            <input type="date">
+                            <label style="margin-left: 15px; margin-right:8px">End Date:</label>
+                            <input type="date">
+
+                            <b style="margin-left: 15px;">Item Sold: 20</b>
+                            <b style="margin-left: 15px;">Net Sales: LKR 3,024,000</b>
+                            <!-- <button>Daily</button> -->
+
+
+                        </form>
+                        <table id="user_list" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+
+                                    <th>Item ID </th>
+                                    <th>Item Name </th>
+                                    <th>Item Sold </th>
+                                    <th>Total Sales LKR </th>
+                                    <th>Orders </th>
+                                    <th>Category</th>
+                                    <th>Stock</th>
+                                    <!-- <th style="width: 85px !important;">Edit</th>
+                                    <th style="width: 85px !important;">Delete</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td> 1</td>
+                                    <td> ASUS TUF GAMING GEFORCE RTX 3080TI 12GBX</td>
+                                    <td>5 </td>
+                                    <td>800,000</td>
+                                    <td>3</td>
+                                    <td>Graphic Cards</td>
+                                    <td>13</td>
+                                    <!-- <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td> -->
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+                                <tr>
+                                    <td> 2</td>
+                                    <td> INTEL CORE I9-12900K</td>
+                                    <td>3 </td>
+                                    <td> 685,000</td>
+                                    <td>2</td>
+                                    <td> Processors</td>
+                                    <td> 10</td>
+                                    <!-- <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td> -->
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+                                <tr>
+                                    <td> 3</td>
+                                    <td> G.SKILL TRIDENTZ5 RGB 32GB</td>
+                                    <td>2 </td>
+                                    <td> 758,000</td>
+                                    <td>3</td>
+                                    <td> MEMORY (RAM)</td>
+                                    <td> 8</td>
+                                    <!-- <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td> -->
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+                                <tr>
+                                    <td> 4</td>
+                                    <td> MSI RTX 3080TI GAMING TRIO 12GB</td>
+                                    <td>4 </td>
+                                    <td> 425,000</td>
+                                    <td>3</td>
+                                    <td> Graphic Cards</td>
+                                    <td> 6</td>
+                                    <!-- <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td> -->
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+                                <tr>
+                                    <td> 5</td>
+                                    <td> CORSAIR DOMINATOR PLATINUM RGB WHITE 32GB</td>
+                                    <td>6 </td>
+                                    <td> 356,000</td>
+                                    <td>5</td>
+                                    <td> MEMORY (RAM)</td>
+                                    <td> 16</td>
+                                    <!-- <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td> -->
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+
+
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Revenue</h3>
+                    </div>
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form>
+                            <label style="margin-right:8px; margin-bottom:8px">Start Date:</label>
+                            <input type="date"><br>
+                            <label style=" margin-right:8px">End Date:</label>
+                            <input type="date"><br>
+                            <b>Orders: 18</b>
+                            <b style="margin-left: 15px;">Po Price: LKR 2,284,000</b>
+                            <b style="margin-left: 15px;">Sale Price: LKR 2,974,000</b>
+                            <b style="margin-left: 15px;">Discount Price: LKR 447,000</b>
+                            <b style="margin-left: 15px;">Total Revenue: LKR 690,000</b>
+                        </form><br>
+                        <table id="user_list" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date </th>
+                                    <th>Orders </th>
+                                    <th>Po Price LKR</th>
+                                    <th>Sale Price LKR</th>
+                                    <th>Discount Price LKR</th>
+                                    <th>Revenue LKR </th>
+
+                                    <!-- <th style="width: 85px !important;">View</th> -->
+                                    <!-- <th style="width: 85px !important;">Edit</th>
+                                    <th style="width: 85px !important;">Delete</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td> 1</td>
+                                    <td> 2022-02-15</td>
+                                    <td> 5</td>
+                                    <td> 589,000</td>
+                                    <td> 674,000</td>
+                                    <td> 125,000</td>
+                                    <td> 325,000</td>
+                                    <!-- <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td> -->
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+
+                                <tr>
+                                    <td> 2</td>
+                                    <td> 2022-02-17</td>
+                                    <td> 6</td>
+                                    <td> 385,000</td>
+                                    <td> 420,000</td>
+                                    <td> 35,000</td>
+                                    <td> 32,000</td>
+                                    <!-- <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td> -->
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+
+                                <tr>
+                                    <td> 3</td>
+                                    <td> 2022-02-19</td>
+                                    <td> 7</td>
+                                    <td> 620,000</td>
+                                    <td> 780,000</td>
+                                    <td> 125,000</td>
+                                    <td> 325,000</td>
+                                    <!-- <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td> -->
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+
+                                <tr>
+                                    <td> 4</td>
+                                    <td> 2022-02-19</td>
+                                    <td> 9</td>
+                                    <td> 450,000</td>
+                                    <td> 480,000</td>
+                                    <td> 12,000</td>
+                                    <td> 325,000</td>
+                                    <!-- <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td> -->
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+
+                                <tr>
+                                    <td> 5</td>
+                                    <td> 2022-02-20</td>
+                                    <td> 5</td>
+                                    <td> 590,000</td>
+                                    <td> 620,000</td>
+                                    <td> 150,000</td>
+                                    <td> 180,000</td>
+                                    <!-- <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td> -->
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Orders</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form>
+                            <label style="margin-right:8px; margin-bottom:8px">Start Date:</label>
+                            <input type="date"><br>
+                            <label>End Date:</label>
+                            <input type="date"><br>
+                            <label >Status:</label>
+                            <select name="cars" id="cars">
+                                <option value="volvo">Completed</option>
+                                <option value="saab">Western</option>
+                                <option value="mercedes">Mercedes</option>
+                                <option value="audi">Audi</option>
+                            </select>
+                            <label style="margin-left: 15px; margin-right:8px">Province:</label>
+                            <select name="cars" id="cars">
+
+                                <option value="saab">Western</option>
+                                <option value="mercedes">Mercedes</option>
+                                <option value="audi">Audi</option>
+                            </select>
+                            <b style="margin-left: 15px;">Total Orders: 5</b>
+                            <b style="margin-left: 15px;">Total Items: 25</b>
+                            <b style="margin-left: 15px;">Total Sale: LKR 690,000</b>
+                        </form><br>
+                        <table id="user_list" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date </th>
+                                    <th>Order Id </th>
+                                    <th>Status </th>
+                                    <th>Customer </th>
+                                    <th>Province </th>
+                                    <th>Items Sold</th>
+                                    <th>Total Sale LKR</th>
+
+                                    <!-- <th style="width: 85px !important;">Edit</th>
+                                    <th style="width: 85px !important;">Delete</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td> 1</td>
+                                    <td>2022-02-20</td>
+                                    <td>122</td>
+                                    <td> Completed</td>
+                                    <td> amal_S</td>                         
+                                    <td> Western</td>
+                                    <td> 4</td>
+                                    <td> 58,900.00</td>
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+                                <tr>
+                                    <td> 1</td>
+                                    <td> 2022-02-22</td>
+                                    <td>123</td>
+                                    <td> Completed</td>
+                                    <td> Amal Samanatha</td>                         
+                                    <td> Western</td>
+                                    <td> 3</td>
+                                    <td> 158,900.00</td>
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+                                <tr>
+                                    <td> 1</td>
+                                    <td> 2022-02-20</td>
+                                    <td>124</td>
+                                    <td> Completed</td>
+                                    <td> Nishan Amarabandu</td>                         
+                                    <td> Western</td>
+                                    <td> 5</td>
+                                    <td> 528,900.00</td>
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+                                <tr>
+                                    <td> 1</td>
+                                    <td> 2022-02-20</td>
+                                    <td>125</td>
+                                    <td> Completed</td>
+                                    <td> Sashi Aberathne</td>                         
+                                    <td> Western</td>
+                                    <td> 2</td>
+                                    <td> 258,900.00</td>
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+                                <tr>
+                                    <td> 1</td>
+                                    <td> 2022-02-20</td>
+                                    <td>126</td>
+                                    <td> Completed</td>
+                                    <td> Gamunu Galahitiyawa</td>                         
+                                    <td> Western</td>
+                                    <td> 8</td>
+                                    <td> 358,900.00</td>
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+                                <tr>
+                                    <td> 1</td>
+                                    <td> 2022-02-20</td>
+                                    <td>127</td>
+                                    <td> Completed</td>
+                                    <td> Priyankara Perera</td>                         
+                                    <td> Western</td>
+                                    <td> 5</td>
+                                    <td> 658,900.00</td>
+                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
+                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Categories</h3>
+                    </div>
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form>
+                            <label style="margin-right:8px; margin-bottom:8px">Start Date:</label>
+                            <input type="date">
+                            <label style="margin-left: 15px; margin-right:8px">End Date:</label>
+                            <input type="date">
+                            <label style="margin-left: 15px; margin-right:8px">Category:</label>
+                            <select name="cars" id="cars">
+
+                                <option value="saab">All</option>
+                                <option value="mercedes">Mercedes</option>
+                                <option value="audi">Audi</option>
+                            </select>
+                        </form>
+                        <table id="user_list" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Category Name </th>
+                                    <th>Items Sold </th>
+                                    <th>Total Sales LKR </th>
+                                    <th>Product </th>
+                                    <th>Orders </th>
+                                   
+
+                                   
+                                    <!-- <th style="width: 85px !important;">Edit</th>
+                                    <th style="width: 85px !important;">Delete</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td> 1</td>
+                                    <td> Processors</td>
+                                    <td> 2</td>
+                                    <td> 18,700.00</td>
+                                    <td> 5</td>
+                                    <td> 3</td>
+                                    
+                                  
+                                </tr>
+                                <tr>
+                                    <td> 1</td>
+                                    <td> Motherboards</td>
+                                    <td> 3</td>
+                                    <td> 58,700.00</td>
+                                    <td> 5</td>
+                                    <td> 3</td>
+                                    
+                                  
+                                </tr>
+                                <tr>
+                                    <td> 1</td>
+                                    <td> Graphics Cards</td>
+                                    <td> 6</td>
+                                    <td> 158,000.00</td>
+                                    <td> 5</td>
+                                    <td> 3</td>
+                                    
+                                  
+                                </tr>
+                                <tr>
+                                    <td> 1</td>
+                                    <td> Memory (RAM)</td>
+                                    <td> 5</td>
+                                    <td> 58,700.00</td>
+                                    <td> 5</td>
+                                    <td> 3</td>
+                                    
+                                  
+                                </tr>
+                                <tr>
+                                    <td> 1</td>
+                                    <td> Power Supply</td>
+                                    <td> 8</td>
+                                    <td> 358,700.00</td>
+                                    <td> 5</td>
+                                    <td> 3</td>
+                                    
+                                  
+                                </tr>
+                             
+                      
+                              
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Stock</h3>
+                    </div>
+
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form>
                           
+                            <label style="margin-right:8px">Show:</label>
+                            <select name="cars" id="cars">
+
+                                <option value="saab">All</option>
+                                <option value="mercedes">Out of Stock </option>
+                                <option value="audi">Low Stock</option>
+                                <option value="audi">In Stock</option>
+                            </select>
                         </form>
                         <table id="user_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Item Name </th>
-                                    <th>Category </th>
-                                    <th>In Stock </th>
-                                    <th>Reorder Level </th>
-                                    <th>GRN Price (LKR)</th>
-                                    <th style="width: 85px !important;">View</th>
+                                    <th>SKU </th>
+                                    <th>Status</th>
+                                    <th>In Stock</th>
+                                    <th>Re Order Level</th>
+                                    
+                                   
+
+                                   
                                     <!-- <th style="width: 85px !important;">Edit</th>
                                     <th style="width: 85px !important;">Delete</th> -->
                                 </tr>
@@ -533,473 +981,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
                                 <tr>
                                     <td> 1</td>
-                                    <td> AMD RYZEN 9 3950X</td>
-                                    <td>Processors </td>
-                                    <td> 10</td>
-                                    <td> 4</td>
-                                    <td> 165,000</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                    <td> ASUS TUF GAMING GEFORCE RTX 3080TI 12GBX</td>
+                                    <td> 24587842</td>
+                                    <td> In Stock</td>
+                                    <td> 5</td>
+                                    <td> 3</td>
+                                    
+                                  
                                 </tr>
-                                
                                 <tr>
                                     <td> 2</td>
-                                    <td> AMD Ryzen 9 5950X</td>
-                                    <td>Processors </td>
-                                    <td> 15</td>
-                                    <td> 5</td>
-                                    <td> 65,000</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                
-                                <tr>
-                                    <td> 3</td>
-                                    <td> Intel Core i9-12900KF</td>
-                                    <td>Processors </td>
-                                    <td> 8</td>
+                                    <td> INTEL CORE I9-12900K</td>
+                                    <td> 24585959</td>
+                                    <td> Low Stock</td>
                                     <td> 2</td>
-                                    <td> 145,000</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                
-                                <tr>
-                                    <td> 4</td>
-                                    <td> Intel Core i9-12900K</td>
-                                    <td>Processors </td>
-                                    <td> 12</td>
-                                    <td> 3</td>
-                                    <td> 175,000</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                
-                                <tr>
-                                    <td> 5</td>
-                                    <td> ASUS ROG MAXIMUS Z690 EXTREME GLACIAL</td>
-                                    <td>Motherboard </td>
-                                    <td> 13</td>
-                                    <td> 4</td>
-                                    <td> 45,000</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                
-                                <tr>
                                     <td> 6</td>
-                                    <td> ASUS ROG MAXIMUS Z690 EXTREME</td>
-                                    <td>Motherboard </td>
-                                    <td> 16</td>
-                                    <td> 5</td>
-                                    <td> 48,000</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
+                                    
+                                  
                                 </tr>
-
+                                <tr>
+                                    <td> 3</td>
+                                    <td> G.SKILL TRIDENTZ5 RGB 32GB</td>
+                                    <td> 24587445</td>
+                                    <td> Out of Stock</td>
+                                    <td> 0</td>
+                                    <td> 3</td>
+                                    
+                                  
+                                </tr>
+                                <tr>
+                                    <td> 4</td>
+                                    <td> MSI RTX 3080TI GAMING TRIO 12GB</td>
+                                    <td> 2452484</td>
+                                    <td> In Stock</td>
+                                    <td> 8</td>
+                                    <td> 4</td>
+                                    
+                                  
+                                </tr>
+                                <tr>
+                                    <td> 5</td>
+                                    <td> CORSAIR DOMINATOR PLATINUM RGB WHITE 32GB</td>
+                                    <td> 24581484</td>
+                                    <td> Out of Stock</td>
+                                    <td> 0</td>
+                                    <td> 5</td>
+                                    
+                                  
+                                </tr>
+                           
                                 
+                     
                               
-                            </tbody>
-
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                  <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Delivers List</h3>
-                    </div>
-
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <form>
-                            <label style="margin-right:8px; margin-bottom:8px">Start Date:</label>
-                            <input type="date">
-                            <label style="margin-left: 15px; margin-right:8px">End Date:</label>
-                            <input type="date">
-                            <label style="margin-left: 15px; margin-right:8px">Courier Status:</label>
-                            <select name="cars" id="cars">
-                                <option value="volvo"> Delivered</option>
-                                <option value="saab">Western</option>
-                                <option value="mercedes">Mercedes</option>
-                                <option value="audi">Audi</option>
-                            </select>
-                        </form>
-                        <table id="user_list" class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Customer Name </th>
-                                    <th>Order Number </th>
-                                    <th>Order Date </th>
-                                    <th>Courier Status </th>
-                                    <th>Courier Company </th>
-                                    
-
-                                    <th style="width: 85px !important;">View</th>
-                                    <!-- <th style="width: 85px !important;">Edit</th>
-                                    <th style="width: 85px !important;">Delete</th> -->
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                <tr>
-                                    <td> 1</td>
-                                    <td> Amal Samatha</td>
-                                    <td> 202204230014</td>
-                                    <td> 2022-02-15</td>
-                                    <td> Delivered</td>
-                                    <td> Prompet Express</td>
-                                    
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 2</td>
-                                    <td> Amal Samatha</td>
-                                    <td> 202204240028</td>
-                                    <td> 2022-02-20</td>
-                                    <td> Delivered</td>
-                                    <td> Prompet Express</td>
-                                    
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 3</td>
-                                    <td> Amal Samatha</td>
-                                    <td> 202204240022</td>
-                                    <td> 2022-02-26</td>
-                                    <td> Delivered</td>
-                                    <td> domex</td>
-                                    
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 4</td>
-                                    <td> Amal Samatha</td>
-                                    <td> 202204240015</td>
-                                    <td> 2022-03-05</td>
-                                    <td> Delivered</td>
-                                    <td> Prompet Express</td>
-                                    
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 5</td>
-                                    <td> Amal Samatha</td>
-                                    <td> 202204240016</td>
-                                    <td> 2022-03-10</td>
-                                    <td> Delivered</td>
-                                    <td> domex</td>
-                                    
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 6</td>
-                                    <td> Amal Samatha</td>
-                                    <td> 202204240018</td>
-                                    <td> 2022-03-12</td>
-                                    <td> Delivered</td>
-                                    <td> domex</td>
-                                    
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 7</td>
-                                    <td> Amal Samatha</td>
-                                    <td> 202204240020</td>
-                                    <td> 2022-03-18</td>
-                                    <td> Delivered</td>
-                                    <td> Prompet Express</td>
-                                    
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Customer List</h3>
-                    </div>
-
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <form>
-                            <label style="margin-right:8px; margin-bottom:8px">Start Date:</label>
-                            <input type="date">
-                            <label style="margin-left: 15px; margin-right:8px">End Date:</label>
-                            <input type="date">
-                            <label style="margin-left: 15px; margin-right:8px">Province:</label>
-                            <select name="cars" id="cars">
-                                <option value="volvo">- Select - </option>
-                                <option value="saab">Western</option>
-                                <option value="mercedes">Mercedes</option>
-                                <option value="audi">Audi</option>
-                            </select>
-                        </form>
-                        <table id="user_list" class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Customer Name </th>
-                                    <th>Username </th>
-                                    <th>Register Date </th>
-                                    <th>City </th>
-                                    <th>Province </th>
-                                    <th>Total LKR </th>
-
-                                    <th style="width: 85px !important;">View</th>
-                                    <!-- <th style="width: 85px !important;">Edit</th>
-                                    <th style="width: 85px !important;">Delete</th> -->
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                <tr>
-                                    <td> 1</td>
-                                    <td> Amal Samatha</td>
-                                    <td> amal_S</td>
-                                    <td> 2022-02-20</td>
-                                    <td> Bandaragama</td>
-                                    <td> Western</td>
-                                    <td> 58,900.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 2</td>
-                                    <td> Pavithra Gamage</td>
-                                    <td> pavithra_G</td>
-                                    <td> 2022-02-22</td>
-                                    <td> Horana</td>
-                                    <td> Western</td>
-                                    <td> 8,700.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 3</td>
-                                    <td> Dhanu Aberathna</td>
-                                    <td> dhnu_a</td>
-                                    <td> 2022-03-05</td>
-                                    <td> Panadura</td>
-                                    <td> Western</td>
-                                    <td> 58,700.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 4</td>
-                                    <td> Venuk Kaveen</td>
-                                    <td> venu_k</td>
-                                    <td> 2022-03-06</td>
-                                    <td> Moratuwa</td>
-                                    <td> Western</td>
-                                    <td> 18,700.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 5</td>
-                                    <td> Shahsi Abekoon</td>
-                                    <td> shashi_a</td>
-                                    <td> 2022-03-10</td>
-                                    <td> Kaluthara</td>
-                                    <td> Western</td>
-                                    <td> 15,700.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 6</td>
-                                    <td> Saman Kumara</td>
-                                    <td> saman_k</td>
-                                    <td> 2022-03-12</td>
-                                    <td> Gampaha</td>
-                                    <td> Western</td>
-                                    <td> 8,700.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                            
-
-
-                            </tbody>
-
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Order List</h3>
-                    </div>
-
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <form>
-                            <label style="margin-right:8px; margin-bottom:8px">Start Date:</label>
-                            <input type="date">
-                            <label style="margin-left: 15px; margin-right:8px">End Date:</label>
-                            <input type="date">
-                        </form>
-                        <table id="user_list" class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th style="width: 125px !important;">#</th>
-                                    <th>Order Number </th>
-                                    <th>Customer Name </th>
-                                    <th>Order Date </th>
-                                    <th>Total LKR </th>
-
-                                    <th style="width: 85px !important;">View</th>
-                                    <!-- <th style="width: 85px !important;">Edit</th>
-                                    <th style="width: 85px !important;">Delete</th> -->
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                <tr>
-                                    <td> 1</td>
-                                    <td> 202204240012</td>
-                                    <td> Amal Samatha</td>
-                                    <td> 2022-02-19</td>
-                                    <td> 158,700.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 2</td>
-                                    <td> 202204240013</td>
-                                    <td> Pavithra Gamage</td>
-                                    <td> 2022-02-25</td>
-                                    <td> 177,000.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 3</td>
-                                    <td> 202204240012</td>
-                                    <td> Saman Kumara</td>
-                                    <td> 2022-03-01</td>
-                                    <td> 16,500.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 4</td>
-                                    <td> 202204240012</td>
-                                    <td> Dhanu Aberathna</td>
-                                    <td> 2022-03-5</td>
-                                    <td> 12,000.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 5</td>
-                                    <td> 202204240012</td>
-                                    <td> Amal Subasinha</td>
-                                    <td> 2022-03-08</td>
-                                    <td> 245,000.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 6</td>
-                                    <td> 202204240013</td>
-                                    <td> Nimesha Perera</td>
-                                    <td> 2022-03-08</td>
-                                    <td> 50,000.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 7</td>
-                                    <td> 202204240014</td>
-                                    <td> Shahsi Abekoon</td>
-                                    <td> 2022-03-12</td>
-                                    <td> 50,000.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 8</td>
-                                    <td> 202204240015</td>
-                                    <td> Samatha Perera</td>
-                                    <td> 2022-03-18</td>
-                                    <td> 244,000.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <tr>
-                                    <td> 9</td>
-                                    <td> 202204240015</td>
-                                    <td> Kasun Kalhara</td>
-                                    <td> 2022-03-20</td>
-                                    <td> 50,000.00</td>
-                                    <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                    <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                </tr>
-                                <var>
-                                    <tr>
-                                        <td> 10</td>
-                                        <td> 202204240016</td>
-                                        <td> Sudam Edirishinha</td>
-                                        <td> 2022-03-25</td>
-                                        <td> 175,000.00</td>
-                                        <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                        <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                    </tr>
-                                    <tr>
-                                        <td> 11</td>
-                                        <td> 202204240017</td>
-                                        <td> Venuk Kaveen</td>
-                                        <td> 2022-03-28</td>
-                                        <td> 150,000.00</td>
-                                        <td><button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button></td>
-                                        <!-- <td><button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button></td>
-                                            <td><button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button></td> -->
-                                    </tr>
-                                </var>
 
                             </tbody>
 

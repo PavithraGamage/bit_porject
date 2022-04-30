@@ -149,6 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'register') {
         $error['reg_last_name'] = "Only Letters allowed for Last Name";
     }
 
+    // email validate
     if (!empty($reg_email) && @$reg_previous_email != $reg_email) {
 
         if (!filter_var($reg_email, FILTER_VALIDATE_EMAIL)) {
@@ -347,7 +348,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $grand_total =  $_SESSION['order_grand_total'];
 
         // insert order
-        $sql_order = "INSERT INTO `orders` (`order_id`, `order_number`, `order_total`, `total_discount`, `delivery_charge`, `order_date`, `order_time`, `user_id`, `payment_id`, `grand_total`) VALUES (NULL, '$order_number', '$order_total', '$discount', '$d_province', '$date', '$time','$user_id', '$payment_method', '$grand_total');";
+        $sql_order = "INSERT INTO `orders` (`order_id`, `order_number`, `order_total`, `total_discount`, `delivery_charge`, `order_date`, `order_time`, `user_id`, `payment_id`, `grand_total`, `courier_status`) VALUES (NULL, '$order_number', '$order_total', '$discount', '$d_province', '$date', '$time','$user_id', '$payment_method', '$grand_total', 1);";
         // run database query
         $query = $db->query($sql_order);
 

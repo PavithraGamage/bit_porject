@@ -1,0 +1,23 @@
+1. check contact number length
+
+if (!empty($contact_number)) {
+        if (strlen($contact_number) != 10) {
+            $error['contact_number'] = "Contact Number Should be at least 10 characters";
+        }
+    }
+
+2. check input felid email to text
+3. Update Data clean function
+3. Manage Delete process
+4. Delivery Contact number beginning zero remove
+
+Query for Delivery customer dashboard
+
+SELECT o.order_number, pm.name, oc.dispatch_date, oc.tracking_number, cp.tracking_url, cp.company_name, cp.contact_number, cp.address_line_1
+FROM orders_company oc
+INNER JOIN orders o ON o.order_id = oc.order_id
+INNER JOIN courier_companies cp ON cp.company_id = oc.company_id
+INNER JOIN users u ON u.user_id = o.user_id
+INNER JOIN courier_status cs ON cs.id = o.courier_status
+INNER JOIN payment_methord pm ON pm.id = o.payment_id
+WHERE o.user_id = 16;
