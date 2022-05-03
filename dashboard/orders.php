@@ -11,7 +11,7 @@ $db = db_con();
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th scope="col" class="table_head">#</th>
+                   
                     <th scope="col" class="table_head">Order Number</th>
                     <th scope="col" class="table_head">Order Date</th>
                     <th scope="col" class="table_head">Total LKR</th>
@@ -19,12 +19,12 @@ $db = db_con();
                 </tr>
             </thead>
             <tbody>
+                
                 <?php
-
 
                 $user_id =  $_SESSION['user_id'];
 
-                $sql = "SELECT * FROM orders o WHERE o.user_id = $user_id;";
+                $sql = "SELECT * FROM orders o WHERE o.user_id = $user_id ORDER BY `o`.`order_date` DESC";
 
                 $result = $db->query($sql);
 
@@ -33,7 +33,7 @@ $db = db_con();
 
                 ?>
                         <tr>
-                            <th scope="row" class="table_body"> <?php echo $row['order_id'] ?></th>
+                           
                             <td class="table_body"><?php echo $row['order_number'] ?></td>
                             <td class="table_body"><?php echo $row['order_date'] ?></td>
                             <td class="table_body"><?php echo number_format($row['grand_total'], 2)  ?></td>

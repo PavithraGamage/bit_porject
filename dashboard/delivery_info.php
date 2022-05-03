@@ -1,98 +1,68 @@
 <?php
-
 include "site_nav.php";
-include "dashboard_nav.php";
+
+extract($_POST);
+
+$db = db_con();
+
+if (empty($order_id)) {
+    header('Location: http://localhost/bit/dashboard/delivery.php');
+}
 ?>
 
 <!-- Dashboard Content Area Start -->
+<div class="container" style="margin-top:100px; margin-bottom:100px">
 <div class="col-10 dash_content">
-    <h5>Package Details</h5>
+    <?php
+
+    $sql = "SELECT o.order_number, cs.courier_status, pm.name, oc.dispatch_date, oc.tracking_number, cp.tracking_url, cp.company_name, cp.email, cp.contact_number, cp.contact_number_opp, cp.address_line_1, cp.address_line_2
+    FROM orders_company oc
+    INNER JOIN orders o ON o.order_id = oc.order_id
+    INNER JOIN courier_companies cp ON cp.company_id = oc.company_id
+    INNER JOIN courier_status cs ON cs.id = o.courier_status
+    INNER JOIN payment_methord pm ON pm.id = o.payment_id
+    WHERE o.order_id = $order_id;";
+
+
+    $result = $db->query($sql);
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+    ?>
     <hr>
-    <form>
-        <div class="row">
-            <div class="col-12">
-                <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-6 col-form-label">Order Number :</label>
-                    <div class="col-sm-6">
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="1125">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-6 col-form-label">Order Description :</label>
-                    <div class="col-sm-6">
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="AMD R9 3600X, ASUS B450 TUF Plus Gamming AMD R9 3600X,...">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-6 col-form-label">Payment Method :</label>
-                    <div class="col-sm-6">
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="Cash On Delivery (COD)">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-6 col-form-label">Dispatch Date :</label>
-                    <div class="col-sm-6">
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="12/10/2021">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-6 col-form-label">Estimate Araival (ETA) :</label>
-                    <div class="col-sm-6">
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="12/10/2021">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-6 col-form-label">Tracking Number :</label>
-                    <div class="col-sm-6">
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="1222544KKZ">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-6 col-form-label">Track Item :</label>
-                    <div class="col-sm-6">
-                        <button>Tracking URL</button>
-                    </div>
-                </div>
-                <hr>
-                <h5>Courier Company Details</h5>
-                <hr>
-                <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-6 col-form-label">Delivery Company Name:</label>
-                    <div class="col-sm-6">
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="Promt Express">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-6 col-form-label">Delivery Company Email:</label>
-                    <div class="col-sm-6">
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="customercare@promptxpress.lk">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-6 col-form-label">Delivery Company Phone:</label>
-                    <div class="col-sm-6">
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="+94 114 422 733">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-6 col-form-label">Delivery Company Address:</label>
-                    <div class="col-sm-6">
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="No. 40, Ferry Road,Borupana, Rathmalana">
-                    </div>
-                </div>
-               
-            </div>
+            <h5>Delivery Details</h5>
+            <hr>
+            <p>Order Number : <?php echo $row['order_number']; ?></p>
+            <p>Delivery Status : <?php echo $row['courier_status']; ?></p>
+            <p>Payment Method : <?php echo $row['name']; ?></p>
+            <p>Dispatch Date at Warehouse : <?php echo $row['dispatch_date']; ?></p>
+            <p>Tracking Number : <?php echo $row['tracking_number']; ?></p>
+            <p>Track URL : <a href="<?php echo $row['tracking_url'] . $row['tracking_number'] ?>" target="_blank"><?php echo $row['tracking_url'] . $row['tracking_number']?></a>
 
-        </div>
-    </form>
-</div>
-<!-- Dashbaord Content Area End -->
+            <hr>
+            <h5>Courier Company Details</h5>
+            <hr>
+            <p>Company Name: <?php echo $row['company_name']; ?></p>
+            <p>Company Email: <?php echo $row['email']; ?></p>
+            <p>Company Phone: <?php echo $row['contact_number']; ?></p>
+            <p>Company Phone (Optional): <?php echo $row['contact_number_opp']; ?></p>
+            <p>Company Address: <?php echo $row['address_line_1'] . $row['address_line_2'] ; ?></p>
+           
+
+    <?php
+
+        }
+    }
+    ?>
+</div> 
+<a href="delivery.php" style="margin-left: 15px;">
+            <button type="button" class="btn btn-success float-right"><i class="fas fa-truck"></i></i> Deliveries</button>
+        </a>
 </div>
 
 
-<!--dashboard end-->
-</div>
-</div>
+
+
+
 
 <?php
 

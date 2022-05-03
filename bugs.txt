@@ -10,6 +10,7 @@ if (!empty($contact_number)) {
 3. Update Data clean function
 3. Manage Delete process
 4. Delivery Contact number beginning zero remove
+5. user active inactive
 
 Query for Delivery customer dashboard
 
@@ -21,3 +22,18 @@ INNER JOIN users u ON u.user_id = o.user_id
 INNER JOIN courier_status cs ON cs.id = o.courier_status
 INNER JOIN payment_methord pm ON pm.id = o.payment_id
 WHERE o.user_id = 16;
+
+Date filter by user and between days
+
+SELECT * FROM orders WHERE (order_date BETWEEN '2022-04-23' AND '2022-04-25') AND user_id = 1;
+
+SELECT o.order_id, o.order_number, o.order_date, dd.frist_name, dd.last_name, pm.name, dd.city, p.price
+FROM orders_company oc
+INNER JOIN orders o ON o.order_id = oc.order_id
+INNER JOIN users u ON u.user_id = o.user_id
+INNER JOIN payment_methord pm ON pm.id = o.payment_id
+INNER JOIN delivery_details dd ON dd.order_id = o.order_id
+INNER JOIN province p ON p.id = o.delivery_charge
+WHERE (order_date BETWEEN '2022-04-23' AND '2022-04-25')  
+ORDER BY `o`.`order_date` DESC;
+

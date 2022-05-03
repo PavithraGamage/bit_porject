@@ -636,7 +636,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                 <?php
 
                                 // provinces drop down data fletch 
-                                $sql_pro = "SELECT * FROM `province`";
+                                $sql_pro = "SELECT * FROM `province` WHERE status = 0";
                                 $pro_result = $db->query($sql_pro);
 
                                 // fletch data
@@ -697,7 +697,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                 <?php
 
                                 // provinces drop down data fletch 
-                                $sql_pro = "SELECT * FROM `province`";
+                                $sql_pro = "SELECT * FROM `province` WHERE status = 0";
                                 $pro_result = $db->query($sql_pro);
                                 // fletch data
                                 if ($pro_result->num_rows > 0) {
