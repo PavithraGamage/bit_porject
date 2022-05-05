@@ -173,10 +173,10 @@
                with font-awesome or any other icon font library -->
                   <?php
 
-                    $sql = "SELECT m.module_id, m.description, m.path, m.view, m.icon, m.status
+                    $sql = "SELECT m.module_id, m.description, m.path, m.view, m.icon, m.status, um.status
                     FROM users_modules um
                     INNER JOIN modules m ON m.module_id = um.module_id
-                    WHERE length(m.module_id) = '2' AND um.user_id ='" . $_SESSION['user_id'] . "' AND m.status = '1'";
+                    WHERE length(m.module_id) = '2' AND um.user_id ='" . $_SESSION['user_id'] . "' AND m.status = '1' AND um.status = '0'";
 
                     // database connection call
                     $db = db_con();
@@ -214,7 +214,7 @@
                                     $sql_sub = "SELECT m.module_id, m.description, m.path, m.view, m.icon, m.status
                                                 FROM users_modules um
                                                 INNER JOIN modules m ON m.module_id = um.module_id
-                                                WHERE length(m.module_id) = '4' AND um.user_id ='" . $_SESSION['user_id'] . "' AND substr(m.module_id, 1,2) = '" . $row['module_id'] . "' AND m.status = '1'";
+                                                WHERE length(m.module_id) = '4' AND um.user_id ='" . $_SESSION['user_id'] . "' AND substr(m.module_id, 1,2) = '" . $row['module_id'] . "' AND m.status = '1' AND um.status = '0'";
 
                                     // assign the query
                                     $result_sub = $db->query($sql_sub);

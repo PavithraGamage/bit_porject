@@ -79,15 +79,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
 
                             <div class="col">
                                 <?php
-                                
+
                                 // create null variable for dynamic query
                                 $q_where_part = null;
 
+                                // cheek the start date and end date
                                 if (!empty($start_date) and !empty($end_date)) {
 
                                     $q_where_part = "WHERE (order_date BETWEEN '$start_date' AND '$end_date')";
                                 }
 
+                                // query
                                 $sql = "SELECT SUM(p.price) 
                                 FROM orders o 
                                 INNER JOIN delivery_details dd ON dd.order_id = o.order_id 
@@ -95,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
                                 INNER JOIN province p ON p.id = o.delivery_charge 
                                 INNER JOIN courier_status cs ON cs.id = o.courier_status $q_where_part;";
 
-
+                                // query fletch
                                 $result = $db->query($sql);
 
 

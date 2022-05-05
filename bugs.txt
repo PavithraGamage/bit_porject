@@ -11,6 +11,7 @@ if (!empty($contact_number)) {
 3. Manage Delete process
 4. Delivery Contact number beginning zero remove
 5. user active inactive
+6. comments for codes
 
 Query for Delivery customer dashboard
 
