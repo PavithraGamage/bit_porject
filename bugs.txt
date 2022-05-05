@@ -37,3 +37,16 @@ INNER JOIN province p ON p.id = o.delivery_charge
 WHERE (order_date BETWEEN '2022-04-23' AND '2022-04-25')  
 ORDER BY `o`.`order_date` DESC;
 
+
+3/5/2022
+------------------------------------------------------
+$sql = "SELECT o.order_number, o.order_date, dd.frist_name, dd.last_name, pm.name, p.price, dd.city, o.order_id
+FROM orders o
+INNER JOIN delivery_details dd ON dd.order_id = o.order_id
+INNER JOIN payment_methord pm ON pm.id = o.payment_id
+INNER JOIN province p ON p.id = o.delivery_charge 
+WHERE (order_date BETWEEN '2022-04-23' AND '2022-05-03')  
+ORDER BY `o`.`order_date` DESC;";
+
+
+Array ( [start_date] => 2022-05-18 [end_date] => 2022-05-17 [action] => search )

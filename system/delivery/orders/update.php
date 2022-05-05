@@ -4,7 +4,7 @@ ob_start(); // multiple headers
 include '../../header.php';
 include '../../nav.php';
 
-print_r($_POST);
+
 
 // extract variables
 extract($_POST);
@@ -59,15 +59,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $error['status'] = "Status Should Not Be Empty";
     }
 
-    if (empty($tracking_number)) {
-        $error['tracking_number'] = "Tracking Number Should Not Be Empty";
-    }
-
     if (empty($dispatch_date)) {
         $error['dispatch_date'] = "Dispatch Date Should Not Be Empty";
     }
 
     // advance validations
+
+    if(!$status == 16){
+        if (empty($tracking_number)) {
+            $error['tracking_number'] = "Tracking Number Should Not Be Empty";
+        }
+    }
 
     if (!empty($order_id)) {
 
@@ -96,30 +98,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
         $sql_update = "UPDATE `orders` SET `courier_status` = '$status' WHERE `orders`.`order_id` = $order_id;";
 
-         // run database query
-         $query = $db->query($sql_update);
+        // run database query
+        $query = $db->query($sql_update);
     }
 }
 
 // edit courier
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 
-     // from name change
-     $form_name = "Update Courier";
+    // from name change
+    $form_name = "Update Courier";
 
-     // form button name change
-     $btn_name = "Update";
- 
-     // form button value change
-     $btn_value = "update";
- 
-     // form button icon
-     $btn_icon = '<i class="far fa-edit"></i>';
+    // form button name change
+    $btn_name = "Update";
+
+    // form button value change
+    $btn_value = "update";
+
+    // form button icon
+    $btn_icon = '<i class="far fa-edit"></i>';
 
 
     // check records
 
-    $sql = "SELECT * FROM orders_company ";
+    $sql = "SELECT cc.company_id, oc.tracking_number, oc.dispatch_date, cs.id
+    FROM orders o 
+    INNER JOIN courier_status cs ON cs.id = o.courier_status
+    INNER JOIN orders_company oc ON oc.order_id = o.order_id
+    INNER JOIN courier_companies cc ON cc.company_id = oc.company_id
+    WHERE o.order_id = $order_id;";
 
     $result = $db->query($sql);
 
@@ -130,32 +137,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
         $company = $row['company_id'];
         $tracking_number = $row['tracking_number'];
         $dispatch_date = $row['dispatch_date'];
+        $status = $row['id'];
     }
 }
 
 // update the edit data
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
-    
+
     // error styles
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
-     // call data clean function
-     $company =  data_clean($company);
-     $status =  data_clean($status);
-     $tracking_number =  data_clean($tracking_number);
-     $dispatch_date =  data_clean($dispatch_date);
+    // call data clean function
+    $company =  data_clean($company);
+    $status =  data_clean($status);
+    $tracking_number =  data_clean($tracking_number);
+    $dispatch_date =  data_clean($dispatch_date);
 
-     // basic validation
+    // basic validation
     if (empty($company)) {
         $error['company'] = "Company Name Should Not Be Empty";
     }
 
-    if (empty($status)) {
-        $error['status'] = "Status Should Not Be Empty";
-    }
-
+  
     if (empty($tracking_number)) {
         $error['tracking_number'] = "Tracking Number Should Not Be Empty";
     }
@@ -169,18 +174,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         $error['tracking_number'] = "Tracking Number not valid";
     }
 
+    if(!$status == 16){
+        if (empty($status)) {
+            $error['status'] = "Status Should Not Be Empty";
+        }
+    
+    }
+
     // update query
     if (empty($error)) {
 
-        $dql = "UPDATE orders_company SET company_id = '$company_id', dispatch_date = '$dispatch_date',  tracking_number = '$tracking_number' WHERE order_id = $order_id;";
+        $sql = "UPDATE orders_company SET company_id = '$company', dispatch_date = '$dispatch_date',  tracking_number = '$tracking_number' WHERE order_id = $order_id;";
 
         // run database query
         $query = $db->query($sql);
 
         $error_style['success'] = "alert-success";
         $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
-        $error['update'] = "<b>$company_name</b> Successfully Updated";
+        $error['update'] = "Successfully Updated";
+
+        $sql_update = "UPDATE `orders` SET `courier_status` = '$status' WHERE `orders`.`order_id` = $order_id;";
+        // run database query
+        $query = $db->query($sql_update);
     }
+}
+
+// delete recode
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
+
+    $sql = "UPDATE `orders_company` SET `status` = '1' WHERE order_id = $order_id;";
+
+    $db->query($sql);
+
+    $error['delete_msg'] = "Recode Delete";
+
+    // error styles
+    $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
 
 ?>
@@ -211,23 +241,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
 
-            $sql = "SELECT * FROM `courier_companies` WHERE company_id = '$company_id'";
+            $sql = "SELECT * FROM `orders_company` WHERE order_id = '$order_id'";
 
             $result = $db->query($sql);
 
             if ($result->num_rows > 0) {
 
                 $row = $result->fetch_assoc();
-                $brand_id = $row['company_id'];
-                $company_name = $row['company_name'];
+                $order_id = $row['order_id'];
+               
 
         ?>
                 <div class="card">
                     <h5 class="card-header bg-danger">Conformation</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $company_name ?> ?</b> </h5>
+                        <h5 class="card-title">Are You Want to DELETE ? </h5>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                            <input type="hidden" name="company_id" value="<?php echo $company_id ?>"><br>
+                            <input type="hidden" name="order_id" value="<?php echo $order_id ?>"><br>
                             <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
                             <button type="submit" name="action" value="cancel_delete" class="btn btn-primary btn-s">No</button>
                         </form>
@@ -355,7 +385,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
                                     <div style="width:auto">
                                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                             <input type="hidden" name="order_id" value="<?php echo $row['order_id'] ?>">
-                                            <button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-l"><i class="fas fa-edit"></i> Update</button>
+                                            <button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-l"><i class="fas fa-edit"></i> Edit</button>
                                         </form>
                                     </div>
 

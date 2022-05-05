@@ -498,85 +498,85 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="card card-primary card-outline card-tabs">
-                                <div class="card-header p-0 pt-1 border-bottom-0">
-                                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Personal Details</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Contact Details</a>
-                                        </li>
-                                    </ul>
-                                </div>
+
                                 <div class="card-body">
-                                    <div class="tab-content" id="custom-tabs-three-tabContent">
-                                        <div class="tab-pane fade show active" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
-                                            <div class="form-group">
-                                                <label class="form-label" for="image">Profile Image <span style="color: red;">*</span></label>
-                                                <input type="file" class="form-control" id="profile_image" style="height: auto;" name="profile_image" />
-                                                <input type="hidden" class="form-control" id="previous_profile_image" name="previous_profile_image" value="<?php echo @$profile_image ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">First Name</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter First Name" name="first_name" value="<?php echo @$first_name ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Last Name</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Last Name" name="last_name" value="<?php echo @$last_name ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">NIC</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter NIC" name="nic" value="<?php echo @$nic ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Date of Birth</label>
-                                                <input type="date" class="form-control" id="exampleInputEmail1" placeholder="Enter Date of Birth" name="dob" value="<?php echo @$dob ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Username</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Username" name="username" value="<?php echo @$username ?>">
-                                                <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="Enter Username" name="previous_username" value="<?php echo @$username ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputPassword1">Password</label>
-                                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
-                                                <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="Enter Username" name="previous_password" value="<?php echo sha1(@$password)  ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputPassword1">Verify Password</label>
-                                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Verify Password" name="verify_password">
-                                                <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="Enter Username" name="previous_password_verify" value="<?php echo sha1(@$password)  ?>">
-                                            </div>
-                                        </div>
-                                        <!-- second colum -->
-                                        <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
-                                            <div class="form-group">
-                                                <label for="exampleInputPassword1">Email</label>
-                                                <input type="email" class="form-control" id="exampleInputPassword1" placeholder="Enter Email" name="email" value="<?php echo @$email ?>">
-                                                <input type="hidden" class="form-control" id="exampleInputPassword1" placeholder="Enter Email" name="previous_email" value="<?php echo @$email ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Contact Number</label>
-                                                <input type="tel" class="form-control" id="exampleInputEmail1" placeholder="Enter Contact Number" name="contact_number" value="<?php echo @$contact_number ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Address Line 1</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Address Line 1" name="address_line_1" value="<?php echo @$address_line_1 ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Address Line 2</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Address Line 2" name="address_line_2" value="<?php echo @$address_line_2 ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">City</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter City" name="city" value="<?php echo @$city ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Postal Code</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Postal Code" name="postal_code" value="<?php echo @$postal_code ?>">
-                                            </div>
-                                        </div>
+                                    
+
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">User Name <span style="color: red;">*</span></label>
+                                        <select class="form-control select2" style="width: 100%;" name="main_module">
+                                            <option value="">- Select Main Module -</option>
+                                            <?php
+
+                                            // user drop down data fletch 
+                                            $sql = "SELECT * FROM `users` WHERE status = 1 ORDER BY `users`.`user_name` ASC";
+                                            $result = $db->query($sql);
+
+                                            // fletch data
+                                            if ($result->num_rows > 0) {
+                                                while ($row = $result->fetch_assoc()) {
+                                            ?>
+                                                    <option value="<?php echo $row['user_id'] ?>" <?php if ($row['user_id'] == @$main_module) { ?> selected <?php } ?>>
+                                                        <?php echo $row['user_name']; ?>
+                                                    </option>
+                                            <?php
+
+                                                }
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
+                                  
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Main Module Name <span style="color: red;">*</span></label>
+                                        <select class="form-control select2" style="width: 100%;" name="main_module">
+                                            <option value="">- Select Main Module -</option>
+                                            <?php
+
+                                            // modules drop down data fletch 
+                                            $sql_modules = "SELECT * FROM `modules` WHERE length(module_id) = '2'";
+                                            $modules_result = $db->query($sql_modules);
+
+                                            // fletch data
+                                            if ($modules_result->num_rows > 0) {
+                                                while ($modules_row = $modules_result->fetch_assoc()) {
+                                            ?>
+                                                    <option value="<?php echo $modules_row['module_id'] ?>" <?php if ($modules_row['module_id'] == @$main_module) { ?> selected <?php } ?>>
+                                                        <?php echo $modules_row['description']; ?>
+                                                    </option>
+                                            <?php
+
+                                                }
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Sub Module Name <span style="color: red;">*</span></label>
+                                        <select class="form-control select2" style="width: 100%;" name="main_module">
+                                            <option value="">- Select Main Module -</option>
+                                            <?php
+
+                                            // modules drop down data fletch 
+                                            $sql_modules = "SELECT * FROM `modules` WHERE length(module_id) = '4'";
+                                            $modules_result = $db->query($sql_modules);
+
+                                            // fletch data
+                                            if ($modules_result->num_rows > 0) {
+                                                while ($modules_row = $modules_result->fetch_assoc()) {
+                                            ?>
+                                                    <option value="<?php echo $modules_row['module_id'] ?>" <?php if ($modules_row['module_id'] == @$main_module) { ?> selected <?php } ?>>
+                                                        <?php echo $modules_row['description']; ?>
+                                                    </option>
+                                            <?php
+
+                                                }
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+
                                 </div>
                                 <!-- /.card -->
                             </div>

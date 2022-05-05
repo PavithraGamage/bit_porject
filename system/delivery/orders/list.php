@@ -13,11 +13,11 @@ $error = array();
 // insert brands
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
 
-    if(empty($start_date)){
+    if (empty($start_date)) {
         $error['start_date'] = "Select Start Date";
     }
-    
-    if(empty($end_date)){
+
+    if (empty($end_date)) {
         $error['end_date'] = "Select End Date";
     }
 }
@@ -63,18 +63,64 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                            <label>Start Date: </label>
-                            <input type="date" name="start_date" value="<?php echo @$start_date ?>">
-                            <p style="color: red;"><?php echo @$error['start_date'] ?></p>
+                        <div class="row">
+                            <div class="col">
+                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                    <label>Start Date: </label>
+                                    <input type="date" name="start_date" value="<?php echo @$start_date ?>">
+                                    <p style="color: red;"><?php echo @$error['start_date'] ?></p>
 
-                            <label>End Date: </label>
-                            <input type="date" name="end_date" value="<?php echo @$end_date ?>">
-                            <p style="color: red;"><?php echo @$error['end_date'] ?></p>
-                            <button name="action" value="search" type="submit">View</button>
-                        </form>
+                                    <label>End Date: </label>
+                                    <input type="date" name="end_date" value="<?php echo @$end_date ?>">
+                                    <p style="color: red;"><?php echo @$error['end_date'] ?></p>
+                                    <button name="action" value="search" type="submit">View</button>
+                                </form>
+                            </div>
+
+                            <div class="col">
+                                <?php
+                                
+                                // create null variable for dynamic query
+                                $q_where_part = null;
+
+                                if (!empty($start_date) and !empty($end_date)) {
+
+                                    $q_where_part = "WHERE (order_date BETWEEN '$start_date' AND '$end_date')";
+                                }
+
+                                $sql = "SELECT SUM(p.price) 
+                                FROM orders o 
+                                INNER JOIN delivery_details dd ON dd.order_id = o.order_id 
+                                INNER JOIN payment_methord pm ON pm.id = o.payment_id 
+                                INNER JOIN province p ON p.id = o.delivery_charge 
+                                INNER JOIN courier_status cs ON cs.id = o.courier_status $q_where_part;";
+
+
+                                $result = $db->query($sql);
+
+
+                                if ($row = $result->fetch_assoc()) {
+                                    $price = $row['SUM(p.price)'];
+                                ?>
+
+                                    <p>Total Delivery Charges LKR: <b><?php echo number_format($price, 2); ?> </b></p>
+
+
+                                <?php
+                                }
+
+
+                                ?>
+
+                            </div>
+
+                        </div>
+
+
+
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
+
                                 <tr>
                                     <th>Order Number</th>
                                     <th>Order Date</th>
@@ -82,22 +128,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
                                     <th>Payment Method</th>
                                     <th>Delivery Charges</th>
                                     <th>City</th>
-                                    <th style="width: 85px !important;">View</th>
+                                    <th>Status</th>
 
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $q_select_part = "SELECT o.order_number, o.order_date, dd.frist_name, dd.last_name, pm.name, p.price, dd.city, o.order_id";
+                                $q_select_part = "SELECT o.order_number, o.order_date, dd.frist_name, dd.last_name, pm.name, p.price, dd.city, o.order_id, cs.courier_status";
                                 $q_from_part = "FROM orders o";
                                 $q_join_part = "INNER JOIN delivery_details dd ON dd.order_id = o.order_id
                                 INNER JOIN payment_methord pm ON pm.id = o.payment_id
-                                INNER JOIN province p ON p.id = o.delivery_charge ";
+                                INNER JOIN province p ON p.id = o.delivery_charge 
+                                INNER JOIN courier_status cs ON cs.id = o.courier_status";
                                 $order_by_part = "ORDER BY `o`.`order_date` DESC;";
 
                                 $q_where_part = null;
 
-                                if(!empty($start_date) AND !empty($end_date)){
+                                if (!empty($start_date) and !empty($end_date)) {
 
                                     $q_where_part = "WHERE (order_date BETWEEN '$start_date' AND '$end_date')";
                                 }
@@ -118,18 +165,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
                                             <td><?php echo  $row['name']; ?> </td>
                                             <td><?php echo  $row['price']; ?></td>
                                             <td><?php echo  $row['city']; ?></td>
+                                            <td><?php echo  $row['courier_status']; ?></td>
 
 
 
-                                            <td>
-                                                <form action="update.php" method="post">
-                                                    <input type="hidden" name="order_id" value="<?php echo $row['order_id'] ?>">
-
-                                                    <button type="submit" name="action" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button>
-
-
-                                                </form>
-                                            </td>
 
                                         </tr>
                                 <?php

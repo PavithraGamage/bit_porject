@@ -28,9 +28,7 @@ $error_style =  array();
 $error_style_icon = array();
 
 
-// modules drop down data fletch 
-$sql_modules = "SELECT * FROM `modules` WHERE length(module_id) = '2'";
-$modules_result = $db->query($sql_modules);
+
 
 
 
@@ -139,6 +137,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
     // form button icon
     $btn_icon = '<i class="far fa-edit"></i>';
 
+
+
     // check recodes in DB
     $sql = "SELECT * FROM `modules` WHERE module_id = $module_id";
     $result = $db->query($sql);
@@ -153,6 +153,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
         $m_m_folder_path = $row['path'];
         $m_m_file_path = $row['view'];
         $m_m_icon = $row['icon'];
+    }
+
+    // remove the last 2 digits of the module id  
+    $main_modules = substr($module_id, 0, -2);
+
+    // modules drop down data fletch 
+    $sql_modules = "SELECT * FROM `modules` WHERE length(module_id) = '2' AND module_id = '$main_modules'";
+    $modules_result = $db->query($sql_modules);
+
+    if ($modules_result->num_rows > 0) {
+
+        $row = $modules_result->fetch_assoc();
+
+        $main_module = $row['module_id'];
     }
 }
 
@@ -330,6 +344,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                 <select class="form-control select2" style="width: 100%;" name="main_module">
                                     <option value="">- Select Main Module -</option>
                                     <?php
+
+                                    // modules drop down data fletch 
+                                    $sql_modules = "SELECT * FROM `modules` WHERE length(module_id) = '2'";
+                                    $modules_result = $db->query($sql_modules);
 
                                     // fletch data
                                     if ($modules_result->num_rows > 0) {
