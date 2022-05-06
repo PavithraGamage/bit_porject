@@ -8,20 +8,12 @@ extract($_POST);
 // DB Connection
 $db = db_con();
 
-// user details
-$sql = "SELECT * FROM `users`  WHERE `user_id` = '$user_id'";
-$result = $db->query($sql);
-
-// staff details
-$staff_sql = "SELECT * FROM `staff`  WHERE `user_id` = '$user_id'";
-$staff_result = $db->query($staff_sql);
-
 
 ?>
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
-        <div class="row mb-2">
+            <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1 class="m-0">Profile</h1>
                 </div><!-- /.col -->
@@ -34,6 +26,10 @@ $staff_result = $db->query($staff_sql);
             </div><!-- /.row -->
             <?php
 
+            // user details
+            $sql = "SELECT * FROM `users`  WHERE `user_id` = '$user_id'";
+            $result = $db->query($sql);
+
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
             ?>
@@ -45,9 +41,6 @@ $staff_result = $db->query($staff_sql);
                         </div>
 
                         <h1 class="profile-username text-center"><?php echo  strtoupper($row['user_name']); ?></h1>
-
-                        <p class="text-muted text-center">Software Engineer</p>
-
                         <ul class="list-group list-group-unbordered mb-3">
                             <h4>Personal Details</h4>
                             <li class="list-group-item">
@@ -66,6 +59,10 @@ $staff_result = $db->query($staff_sql);
                         <?php
                     }
 
+                    // staff details
+                    $staff_sql = "SELECT * FROM `staff`  WHERE `user_id` = '$user_id'";
+                    $staff_result = $db->query($staff_sql);
+                    
                     if ($staff_result->num_rows > 0) {
                         $staff_row = $staff_result->fetch_assoc();
 

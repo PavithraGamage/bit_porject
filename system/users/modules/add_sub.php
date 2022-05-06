@@ -147,7 +147,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 
         $row = $result->fetch_assoc();
 
-
         $m_m_id = $row['module_id'];
         $m_m_name =  $row['description'];
         $m_m_folder_path = $row['path'];
@@ -402,19 +401,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 ?>
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">User List</h3>
+                        <h3 class="card-title">Sub Module List</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table id="user_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th style="width: 125px !important;">Module ID</th>
+                                    <th>Module ID</th>
                                     <th>Module Name</th>
-
-
-                                    <th style="width: 85px !important;">Edit</th>
-                                    <th style="width: 85px !important;">Delete</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -466,11 +463,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     $(function() {
         $('#user_list').DataTable({
             "paging": true,
-            "lengthChange": false,
-            "searching": false,
+            "lengthChange": true,
+            "searching": true,
             "ordering": true,
             "info": true,
-            "autoWidth": false,
+            "autoWidth": true,
             "responsive": true,
         });
     });

@@ -488,7 +488,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     </div>
     <div class="container-fluid">
         <div class="row">
-            <div class="col">
+            <div class="col-5">
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title"><?php echo $form_name ?></h3>

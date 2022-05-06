@@ -66,6 +66,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $error['match'] = "Invalid Date Type";
     }
 
+    if (!empty($main_module)) {
+
+        $sql = "SELECT * FROM users_modules WHERE module_id = '$main_module' AND user_id = $username";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['main_module'] = "This module already assign  to the selected user";
+        }
+    }
+
+
 
 
     //insert data to db
@@ -111,6 +123,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert_1') {
 
     if (!preg_match("/^[0-9]*$/", $sub_module)) {
         $error['match'] = "Invalid Date Type";
+    }
+
+    if (!empty($sub_module)) {
+
+        $sql = "SELECT * FROM users_modules WHERE module_id = '$sub_module' AND user_id = $username";
+
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['sub_module'] = "This module already assign  to the selected user";
+        }
     }
 
 
@@ -188,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
     // update query
     if (empty($error)) {
-        echo $sql = "UPDATE `users_modules` SET `module_id` = '$main_module' WHERE id = $id;";
+         $sql = "UPDATE `users_modules` SET `module_id` = '$main_module' WHERE id = $id;";
 
         // run database query
         $query = $db->query($sql);
@@ -243,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update_1') {
     }
 }
 
-
+// delete the recode
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
     $sql = "UPDATE `users_modules` SET `status` = '1' WHERE id = $id;";
@@ -256,6 +279,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
+
+// change status
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
+
+    $sql = "UPDATE `users_modules` SET `status` = '0' WHERE id = $id;";
+
+    $db->query($sql);
+
+    $error['delete_msg'] = "Recode Active";
+
+    // error styles
+    $error_style['success'] = "alert-success";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+}
 ?>
 
 <div class="content-wrapper">
@@ -263,7 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Staff Permissions</h1>
+                    <h1 class="m-0">Permissions</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -292,7 +329,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
                 $row = $result->fetch_assoc();
                 $username = $row['id'];
-                
+
         ?>
                 <div class="card">
                     <h5 class="card-header bg-danger">Conformation</h5>
@@ -391,6 +428,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                         </div>
                     </form>
                 </div>
+
+            </div>
+            <!-- Right Section Start -->
+            <div class="col">
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title"><?php echo $form_name_1 ?></h3>
@@ -467,94 +508,101 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     </form>
                 </div>
             </div>
-            <!-- Right Section Start -->
-            <div class="col">
-                <?php
 
-
-
-                ?>
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Staff Permissions List</h3><br><br>
-                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                            <label>Filter by:</label>
-                            <select class="form-control select2" style="width: 40%;" name="modules">
-                                <option value="">- Select Module -</option>
-                                <option value="2" <?php if (@$modules == 2) {
-                                                        echo "selected";
-                                                    }; ?>>Main Module</option>
-                                <option value="4" <?php if (@$modules == 4) {
-                                                        echo "selected";
-                                                    }; ?>>Sub Module</option>
-                            </select><br>
-                            <button class="btn btn-block btn-primary btn-xs" style="width: 20%;">Filter</button>
-                        </form>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <table id="user_list" class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th style="width: 75px !important;">Profile Image</th>
-                                    <th>Username</th>
-                                    <th>Module</th>
-                                    <th>Module ID</th>
-                                    <th style="width: 85px !important;">Edit</th>
-                                    <th style="width: 85px !important;">Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-
-                                // null variable for query where part
-                                $q_where_part = null;
-
-                                // check the filter is set
-                                if (!empty($modules)) {
-
-                                    $q_where_part = " WHERE LENGTH(um.module_id) = $modules;";
-                                }
-
-                                // sql query
-                                $sql = "SELECT u.user_id, u.profile_image, u.user_name, m.description, um.module_id, um.id FROM users_modules um INNER JOIN users u ON u.user_id = um.user_id INNER JOIN modules m ON m.module_id = um.module_id $q_where_part";
-
-                                // fletch data
-                                $result = $db->query($sql);
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                ?>
-                                        <tr>
-                                            <td><img src="../../../assets/images/<?php echo $row['profile_image'] ?>" class="img-fluid" width="100"></td>
-                                            <td><?php echo $row['user_name'] ?> </td>
-                                            <td><?php echo $row['description'] ?> </td>
-                                            <td><?php echo $row['module_id'] ?> </td>
-                                            <td>
-                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
-                                                    <button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
-                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
-                                                </form>
-                                            </td>
-
-                                        </tr>
-
-                                <?php
-                                    }
-                                }
-                                ?>
-                            </tbody>
-
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Staff Permissions List</h3><br><br>
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                    <label>Filter by:</label>
+                    <select class="form-control select2" style="width: 40%;" name="modules">
+                        <option value="">- Select Module -</option>
+                        <option value="2" <?php if (@$modules == 2) {
+                                                echo "selected";
+                                            }; ?>>Main Module</option>
+                        <option value="4" <?php if (@$modules == 4) {
+                                                echo "selected";
+                                            }; ?>>Sub Module</option>
+                    </select><br>
+                    <button class="btn btn-block btn-primary btn-xs" style="width: 20%;">Filter</button>
+                </form>
             </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table id="user_list" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Profile Image</th>
+                            <th>Username</th>
+                            <th>Module</th>
+                            <th>Module ID</th>
+                            <th>Status</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                            <th>Change Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+
+                        // null variable for query where part
+                        $q_where_part = null;
+
+                        // check the filter is set
+                        if (!empty($modules)) {
+
+                            $q_where_part = " WHERE LENGTH(um.module_id) = $modules;";
+                        }
+
+                        // sql query
+                        $sql = "SELECT u.user_id, u.profile_image, u.user_name, m.description, um.module_id, um.id, s.status_name
+                      FROM users_modules um 
+                      INNER JOIN users u ON u.user_id = um.user_id 
+                      INNER JOIN modules m ON m.module_id = um.module_id
+                      INNER JOIN status s ON s.status_id = um.status $q_where_part";
+
+                        // fletch data
+                        $result = $db->query($sql);
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                        ?>
+                                <tr>
+                                    <td><img src="../../../assets/images/<?php echo $row['profile_image'] ?>" class="img-fluid" width="100"></td>
+                                    <td><?php echo $row['user_name'] ?> </td>
+                                    <td><?php echo $row['description'] ?> </td>
+                                    <td><?php echo $row['module_id'] ?> </td>
+                                    <td><?php echo $row['status_name'] ?> </td>
+
+                                    <td>
+                                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                            <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
+                                            <button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                            <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
+                                            <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                            <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
+                                            <button type="submit" name="action" value="active" class="btn btn-block btn-warning btn-xs"><i class="fas fa-check"></i></button>
+                                        </form>
+                                    </td>
+
+                                </tr>
+
+                        <?php
+                            }
+                        }
+                        ?>
+                    </tbody>
+
+                </table>
+            </div>
+            <!-- /.card-body -->
         </div>
     </div>
 </div>
@@ -566,11 +614,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     $(function() {
         $('#user_list').DataTable({
             "paging": true,
-            "lengthChange": false,
+            "lengthChange": true,
             "searching": true,
             "ordering": true,
             "info": true,
-            "autoWidth": false,
+            "autoWidth": true,
             "responsive": true,
         });
     });
