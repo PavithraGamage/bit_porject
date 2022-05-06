@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
     // advance validation
     if (empty($error)) {
 
-        $sql = "SELECT * FROM users WHERE user_name = '$username' AND password = '" . sha1($password) . "'";
+        $sql = "SELECT * FROM users WHERE user_name = '$username' AND password = '" . sha1($password) . "' AND status = 0";
 
         // run database query
         $result = $db->query($sql);
@@ -184,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'register') {
 
     if (empty($error)) {
 
-        $sql = "INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `first_name`, `last_name`, `profile_image`, `created_date`, `status`) VALUES (NULL, '$reg_username', '$reg_email', SHA1('$reg_password'), '$reg_first_name', '$reg_last_name', '', '$date', '1');";
+        $sql = "INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `first_name`, `last_name`, `profile_image`, `created_date`, `status`) VALUES (NULL, '$reg_username', '$reg_email', SHA1('$reg_password'), '$reg_first_name', '$reg_last_name', '', '$date', '0');";
 
         //run database query
         $db->query($sql);

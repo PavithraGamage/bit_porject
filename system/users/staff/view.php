@@ -1,9 +1,16 @@
 <?php
+ob_start(); // multiple headers
+
 include '../../header.php';
 include '../../nav.php';
 
 // extract variables
 extract($_POST);
+
+//redirect
+if(empty($user_id)){
+    header('Location: http://localhost/bit/system/users/staff/add.php ');
+}
 
 // DB Connection
 $db = db_con();
@@ -62,7 +69,7 @@ $db = db_con();
                     // staff details
                     $staff_sql = "SELECT * FROM `staff`  WHERE `user_id` = '$user_id'";
                     $staff_result = $db->query($staff_sql);
-                    
+
                     if ($staff_result->num_rows > 0) {
                         $staff_row = $staff_result->fetch_assoc();
 
@@ -121,3 +128,4 @@ $db = db_con();
         });
     });
 </script>
+<?php ob_end_flush(); ?>

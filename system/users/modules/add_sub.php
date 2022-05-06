@@ -27,11 +27,6 @@ $error =  array();
 $error_style =  array();
 $error_style_icon = array();
 
-
-
-
-
-
 // date
 $date = date('Y-m-d');
 
@@ -110,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     //insert data to db
     if (empty($error)) {
 
-        $sql = "INSERT INTO `modules` (`module_id`, `description`, `path`, `view`, `status`) VALUES ('$m_m_id', '$m_m_name', '$path', '$m_m_file_path', '1');";
+        $sql = "INSERT INTO `modules` (`module_id`, `description`, `path`, `view`, `status`) VALUES ('$m_m_id', '$m_m_name', '$path', '$m_m_file_path', '0');";
 
         //run database query
         $db->query($sql);
@@ -136,8 +131,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 
     // form button icon
     $btn_icon = '<i class="far fa-edit"></i>';
-
-
 
     // check recodes in DB
     $sql = "SELECT * FROM `modules` WHERE module_id = $module_id";
@@ -259,15 +252,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     }
 }
 
+// change status to inactive
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
-    $sql = "DELETE FROM `modules` WHERE `module_id` = '$module_id'";
+    $sql = "UPDATE `modules` SET `status` = '1' WHERE `modules`.`module_id` = '$module_id';";
     $db->query($sql);
 
     $error['delete_msg'] = "Recode Delete";
 
     // error styles
     $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+}
+
+// change status to active
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
+
+    $sql = "UPDATE `modules` SET `status` = '0' WHERE `modules`.`module_id` = '$module_id';";
+    $db->query($sql);
+
+    $error['delete_msg'] = "Recode Delete";
+
+    // error styles
+    $error_style['success'] = "alert-success";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
 ?>
@@ -277,7 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Modules</h1>
+                    <h1 class="m-0">Sub Modules</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -353,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                         while ($modules_row = $modules_result->fetch_assoc()) {
                                     ?>
                                             <option value="<?php echo $modules_row['module_id'] ?>" <?php if ($modules_row['module_id'] == @$main_module) { ?> selected <?php } ?>>
-                                                <?php echo $modules_row['description']; ?>
+                                                <?php echo $modules_row['module_id'] ." - " . $modules_row['description']; ?>
                                             </option>
                                     <?php
 
@@ -364,8 +371,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Sub Module ID</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="4 Digits" name="m_m_id" value="<?php echo @$m_m_id ?>">
-                                <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="4 Digits" name="m_m_id_previous" value="<?php echo @$m_m_id ?>">
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="4 Digits Eg:- 0101" name="m_m_id" value="<?php echo @$m_m_id ?>">
+                                <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="4 Digits Eg:- 0101" name="m_m_id_previous" value="<?php echo @$m_m_id ?>">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Sub Module Name</label>
@@ -389,11 +396,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
             <div class="col">
                 <?php
 
-                // db connect
-                $db = db_con();
-
-                // sql query
-                $sql = "SELECT * FROM `modules` WHERE length(module_id) = '4'";
+              // sql query
+              $sql = "SELECT * FROM modules m INNER JOIN status s on s.status_id = m.status WHERE length(module_id) = '4';";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -410,8 +414,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                 <tr>
                                     <th>Module ID</th>
                                     <th>Module Name</th>
+                                    <th>Status</th>
                                     <th>Edit</th>
-                                    <th>Delete</th>
+                                    <th>Inactive</th>
+                                    <th>Active</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -424,6 +430,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
                                             <td><?php echo $row['module_id'] ?> </td>
                                             <td> <?php echo $row['description'] ?></td>
+                                            <td> <?php echo $row['status_name'] ?></td>
 
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
@@ -434,7 +441,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                                     <input type="hidden" name="module_id" value="<?php echo $row['module_id'] ?>">
-                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
+                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-ban"></i></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                                    <input type="hidden" name="module_id" value="<?php echo $row['module_id'] ?>">
+                                                    <button type="submit" name="action" value="active" class="btn btn-block btn-warning btn-xs"><i class="fas fa-check"></i></button>
                                                 </form>
                                             </td>
 

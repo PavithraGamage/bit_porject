@@ -1,9 +1,15 @@
 <?php
+ob_start(); // multiple headers
 include '../../header.php';
 include '../../nav.php';
 
 // extract variables
 extract($_POST);
+
+//redirect
+if(empty($user_id)){
+    header('Location: http://localhost/bit/system/users/customers/add.php');
+}
 
 // DB Connection
 $db = db_con();
@@ -117,3 +123,4 @@ $cus_result = $db->query($cus_sql);
         });
     });
 </script>
+<?php ob_end_flush(); ?>

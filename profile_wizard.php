@@ -74,12 +74,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
         $error['province'] = "Not valid";
     }
 
+    // image upload function
+    if (!empty($_FILES['profile_image']['name']) && empty($error)) {
+
+        $photo =  image_upload("profile_image", "assets/images/");
+
+        if (array_key_exists("photo", $photo)) {
+
+            $photo = $photo['photo'];
+        } else {
+
+            $error['profile_image'] = $photo['profile_image'];
+        }
+    } else {
+        $photo = @$previous_profile_image;
+    }
+
+
+    // database section
     if (empty($error)) {
 
-      $sql = "INSERT INTO `customers` (`cus_id`, `contact_nmuber`, `address_l1`, `address_l2`, `city`, `postal_code`, `user_id`, `province_id`) VALUES (NULL, '$contact_number', '$address_line_1', '$address_line_2', '$city', '$postal_code', '$req_user_id', '$province');";
-
+        $sql = "INSERT INTO `customers` (`cus_id`, `contact_nmuber`, `address_l1`, `address_l2`, `city`, `postal_code`, `user_id`, `province_id`) VALUES (NULL, '$contact_number', '$address_line_1', '$address_line_2', '$city', '$postal_code', '$req_user_id', '$province');";
         //run database query
         $db->query($sql);
+
+        // user image upload
+        $sql_image = "UPDATE `users` SET `profile_image` = '$photo' WHERE `users`.`user_id` = $req_user_id";
+        //run database query
+        $db->query($sql_image);
     }
 
     // redirect to dashboard
@@ -87,8 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
 
         header('Location:checkout.php');
     }
-
-
 }
 
 ?>
@@ -178,31 +198,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
                         </div>
                         <div class="card-body">
                             <p class="login-box-msg">Complete your profile to continue the shopping</p>
-                            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label class="form-label" for="image">Profile Image <span style="color: red;">*</span></label>
+                                    <input type="file" class="form-control" id="profile_image" style="height: auto;" name="profile_image" />
+                                    <input type="hidden" class="form-control" id="previous_profile_image" name="previous_profile_image" value="<?php echo @$profile_image ?>">
+                                </div>
+                                <br>
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="Contact Number" name="contact_number" value="<?php echo @$contact_number?>">
+                                    <input type="text" class="form-control" placeholder="Contact Number" name="contact_number" value="<?php echo @$contact_number ?>">
                                 </div>
                                 <div>
                                     <p style="color: red;"> <?php echo @$error['contact_number'] ?> </p>
                                 </div>
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="Address Line 1" name="address_line_1" value="<?php echo @$address_line_1?>">
+                                    <input type="text" class="form-control" placeholder="Address Line 1" name="address_line_1" value="<?php echo @$address_line_1 ?>">
                                 </div>
                                 <div>
                                     <p style="color: red;"> <?php echo @$error['address_line_1'] ?> </p>
                                 </div>
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="Address Line 2" name="address_line_2" value="<?php echo @$address_line_2?>">
+                                    <input type="text" class="form-control" placeholder="Address Line 2" name="address_line_2" value="<?php echo @$address_line_2 ?>">
                                 </div>
 
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="City" name="city" value="<?php echo @$city?>">
+                                    <input type="text" class="form-control" placeholder="City" name="city" value="<?php echo @$city ?>">
                                 </div>
                                 <div>
                                     <p style="color: red;"> <?php echo @$error['city'] ?> </p>
                                 </div>
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control" placeholder="Postal Code" name="postal_code" value="<?php echo @$postal_code?>">
+                                    <input type="text" class="form-control" placeholder="Postal Code" name="postal_code" value="<?php echo @$postal_code ?>">
                                 </div>
                                 <div>
                                     <p style="color: red;"> <?php echo @$error['postal_code'] ?> </p>

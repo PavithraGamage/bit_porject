@@ -100,7 +100,7 @@ if (empty($_SESSION['cart'])) {
                 <?php
 
                 //individual order data fletch
-               $sql = "SELECT o.order_date, u.first_name, u.last_name, c.address_l1, c.address_l2, c.contact_nmuber, u.email, o.order_number FROM orders o INNER JOIN users u ON o.user_id = u.user_id INNER JOIN customers c ON u.user_id = c.user_id WHERE o.order_id = $order_id;";
+               $sql = "SELECT o.order_date, u.first_name, u.last_name, c.address_l1, c.address_l2, c.contact_nmuber, u.email, o.order_number, c.city FROM orders o INNER JOIN users u ON o.user_id = u.user_id INNER JOIN customers c ON u.user_id = c.user_id WHERE o.order_id = $order_id;";
 
                 $result = $db->query($sql);
 
@@ -143,7 +143,8 @@ if (empty($_SESSION['cart'])) {
                         <address>
                             <strong><?php echo $row['first_name'] . " " . $row['last_name']; ?></strong><br>
                             <?php echo $row['address_l1'] ?><br>
-                            <?php echo $row['address_l2'] ?><br>
+                            <?php echo $row['address_l2'] ?>
+                            <?php echo $row['city'] ?><br>
                             Phone: <?php echo $row['contact_nmuber'] ?><br>
                             Email: <?php echo $row['email'] ?>
                         </address>
@@ -277,7 +278,7 @@ if (empty($_SESSION['cart'])) {
 <!-- this row will not appear when printing -->
 <div class="row no-print">
     <div class="col-12">
-        <a href="dashboard.php">
+        <a href="dashboard/dashboard.php">
             <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Dashboard</button>
         </a>
 

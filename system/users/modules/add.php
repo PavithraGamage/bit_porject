@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     //insert data to db
     if (empty($error)) {
 
-        $sql = "INSERT INTO `modules` (`module_id`, `description`, `path`, `icon`, `status`) VALUES ('$m_m_id', '$m_m_name', '$m_m_folder_path', '$m_m_icon', '1');";
+        $sql = "INSERT INTO `modules` (`module_id`, `description`, `path`, `icon`, `status`) VALUES ('$m_m_id', '$m_m_name', '$m_m_folder_path', '$m_m_icon', '0');";
 
         //run database query
         $db->query($sql);
@@ -234,15 +234,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     }
 }
 
+// change status to inactive
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
-    $sql = "DELETE FROM `modules` WHERE `module_id` = '$module_id'";
+    $sql = "UPDATE `modules` SET `status` = '1' WHERE `modules`.`module_id` = '$module_id';";
     $db->query($sql);
 
     $error['delete_msg'] = "Recode Delete";
 
     // error styles
     $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+}
+
+// change status to active
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
+
+    $sql = "UPDATE `modules` SET `status` = '0' WHERE `modules`.`module_id` = '$module_id';";
+    $db->query($sql);
+
+    $error['delete_msg'] = "Recode Delete";
+
+    // error styles
+    $error_style['success'] = "alert-success";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
 ?>
@@ -252,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Modules</h1>
+                    <h1 class="m-0">Main Modules</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -304,7 +318,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     </div>
     <div class="container-fluid">
         <div class="row">
-            <div class="col">
+            <div class="col-5">
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title"><?php echo $form_name ?></h3>
@@ -316,7 +330,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Main Module ID</label>
                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="2 Digits" name="m_m_id" value="<?php echo @$m_m_id ?>">
-                                <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="2 Digits" name="m_m_id_previous" value="<?php echo @$m_m_id ?>">
+                                <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="2 Digits Eg:- 01" name="m_m_id_previous" value="<?php echo @$m_m_id ?>">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Main Module Name</label>
@@ -331,7 +345,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputPassword1">Main Module Icon</label>
-                                <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Main Module Icon" name="m_m_icon" value="<?php echo @$m_m_icon ?>">
+                                <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Eg:- fa fa-id-card" name="m_m_icon" value="<?php echo @$m_m_icon ?>">
                             </div>
                         </div>
                         <!-- /.card-body -->
@@ -343,14 +357,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 </div>
             </div>
             <!-- Right Section Start -->
-            <div class="col">
+            <div class="col-7">
                 <?php
 
-                // db connect
-                $db = db_con();
-
                 // sql query
-                $sql = "SELECT * FROM `modules` WHERE length(module_id) = '2'";
+                $sql = "SELECT * FROM modules m INNER JOIN status s on s.status_id = m.status WHERE length(module_id) = '2';";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -365,11 +376,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                         <table id="user_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th style="width: 125px !important;">module ID</th>
+                                    <th>Module ID</th>
                                     <th>Module Name</th>
-
-                                    <th style="width: 85px !important;">Edit</th>
-                                    <th style="width: 85px !important;">Delete</th>
+                                    <th>Status</th>
+                                    <th>Edit</th>
+                                    <th>Inactive</th>
+                                    <th>Active</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -382,6 +394,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
                                             <td><?php echo $row['module_id'] ?> </td>
                                             <td> <?php echo $row['description'] ?></td>
+                                            <td> <?php echo $row['status_name'] ?></td>
 
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
@@ -392,7 +405,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                                     <input type="hidden" name="module_id" value="<?php echo $row['module_id'] ?>">
-                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
+                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-ban"></i></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                                    <input type="hidden" name="module_id" value="<?php echo $row['module_id'] ?>">
+                                                    <button type="submit" name="action" value="active" class="btn btn-block btn-warning btn-xs"><i class="fas fa-check"></i></button>
                                                 </form>
                                             </td>
 
@@ -425,7 +444,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
             "searching": true,
             "ordering": true,
             "info": true,
-            "autoWidth": false,
+            "autoWidth": true,
             "responsive": true,
         });
     });

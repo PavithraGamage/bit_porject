@@ -180,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     //insert data to db
     if (empty($error)) {
 
-        $sql = "INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `first_name`, `last_name`, `profile_image`, `created_date`, `status`) VALUES (NULL, '$username', '$email', SHA1('$password'), '$first_name', '$last_name', '$photo', '$date', '1');";
+        $sql = "INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `first_name`, `last_name`, `profile_image`, `created_date`, `status`) VALUES (NULL, '$username', '$email', SHA1('$password'), '$first_name', '$last_name', '$photo', '$date', '0');";
 
         //run database query
         $db->query($sql);
@@ -398,13 +398,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
     // update query
     if (empty($error)) {
-        $sql = "UPDATE `users` SET `user_name` = '$username', `email` = '$email', `password` = SHA1('$password'), `first_name` = '$first_name', `last_name` = '$last_name', `profile_image` = '$photo'    WHERE `user_id` = $user_id";
 
+        $sql = "UPDATE `users` SET `user_name` = '$username', `email` = '$email', `password` = SHA1('$password'), `first_name` = '$first_name', `last_name` = '$last_name', `profile_image` = '$photo'    WHERE `user_id` = $user_id";
         // run database query
         $query = $db->query($sql);
 
-        $sql = "UPDATE `staff` SET nic = '$nic', dob = '$dob', contact_number = '$contact_number', address_l1 = '$address_line_1', address_l2 = '$address_line_2', city = '$city', postal_code = '$postal_code' WHERE `user_id` = $user_id;";
 
+        $sql = "UPDATE `staff` SET nic = '$nic', dob = '$dob', contact_number = '$contact_number', address_l1 = '$address_line_1', address_l2 = '$address_line_2', city = '$city', postal_code = '$postal_code' WHERE `user_id` = $user_id;";
         // run database query
         $query = $db->query($sql);
 
@@ -418,7 +418,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 // update user status to inactive
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
-  echo  $sql = "UPDATE `users` SET `status` = '0' WHERE `users`.`user_id` = '$user_id;'";
+    $sql = "UPDATE `users` SET `status` = '1' WHERE `users`.`user_id` = '$user_id;'";
     $db->query($sql);
 
     $sql = "UPDATE `staff` SET `status` = '1' WHERE `user_id` = '$user_id'";
@@ -434,8 +434,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 // change status active
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
 
-    $sql = "UPDATE `users_modules` SET `status` = '0' WHERE id = $id;";
+    $sql = "UPDATE `users` SET `status` = '0' WHERE `users`.`user_id` = '$user_id;'";
+    $db->query($sql);
 
+    $sql = "UPDATE `staff` SET `status` = '0' WHERE `user_id` = '$user_id'";
     $db->query($sql);
 
     $error['delete_msg'] = "Recode Active";
@@ -503,7 +505,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
     </div>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-5">
+            <div class="col">
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title"><?php echo $form_name ?></h3>
@@ -513,84 +515,83 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="card card-primary card-outline card-tabs">
-                                <div class="card-header p-0 pt-1 border-bottom-0">
-                                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Personal Details</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Contact Details</a>
-                                        </li>
-                                    </ul>
-                                </div>
+
                                 <div class="card-body">
                                     <div class="tab-content" id="custom-tabs-three-tabContent">
-                                        <div class="tab-pane fade show active" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
-                                            <div class="form-group">
-                                                <label class="form-label" for="image">Profile Image <span style="color: red;">*</span></label>
-                                                <input type="file" class="form-control" id="profile_image" style="height: auto;" name="profile_image" />
-                                                <input type="hidden" class="form-control" id="previous_profile_image" name="previous_profile_image" value="<?php echo @$profile_image ?>">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="image">Profile Image <span style="color: red;">*</span></label>
+                                                    <input type="file" class="form-control" id="profile_image" style="height: auto;" name="profile_image" />
+                                                    <input type="hidden" class="form-control" id="previous_profile_image" name="previous_profile_image" value="<?php echo @$profile_image ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">First Name</label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter First Name" name="first_name" value="<?php echo @$first_name ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Last Name</label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Last Name" name="last_name" value="<?php echo @$last_name ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">NIC</label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter NIC" name="nic" value="<?php echo @$nic ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Date of Birth</label>
+                                                    <input type="date" class="form-control" id="exampleInputEmail1" placeholder="Enter Date of Birth" name="dob" value="<?php echo @$dob ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Username</label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Username" name="username" value="<?php echo @$username ?>">
+                                                    <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="Enter Username" name="previous_username" value="<?php echo @$username ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputPassword1">Password</label>
+                                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+                                                    <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="Enter Username" name="previous_password" value="<?php echo sha1(@$password)  ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputPassword1">Verify Password</label>
+                                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Verify Password" name="verify_password">
+                                                    <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="Enter Username" name="previous_password_verify" value="<?php echo sha1(@$password)  ?>">
+                                                </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">First Name</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter First Name" name="first_name" value="<?php echo @$first_name ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Last Name</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Last Name" name="last_name" value="<?php echo @$last_name ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">NIC</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter NIC" name="nic" value="<?php echo @$nic ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Date of Birth</label>
-                                                <input type="date" class="form-control" id="exampleInputEmail1" placeholder="Enter Date of Birth" name="dob" value="<?php echo @$dob ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Username</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Username" name="username" value="<?php echo @$username ?>">
-                                                <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="Enter Username" name="previous_username" value="<?php echo @$username ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputPassword1">Password</label>
-                                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
-                                                <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="Enter Username" name="previous_password" value="<?php echo sha1(@$password)  ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputPassword1">Verify Password</label>
-                                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Verify Password" name="verify_password">
-                                                <input type="hidden" class="form-control" id="exampleInputEmail1" placeholder="Enter Username" name="previous_password_verify" value="<?php echo sha1(@$password)  ?>">
+                                            <div class="col-6">
+
+                                                <!-- second colum -->
+
+                                                <div class="form-group">
+                                                    <label for="exampleInputPassword1">Email</label>
+                                                    <input type="email" class="form-control" id="exampleInputPassword1" placeholder="Enter Email" name="email" value="<?php echo @$email ?>">
+                                                    <input type="hidden" class="form-control" id="exampleInputPassword1" placeholder="Enter Email" name="previous_email" value="<?php echo @$email ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Contact Number</label>
+                                                    <input type="tel" class="form-control" id="exampleInputEmail1" placeholder="Enter Contact Number" name="contact_number" value="<?php echo @$contact_number ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Address Line 1</label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Address Line 1" name="address_line_1" value="<?php echo @$address_line_1 ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Address Line 2</label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Address Line 2" name="address_line_2" value="<?php echo @$address_line_2 ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">City</label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter City" name="city" value="<?php echo @$city ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Postal Code</label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Postal Code" name="postal_code" value="<?php echo @$postal_code ?>">
+                                                </div>
                                             </div>
                                         </div>
-                                        <!-- second colum -->
-                                        <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
-                                            <div class="form-group">
-                                                <label for="exampleInputPassword1">Email</label>
-                                                <input type="email" class="form-control" id="exampleInputPassword1" placeholder="Enter Email" name="email" value="<?php echo @$email ?>">
-                                                <input type="hidden" class="form-control" id="exampleInputPassword1" placeholder="Enter Email" name="previous_email" value="<?php echo @$email ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Contact Number</label>
-                                                <input type="tel" class="form-control" id="exampleInputEmail1" placeholder="Enter Contact Number" name="contact_number" value="<?php echo @$contact_number ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Address Line 1</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Address Line 1" name="address_line_1" value="<?php echo @$address_line_1 ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Address Line 2</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Address Line 2" name="address_line_2" value="<?php echo @$address_line_2 ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">City</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter City" name="city" value="<?php echo @$city ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Postal Code</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Postal Code" name="postal_code" value="<?php echo @$postal_code ?>">
-                                            </div>
-                                        </div>
+
+
+
+
                                     </div>
                                 </div>
                                 <!-- /.card -->
@@ -605,86 +606,90 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                 </div>
             </div>
             <!-- Right Section Start -->
-            <div class="col">
-                <?php
 
-                // db connect
-                $db = db_con();
+        </div>
+        <?php
 
-                // sql query
-                $sql = "SELECT * FROM `users`";
+        // db connect
+        $db = db_con();
 
-                // fletch data
-                $result = $db->query($sql);
+        // sql query
+        $sql = "SELECT u.profile_image, u.user_name, u.user_id, st.status_name, u.first_name, u.last_name FROM users u INNER JOIN staff s ON s.user_id = u.user_id INNER JOIN status st ON st.status_id = u.status;";
 
-                ?>
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Staff List</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <table id="user_list" class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th style="width: 125px !important;">Profile Image</th>
-                                    <th>Username</th>
-                                    <th style="width: 85px !important;">View</th>
-                                    <th style="width: 85px !important;">Edit</th>
-                                    <th style="width: 85px !important;">Delete</th>
-                                    <th style="width: 85px !important;">Status Change</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
+        // fletch data
+        $result = $db->query($sql);
 
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                ?>
-                                        <tr>
-                                            <td><img src="../../../assets/images/<?php echo $row['profile_image'] ?>" class="img-fluid" width="100"></td>
-                                            <td><?php echo $row['user_name'] ?> </td>
-                                            <td>
-                                                <form action="view.php" method="post">
-                                                    <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
-                                                    <a href="view.php">
-                                                        <button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button>
-                                                    </a>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
-                                                    <button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
-                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
-                                                    <button type="submit" name="action" value="active" class="btn btn-block btn-warning btn-xs"><i class="fas fa-check"></i></button>
-                                                </form>
-                                            </td>
-
-                                        </tr>
-
-                                <?php
-                                    }
-                                }
-                                ?>
-                            </tbody>
-
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-
+        ?>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Staff List</h3>
             </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <table id="user_list" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 125px !important;">Profile Image</th>
+                            <th>Username</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Status</th>
+                            <th style="width: 85px !important;">View</th>
+                            <th style="width: 85px !important;">Edit</th>
+                            <th style="width: 85px !important;">Inactive</th>
+                            <th style="width: 85px !important;">Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                        ?>
+                                <tr>
+                                    <td><img src="../../../assets/images/<?php echo $row['profile_image'] ?>" class="img-fluid" width="100"></td>
+                                    <td><?php echo $row['user_name'] ?> </td>
+                                    <td><?php echo $row['first_name'] ?> </td>
+                                    <td><?php echo $row['last_name'] ?> </td>
+                                    <td><?php echo $row['status_name'] ?> </td>
+                                    <td>
+                                        <form action="view.php" method="post">
+                                            <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
+                                            <a href="view.php">
+                                                <button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button>
+                                            </a>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                            <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
+                                            <button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                            <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
+                                            <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-ban"></i></button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                            <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
+                                            <button type="submit" name="action" value="active" class="btn btn-block btn-warning btn-xs"><i class="fas fa-check"></i></button>
+                                        </form>
+                                    </td>
+
+                                </tr>
+
+                        <?php
+                            }
+                        }
+                        ?>
+                    </tbody>
+
+                </table>
+            </div>
+            <!-- /.card-body -->
         </div>
     </div>
 </div>

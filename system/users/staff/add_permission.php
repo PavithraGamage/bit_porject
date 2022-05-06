@@ -373,7 +373,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                                             <?php
 
                                             // user drop down data fletch 
-                                            $sql = "SELECT * FROM `users` WHERE status = 1 ORDER BY `users`.`user_name` ASC";
+                                            $sql = "SELECT u.user_id, u.user_name
+                                            FROM users u
+                                            INNER JOIN staff s ON s.user_id = u.user_id
+                                            WHERE u.status = 0  
+                                            ORDER BY `u`.`user_name` ASC;";
                                             $result = $db->query($sql);
 
                                             // fletch data
@@ -452,7 +456,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                                             <?php
 
                                             // user drop down data fletch 
-                                            $sql = "SELECT * FROM `users` WHERE status = 1 ORDER BY `users`.`user_name` ASC";
+                                            $sql = "SELECT u.user_id, u.user_name
+                                            FROM users u
+                                            INNER JOIN staff s ON s.user_id = u.user_id
+                                            WHERE u.status = 0  
+                                            ORDER BY `u`.`user_name` ASC;";
+                                            
                                             $result = $db->query($sql);
 
                                             // fletch data
@@ -538,8 +547,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                             <th>Module ID</th>
                             <th>Status</th>
                             <th>Edit</th>
-                            <th>Delete</th>
-                            <th>Change Status</th>
+                            <th>Inactive</th>
+                            <th>Active</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -582,7 +591,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                                     <td>
                                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                             <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
-                                            <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
+                                            <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-ban"></i></button>
                                         </form>
                                     </td>
                                     <td>
