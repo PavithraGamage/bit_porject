@@ -415,18 +415,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     }
 }
 
+// update user status to inactive
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
-    $sql = "DELETE FROM `users` WHERE `user_id` = '$user_id'";
+  echo  $sql = "UPDATE `users` SET `status` = '0' WHERE `users`.`user_id` = '$user_id;'";
     $db->query($sql);
 
-    $sql = "DELETE FROM `staff` WHERE `user_id` = '$user_id'";
+    $sql = "UPDATE `staff` SET `status` = '1' WHERE `user_id` = '$user_id'";
     $db->query($sql);
 
     $error['delete_msg'] = "Recode Delete";
 
     // error styles
     $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+}
+
+// change status active
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
+
+    $sql = "UPDATE `users_modules` SET `status` = '0' WHERE id = $id;";
+
+    $db->query($sql);
+
+    $error['delete_msg'] = "Recode Active";
+
+    // error styles
+    $error_style['success'] = "alert-success";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
 ?>
@@ -617,6 +632,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <th style="width: 85px !important;">View</th>
                                     <th style="width: 85px !important;">Edit</th>
                                     <th style="width: 85px !important;">Delete</th>
+                                    <th style="width: 85px !important;">Status Change</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -646,6 +662,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                                     <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
                                                     <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                                    <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
+                                                    <button type="submit" name="action" value="active" class="btn btn-block btn-warning btn-xs"><i class="fas fa-check"></i></button>
                                                 </form>
                                             </td>
 
