@@ -19,7 +19,6 @@ if (!empty($category_id)) {
     header('location:index.php');
 }
 
-
 // fletch data
 $result = $db->query($sql);
 
@@ -103,292 +102,77 @@ $result = $db->query($sql);
     <div class="container">
         <div class="row shop_row">
             <div class="col-2 wig_bar">
-                <div class="row wig">
-                    <h6 class="wig_title">Price</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="range" class="range_slider" id="price_range" />
-                    </div>
-                </div>
-                <div class="row wig">
-                    <h6 class="wig_title">Brand</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="brand_id_1">
-                        <label class="form-check-label wig_lable" for="brand_id_1">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="brand_id_2">
-                        <label class="form-check-label wig_lable" for="brand_id_2">INTEL</label>
-                    </div>
-                </div>
-                <div class="row wig">
-                    <h6 class="wig_title">Product Family</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="family_id_1">
-                        <label class="form-check-label wig_lable" for="family_id_1">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="family_id_2">
-                        <label class="form-check-label wig_lable" for="family_id_2">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="family_id_3">
-                        <label class="form-check-label wig_lable" for="family_id_3">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="family_id_4">
-                        <label class="form-check-label wig_lable" for="family_id_4">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="family_id_5">
-                        <label class="form-check-label wig_lable" for="family_id_5">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="family_id_6">
-                        <label class="form-check-label wig_lable" for="family_id_6">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="family_id_7">
-                        <label class="form-check-label wig_lable" for="family_id_7">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="family_id_8">
-                        <label class="form-check-label wig_lable" for="family_id_8">INTEL</label>
-                    </div>
-                </div>
-                <div class="row wig">
-                    <h6 class="wig_title">Product Line</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="product_family_id_1">
-                        <label class="form-check-label wig_lable" for="product_family_id_1">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="product_family_id_2">
-                        <label class="form-check-label wig_lable" for="product_family_id_2">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="product_family_id_3">
-                        <label class="form-check-label wig_lable" for="product_family_id_3">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="product_family_id_4">
-                        <label class="form-check-label wig_lable" for="product_family_id_4">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="product_family_id_5">
-                        <label class="form-check-label wig_lable" for="product_family_id_5">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="product_family_id_6">
-                        <label class="form-check-label wig_lable" for="product_family_id_6">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="product_family_id_7">
-                        <label class="form-check-label wig_lable" for="product_family_id_7">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="product_family_id_8">
-                        <label class="form-check-label wig_lable" for="product_family_id_8">INTEL</label>
-                    </div>
-                </div>
-                <div class="row wig">
-                    <h6 class="wig_title">CPU Cores</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="cpu_core_id_1">
-                        <label class="form-check-label wig_lable" for="cpu_core_id_1">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="cpu_core_id_2">
-                        <label class="form-check-label wig_lable" for="cpu_core_id_2">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="cpu_core_id_3">
-                        <label class="form-check-label wig_lable" for="cpu_core_id_3">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="cpu_core_id_4">
-                        <label class="form-check-label wig_lable" for="cpu_core_id_4">INTEL</label>
-                    </div>
-                </div>
-                <div class="row wig">
-                    <h6 class="wig_title">CPU Threads</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="cpu_threads_id_1">
-                        <label class="form-check-label wig_lable" for="cpu_threads_id_1">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="cpu_threads_id_2">
-                        <label class="form-check-label wig_lable" for="cpu_threads_id_2">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="cpu_threads_id_3">
-                        <label class="form-check-label wig_lable" for="cpu_threads_id_3">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="cpu_threads_id_4">
-                        <label class="form-check-label wig_lable" for="cpu_threads_id_4">INTEL</label>
-                    </div>
-                </div>
-                <div class="row wig">
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
 
-                    <h6 class="wig_title">Max Boost Clock</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="range" class="range_slider" id="price_range" />
-                    </div>
+                    <div class="row wig">
+                        <h6 class="wig_title">Brands</h6>
+                        <div>
+                            <hr class="wig_hr">
+                        </div>
+                        <?php
 
-                </div>
-                <div class="row wig">
+                        // sql query
+                        $sql_brands = "SELECT b.brand_name
+                        FROM items i 
+                        INNER JOIN brands b ON b.brand_id = i.brand_id 
+                        WHERE i.category_id = $category_id
+                        GROUP BY (b.brand_id);";
 
+                        // fletch data
+                        $result_brands = $db->query($sql_brands);
 
-                    <h6 class="wig_title">Base Clock</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="range" class="range_slider" id="price_range" />
-                    </div>
+                        if ($result_brands->num_rows > 0) {
+                            while ($row_brands = $result_brands->fetch_assoc()) {
 
-                </div>
-                <div class="row wig">
-                    <h6 class="wig_title">Total L1 Cache</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="l1_cache_id_1">
-                        <label class="form-check-label wig_lable" for="l1_cache_id_1">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="l1_cache_id_2">
-                        <label class="form-check-label wig_lable" for="l1_cache_id_2">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="l1_cache_id_3">
-                        <label class="form-check-label wig_lable" for="l1_cache_id_3">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="l1_cache_id_4">
-                        <label class="form-check-label wig_lable" for="l1_cache_id_4">INTEL</label>
-                    </div>
-                </div>
-                <div class="row wig">
-                    <h6 class="wig_title">Total L2 Cache</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="l2_cache_id_1">
-                        <label class="form-check-label wig_lable" for="l2_cache_id_1">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="l2_cache_id_2">
-                        <label class="form-check-label wig_lable" for="l2_cache_id_2">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="l2_cache_id_3">
-                        <label class="form-check-label wig_lable" for="l2_cache_id_3">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="l2_cache_id_4">
-                        <label class="form-check-label wig_lable" for="l2_cache_id_4">INTEL</label>
-                    </div>
-                </div>
-                <div class="row wig">
-                    <h6 class="wig_title">Total L3 Cache</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="l3_cache_id_1">
-                        <label class="form-check-label wig_lable" for="l3_cache_id_1">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="l3_cache_id_2">
-                        <label class="form-check-label wig_lable" for="l3_cache_id_2">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="l3_cache_id_3">
-                        <label class="form-check-label wig_lable" for="l3_cache_id_3">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="l3_cache_id_4">
-                        <label class="form-check-label wig_lable" for="l3_cache_id_4">INTEL</label>
-                    </div>
-                </div>
-                <div class="row wig">
-                    Default TDP
-                </div>
-                <div class="row wig">
-                    <h6 class="wig_title">CMOS</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="cmos_id_1">
-                        <label class="form-check-label wig_lable" for="cmos_id_1">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="cmos_id_2">
-                        <label class="form-check-label wig_lable" for="cmos_id_2">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="cmos_id_3">
-                        <label class="form-check-label wig_lable" for="cmos_id_3">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="cmos_id_4">
-                        <label class="form-check-label wig_lable" for="cmos_id_4">INTEL</label>
-                    </div>
-                </div>
-                <div class="row wig">
-                    <h6 class="wig_title">Unlock for Overclocking</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="over_clock_yes">
-                        <label class="form-check-label wig_lable" for="over_clock_yes">INTEL</label>
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="over_clock_no">
-                        <label class="form-check-label wig_lable" for="over_clock_no">INTEL</label>
-                    </div>
-                </div>
-                <div class="row wig">
-                    <h6 class="wig_title">CPU Socket</h6>
-                    <div>
-                        <hr class="wig_hr">
-                    </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input   wig_input" id="cpu_socket_id_1">
-                        <label class="form-check-label wig_lable" for="cpu_socket_id_1">INTEL</label>
+                        ?>
+                                <div class="wig_items">
+                                    <input type="checkbox" class="form-check-input   wig_input" id="brand_id_<?php echo $row_brands['brand_name']; ?>">
+                                    <label class="form-check-label wig_lable" for="brand_id_<?php echo $row_brands['brand_name']; ?>"><?php echo $row_brands['brand_name']; ?></label>
+                                </div>
+                        <?php
+                            }
+                        }
+                        ?>
 
                     </div>
-                    <div class="wig_items">
-                        <input type="checkbox" class="form-check-input wig_input" id="cpu_socket_id_2">
-                        <label class="form-check-label wig_lable" for="cpu_socket_id_2">INTEL</label>
+
+
+                </form>
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+
+                    <div class="row wig">
+                        <h6 class="wig_title">Models</h6>
+                        <div>
+                            <hr class="wig_hr">
+                        </div>
+                        <?php
+
+                        // sql query
+                        $sql_models = "SELECT m.model_name FROM items i INNER JOIN models m ON m.model_id = i.model_id WHERE i.category_id = $category_id GROUP BY (m.model_id);";
+
+                        // fletch data
+                        $result_models = $db->query($sql_models);
+
+                        if ($result_models->num_rows > 0) {
+                            while ($row_models = $result_models->fetch_assoc()) {
+
+                        ?>
+                                <div class="wig_items">
+                                    <input type="checkbox" class="form-check-input   wig_input" id="brand_id_<?php echo $row_models['model_name']; ?>">
+                                    <label class="form-check-label wig_lable" for="brand_id_<?php echo $row_models['model_name']; ?>"><?php echo $row_models['model_name']; ?></label>
+                                </div>
+                        <?php
+                            }
+                        }
+                        ?>
+
                     </div>
-                </div>
+
+
+                </form>
+
+
+
             </div>
             <div class="col-10">
                 <div class="row shop_main_row">
@@ -438,11 +222,11 @@ $result = $db->query($sql);
     <!-- content end -->
 
     <!-- footer start -->
-    <?php 
-   
-   include "footer.php";
-   
-   ?>
+    <?php
+
+    include "footer.php";
+
+    ?>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
 
 

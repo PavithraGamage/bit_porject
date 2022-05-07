@@ -503,7 +503,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 $result = $db->query($sql);
 
                 ?>
-                <div class="card">
+                <div class="card" id="pdf">
                     <div class="card-header">
                         <h3 class="card-title">Items</h3>
                     </div>
@@ -524,7 +524,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
 
                         </form>
-                        <table id="user_list" class="table table-bordered table-hover">
+                        <table id="report_1" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
 
@@ -607,7 +607,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
                             </tbody>
 
-                        </table>
+                        </table><br>
+                        <button onclick="exportTableToExcel('report_1', 'item_details')">Export Table Data To Excel File</button>
+                        <button onclick="Convert_HTML_To_PDF();">Convert HTML to PDF</button>
                     </div>
                     <!-- /.card-body -->
                 </div>
@@ -730,7 +732,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             <input type="date"><br>
                             <label>End Date:</label>
                             <input type="date"><br>
-                            <label >Status:</label>
+                            <label>Status:</label>
                             <select name="cars" id="cars">
                                 <option value="volvo">Completed</option>
                                 <option value="saab">Western</option>
@@ -771,7 +773,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td>2022-02-20</td>
                                     <td>122</td>
                                     <td> Completed</td>
-                                    <td> amal_S</td>                         
+                                    <td> amal_S</td>
                                     <td> Western</td>
                                     <td> 4</td>
                                     <td> 58,900.00</td>
@@ -783,7 +785,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> 2022-02-22</td>
                                     <td>123</td>
                                     <td> Completed</td>
-                                    <td> Amal Samanatha</td>                         
+                                    <td> Amal Samanatha</td>
                                     <td> Western</td>
                                     <td> 3</td>
                                     <td> 158,900.00</td>
@@ -795,7 +797,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> 2022-02-20</td>
                                     <td>124</td>
                                     <td> Completed</td>
-                                    <td> Nishan Amarabandu</td>                         
+                                    <td> Nishan Amarabandu</td>
                                     <td> Western</td>
                                     <td> 5</td>
                                     <td> 528,900.00</td>
@@ -807,7 +809,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> 2022-02-20</td>
                                     <td>125</td>
                                     <td> Completed</td>
-                                    <td> Sashi Aberathne</td>                         
+                                    <td> Sashi Aberathne</td>
                                     <td> Western</td>
                                     <td> 2</td>
                                     <td> 258,900.00</td>
@@ -819,7 +821,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> 2022-02-20</td>
                                     <td>126</td>
                                     <td> Completed</td>
-                                    <td> Gamunu Galahitiyawa</td>                         
+                                    <td> Gamunu Galahitiyawa</td>
                                     <td> Western</td>
                                     <td> 8</td>
                                     <td> 358,900.00</td>
@@ -831,7 +833,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> 2022-02-20</td>
                                     <td>127</td>
                                     <td> Completed</td>
-                                    <td> Priyankara Perera</td>                         
+                                    <td> Priyankara Perera</td>
                                     <td> Western</td>
                                     <td> 5</td>
                                     <td> 658,900.00</td>
@@ -873,9 +875,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <th>Total Sales LKR </th>
                                     <th>Product </th>
                                     <th>Orders </th>
-                                   
 
-                                   
+
+
                                     <!-- <th style="width: 85px !important;">Edit</th>
                                     <th style="width: 85px !important;">Delete</th> -->
                                 </tr>
@@ -889,8 +891,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> 18,700.00</td>
                                     <td> 5</td>
                                     <td> 3</td>
-                                    
-                                  
+
+
                                 </tr>
                                 <tr>
                                     <td> 1</td>
@@ -899,8 +901,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> 58,700.00</td>
                                     <td> 5</td>
                                     <td> 3</td>
-                                    
-                                  
+
+
                                 </tr>
                                 <tr>
                                     <td> 1</td>
@@ -909,8 +911,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> 158,000.00</td>
                                     <td> 5</td>
                                     <td> 3</td>
-                                    
-                                  
+
+
                                 </tr>
                                 <tr>
                                     <td> 1</td>
@@ -919,8 +921,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> 58,700.00</td>
                                     <td> 5</td>
                                     <td> 3</td>
-                                    
-                                  
+
+
                                 </tr>
                                 <tr>
                                     <td> 1</td>
@@ -929,12 +931,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> 358,700.00</td>
                                     <td> 5</td>
                                     <td> 3</td>
-                                    
-                                  
+
+
                                 </tr>
-                             
-                      
-                              
+
+
+
 
                             </tbody>
 
@@ -950,7 +952,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     <!-- /.card-header -->
                     <div class="card-body">
                         <form>
-                          
+
                             <label style="margin-right:8px">Show:</label>
                             <select name="cars" id="cars">
 
@@ -969,10 +971,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <th>Status</th>
                                     <th>In Stock</th>
                                     <th>Re Order Level</th>
-                                    
-                                   
 
-                                   
+
+
+
                                     <!-- <th style="width: 85px !important;">Edit</th>
                                     <th style="width: 85px !important;">Delete</th> -->
                                 </tr>
@@ -986,8 +988,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> In Stock</td>
                                     <td> 5</td>
                                     <td> 3</td>
-                                    
-                                  
+
+
                                 </tr>
                                 <tr>
                                     <td> 2</td>
@@ -996,8 +998,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> Low Stock</td>
                                     <td> 2</td>
                                     <td> 6</td>
-                                    
-                                  
+
+
                                 </tr>
                                 <tr>
                                     <td> 3</td>
@@ -1006,8 +1008,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> Out of Stock</td>
                                     <td> 0</td>
                                     <td> 3</td>
-                                    
-                                  
+
+
                                 </tr>
                                 <tr>
                                     <td> 4</td>
@@ -1016,8 +1018,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> In Stock</td>
                                     <td> 8</td>
                                     <td> 4</td>
-                                    
-                                  
+
+
                                 </tr>
                                 <tr>
                                     <td> 5</td>
@@ -1026,13 +1028,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                     <td> Out of Stock</td>
                                     <td> 0</td>
                                     <td> 5</td>
-                                    
-                                  
+
+
                                 </tr>
-                           
-                                
-                     
-                              
+
+
+
+
 
                             </tbody>
 
@@ -1060,4 +1062,94 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
             "responsive": true,
         });
     });
+</script>
+
+
+<!-- pdf support links -->
+<script src="http://localhost/bit/system/dist/js/html2canvas.min.js" type="text/javascript"></script>
+<script src="http://localhost/bit/system/dist/js/jspdf.min.js" type="text/javascript"></script>
+
+<script>
+
+    // excel export
+    function exportTableToExcel(tableID, filename = '') {
+
+        var downloadLink;
+
+        //ms office file type
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+        // Specify file name (short if)
+        filename = filename ? filename + '.xls' : 'excel_data.xls';
+
+        // Create download link element
+        downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        // for netscape navigator browsers
+        if (navigator.msSaveOrOpenBlob) {
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob(blob, filename);
+        } else {
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+    }
+
+//  export pdf
+    function Convert_HTML_To_PDF() {
+                var elementHTML = document.getElementById('pdf');
+
+                html2canvas(elementHTML, {
+                    useCORS: true,
+                    onrendered: function (canvas) {
+                        var pdf = new jsPDF('L', 'pt', '[1000,1500]');
+
+                        var pageHeight = 2160;
+                        var pageWidth = 3840;
+                        for (var i = 0; i <= elementHTML.clientHeight / pageHeight; i++) {
+                            var srcImg = canvas;
+                            var sX = 0;
+                            var sY = pageHeight * i; // start 1 pageHeight down for every new page
+                            var sWidth = pageWidth;
+                            var sHeight = pageHeight;
+                            var dX = 0;
+                            var dY = 0;
+                            var dWidth = pageWidth;
+                            var dHeight = pageHeight;
+
+                            window.onePageCanvas = document.createElement("canvas");
+                            onePageCanvas.setAttribute('width', pageWidth);
+                            onePageCanvas.setAttribute('height', pageHeight);
+                            var ctx = onePageCanvas.getContext('2d');
+                            ctx.drawImage(srcImg, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight);
+
+                            var canvasDataURL = onePageCanvas.toDataURL("image/SVG", 1.0);
+                            var width = onePageCanvas.width;
+                            var height = onePageCanvas.clientHeight;
+
+                            if (i > 0) // if we're on anything other than the first page, add another page
+                                pdf.addPage(612, 864); // 8.5" x 12" in pts (inches*72)
+
+                            pdf.setPage(i + 1); // now we declare that we're working on that page
+                            pdf.addImage(canvasDataURL, 'SVG', 20, 40, (width * .62), (height * .62)); // add content to the page
+                        }
+
+                        // Save the PDF
+                        pdf.save('document-html.pdf');
+                    }
+                });
+            }
+
 </script>

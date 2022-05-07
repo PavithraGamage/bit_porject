@@ -500,7 +500,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="user_list" class="table table-bordered table-hover">
+                        <table id="customer_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>Profile Image</th>

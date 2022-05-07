@@ -72,6 +72,14 @@ if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "troubleshoots") {
     $dash['dash_icon'] = '<i class="fas fa-tools"></i>';
     $dash['path'] = pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME);
 }
+
+if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "edit_profile") {
+
+    $dash['dash_icon'] = '<i class="fas fa-user"></i>';
+    $dash['path'] = 'Edit Profile';
+}
+
+
 ?>
 
 <div class="container">
@@ -85,22 +93,20 @@ if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "troubleshoots") {
             <div class="col-6">
                 <div class="row">
                     <!-- image and name -->
-                    <div class="col-8">
+                    <div class="col-10">
                         <div class="row">
                             <div class="col-6 dash_image_box">
-                                <img src="http://localhost/bit/assets/images/sulitha_w-1.jpg" class="dash_image" alt="" />
+                                <img src="http://localhost/bit/assets/images/<?php echo $_SESSION['profile_image'] ?>" class="dash_image" alt="" />
                             </div>
                             <div class="col-6 dash_name_box">
                                 <h6><?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?></h6>
                             </div>
                         </div>
                     </div>
+                  
                     <div class="col-2 dash_notifcation_box">
-                        <i class="fas fa-bell"></i>
-                    </div>
-                    <div class="col-2 dash_notifcation_box">
-                        <a href="logout.php">
-                            <i class="fas fa-sign-out-alt"></i>
+                        <a href="logout.php" style="text-decoration:none ;">
+                           Logout <i class="fas fa-sign-out-alt"></i>
                         </a>
                     </div>
                 </div>
@@ -132,18 +138,19 @@ if (pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME) == "troubleshoots") {
                     <a href="warranty.php" style="text-decoration:none; color:black">
                         <i class="fas fa-charging-station"></i> Warranty
                     </a>
-                </div>
-                <div class="dash_left_nav">
-                    <a href="appointments.php" style="text-decoration:none; color:black">
-                        <i class="fas fa-calendar-check"></i> Appointments
-                    </a>
                 </div> -->
+               
                 <div class="dash_left_nav">
                     <a href="troubleshoots.php" style="text-decoration:none; color:black">
                         <i class="fas fa-tools"></i> Troubleshoots
                     </a>
                 </div>
-                <div class="dash_left_nav_last">
-                    <i class="fas fa-bell"></i> Notification
+                <div class="dash_left_nav">
+                    <a href="edit_profile.php" style="text-decoration:none; color:black">
+                    <i class="fas fa-user"></i> Profile
+                    </a>
                 </div>
+                <!-- <div class="dash_left_nav_last">
+                    <i class="fas fa-bell"></i> Notification
+                </div> -->
             </div>

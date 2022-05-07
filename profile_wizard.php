@@ -191,6 +191,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
     <div class="container">
         <div class="row">
             <div class="col" style="margin:5% 20%; ">
+            <div>
+                message for the login
+            </div>
                 <div class="register-box">
                     <div class="card card-outline card-primary">
                         <div class="card-header text-center">
@@ -239,7 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
                                         <?php
 
                                         // provinces drop down data fletch 
-                                        $sql_pro = "SELECT * FROM `province`";
+                                        $sql_pro = "SELECT * FROM `province` WHERE status = 0";
                                         $pro_result = $db->query($sql_pro);
 
                                         // fletch data

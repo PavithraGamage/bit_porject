@@ -64,7 +64,7 @@ session_start();
                     // advance validation
                     if (empty($error)) {
 
-                        $sql = "SELECT * FROM users WHERE user_name = '$user_name' AND password = '" . sha1($password) . "'";
+                        $sql = "SELECT * FROM users WHERE user_name = '$user_name' AND password = '" . sha1($password) . "' AND status = 0";
 
                         // call db con function
                         $db = db_con();
@@ -87,7 +87,7 @@ session_start();
                             $_SESSION['status'] = $row['status'];
                         } else {
 
-                            $error['password'] = "invalided password";
+                            $error['password'] = "Invalided user name or password";
                         }
                     }
 
