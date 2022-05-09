@@ -23,26 +23,6 @@ $btn_icon = '<i class="far fa-save"></i>';
 // create error variable to store error messages
 $error =  array();
 
-// categories drop down data fletch 
-$sql_cat = "SELECT * FROM `categories`";
-$cat_result = $db->query($sql_cat);
-
-// brand drop down data fletch 
-$sql_brand = "SELECT * FROM `brands`";
-$brand_result = $db->query($sql_brand);
-
-// model drop down data fletch 
-$sql_model = "SELECT * FROM `models`";
-$model_result = $db->query($sql_model);
-
-// Item drop down data fletch 
-$sql_item = "SELECT * FROM `items`";
-$item_result = $db->query($sql_item);
-
-// Specification data fletch 
-$sql_spec = "SELECT * FROM `specifications`";
-$item_spec = $db->query($sql_spec);
-
 // create error variable to store error message styles
 $error_style =  array();
 $error_style_icon = array();
@@ -73,10 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     $reorder_level = data_clean($reorder_level);
     $unit_price = data_clean($unit_price);
     $sale_price = data_clean($sale_price);
+    $stock = data_clean($stock);
 
     // specification data clean
     foreach ($specs as $key => $value) {
-
         $spec[$key] = data_clean($value);
     }
 
@@ -105,17 +85,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $error['error_sku'] = "SKU Should not be empty";
     }
 
+    if (empty($stock)) {
+        $error['error_reorder_level'] = "Stock Should not be empty";
+    }
+
     if (empty($reorder_level)) {
         $error['error_reorder_level'] = "Reorder Level Should not be empty";
+    }
+
+    if (empty($grn_price)) {
+        $error['error_reorder_level'] = "GRN price Should not be empty";
     }
 
     if (empty($unit_price)) {
         $error['error_unit_price'] = "Unit Price Should not be empty";
     }
 
-    if (empty($sale_price)) {
-        $error['error_sale_price'] = "Sale Price Should not be empty";
-    }
 
     foreach ($specs as $key => $value) {
 
@@ -173,8 +158,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     //insert data to db
     if (empty($error)) {
 
-        $sql = "INSERT INTO `items` (`item_image`, `item_name`, `sku`, `recorder_level`, `unit_price`, `sale_price`, `discount_rate`, `item_description`, `date`, `stock`, `category_id`, `brand_id`, `model_id`) 
-                VALUES ('$photo', '$item_name', '$sku', '$reorder_level', '$unit_price', '$sale_price', '$discount', '$additional_info', '$date', NULL, '$category', '$brand', '$model');";
+        $sql = "INSERT INTO `items` (`item_image`, `item_name`, `sku`, `recorder_level`, `unit_price`, `sale_price`, `discount_rate`, `item_description`, `date`, `stock`, `warranty_period`, `category_id`, `brand_id`, `model_id`) 
+                VALUES ('$photo', '$item_name', '$sku', '$reorder_level', '$unit_price', '$sale_price', '$discount', '$additional_info', '$date', '$stock', '$warranty_period', '$category', '$brand', '$model');";
 
         //run database query
         $db->query($sql);
@@ -182,6 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         //capture last insert ID
         $item_id = $db->insert_id;
 
+        // inset the item specifications
         foreach ($specs as $key => $value) {
 
             $sql = "INSERT INTO spec_items (spec_id, item_id, value) VALUES ('$key' , '$item_id', '$value')";
@@ -232,6 +218,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
         $sale_price = $row['sale_price'];
         $additional_info = $row['item_description'];
         $item_image = $row['item_image'];
+        $stock = $row['stock'];
+        $warranty_period = $row['warranty_period'];
+        $grn_price = $row['grn_price'];
     }
 }
 
@@ -264,37 +253,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         $error['error_sku'] = "SKU Should not be empty";
     }
 
+    if (empty($stock)) {
+        $error['error_reorder_level'] = "Stock Should not be empty";
+    }
+
     if (empty($reorder_level)) {
         $error['error_reorder_level'] = "Reorder Level Should not be empty";
+    }
+
+    if (empty($grn_price)) {
+        $error['error_reorder_level'] = "GRN Price Should not be empty";
     }
 
     if (empty($unit_price)) {
         $error['error_unit_price'] = "Unit Price Should not be empty";
     }
 
-    if (empty($sale_price)) {
-        $error['error_sale_price'] = "Sale Price Should not be empty";
-    }
-
     foreach ($specs as $key => $value) {
 
-        if (empty($spec[$key])) {
+        if (empty($specs[$key])) {
 
             $error['spec_empty'] = "$value Spec Items not be blank";
         }
     }
 
     // Advance validation
-    if (!empty($item_name) && @$previous_item_name != $item_name) {
 
-        $sql = "SELECT * FROM items WHERE item_name = '$item_name'";
-
-        $result = $db->query($sql);
-
-        if ($result->num_rows > 0) {
-            $error['error_category'] = "This <b> $item_name </b> Item Already Exists";
-        }
-    }
 
     if (!empty($sku) && $previous_sku != $sku) {
 
@@ -324,12 +308,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     }
 
     //discount rate calculation
-    $discount = discount($unit_price, $sale_price);
+    if (!empty($sale_price)) {
+
+        $discount = discount($unit_price, $sale_price);
+    } else {
+        $discount = 0;
+    }
+
 
     // update query
     if (empty($error)) {
-        $sql = "UPDATE `items` 
-                SET item_image = '$photo',  item_name = '$item_name', sku = '$sku', recorder_level = $reorder_level, unit_price = $unit_price, sale_price = $sale_price, discount_rate = $discount, item_description = '$additional_info', `date` = $date, category_id = $category, brand_id = $brand, model_id = $model 
+        echo   $sql = "UPDATE `items` 
+                SET item_image = '$photo',  item_name = '$item_name', sku = '$sku', recorder_level = $reorder_level, unit_price = $unit_price, sale_price = $sale_price, discount_rate = $discount, item_description = $additional_info, date = $date, category_id = $category, brand_id = $brand, model_id = $model, stock = $stock, warranty_period = $warranty_period, grn_price = $grn_price 
                 WHERE `item_id` = $item_id";
 
         // run database query
@@ -337,7 +327,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
         foreach ($specs as $key => $value) {
 
-            $sql = "UPDATE spec_items SET value = '$value' WHERE spec_id = '$key' AND item_id = '$item_id';";
+          echo  $sql = "UPDATE spec_items SET value = '$value' WHERE spec_id = '$key' AND item_id = '$item_id';";
 
             $db->query($sql);
         }
@@ -432,127 +422,135 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="card card-primary card-outline card-tabs">
-                                <div class="card-header p-0 pt-1 border-bottom-0">
-                                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Item Details</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#custom-tabs-three-profile" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Item Specifications</a>
-                                        </li>
-                                    </ul>
-                                </div>
+
                                 <div class="card-body">
                                     <div class="tab-content" id="custom-tabs-three-tabContent">
-                                        <div class="tab-pane fade active show" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
-                                            <div class="form-group">
-                                                <label class="form-label" for="image">Item Image <span style="color: red;">*</span></label>
-                                                <input type="file" class="form-control" id="item_image" style="height: auto;" name="item_image" />
-                                                <input type="hidden" class="form-control" id="previous_item_image" name="previous_item_image" value="<?php echo @$item_image ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Item Name <span style="color: red;">*</span></label>
-                                                <input type="text" class="form-control" id="item_name" placeholder="Item Name" name="item_name" value="<?php echo @$item_name ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Category <span style="color: red;">*</span></label>
-                                                <select class="form-control select2" style="width: 100%;" name="category">
-                                                    <option value="">- Select Category -</option>
-                                                    <?php
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5>Item Details</h5>
+                                                <hr>
+                                                <div class="form-group">
+                                                    <label class="form-label" for="image">Item Image <span style="color: red;">*</span></label>
+                                                    <input type="file" class="form-control" id="item_image" style="height: auto;" name="item_image" />
+                                                    <input type="hidden" class="form-control" id="previous_item_image" name="previous_item_image" value="<?php echo @$item_image ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Item Name <span style="color: red;">*</span></label>
+                                                    <input type="text" class="form-control" id="item_name" placeholder="ASUS STRIX GAMING RADEON RX6700XT 12GB" name="item_name" value="<?php echo @$item_name ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Category <span style="color: red;">*</span></label>
+                                                    <select class="form-control select2" style="width: 100%;" name="category" onchange="show_spec()" id="category">
+                                                        <option value="">- Select Category -</option>
+                                                        <?php
 
-                                                    // fletch data
-                                                    if ($cat_result->num_rows > 0) {
-                                                        while ($cat_row = $cat_result->fetch_assoc()) {
-                                                    ?>
-                                                            <option value="<?php echo $cat_row['category_id'] ?>" <?php if ($cat_row['category_id'] == @$category) { ?> selected <?php } ?>><?php echo $cat_row['category_name']; ?></option>
-                                                    <?php
+                                                        // categories drop down data fletch 
+                                                        $sql_cat = "SELECT * FROM `categories` WHERE status = 0";
+                                                        $cat_result = $db->query($sql_cat);
 
+                                                        // fletch data
+                                                        if ($cat_result->num_rows > 0) {
+                                                            while ($cat_row = $cat_result->fetch_assoc()) {
+                                                        ?>
+                                                                <option value="<?php echo $cat_row['category_id'] ?>" <?php if ($cat_row['category_id'] == @$category) { ?> selected <?php } ?>><?php echo $cat_row['category_name']; ?></option>
+                                                        <?php
+
+                                                            }
                                                         }
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Brand <span style="color: red;">*</span></label>
-                                                <select class="form-control select2" style="width: 100%;" name="brand">
-                                                    <option value="">- Select Brand -</option>
-                                                    <?php
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Brand <span style="color: red;">*</span></label>
+                                                    <select class="form-control select2" style="width: 100%;" name="brand">
+                                                        <option value="">- Select Brand -</option>
+                                                        <?php
 
-                                                    // fletch data
-                                                    if ($brand_result->num_rows > 0) {
-                                                        while ($brand_row = $brand_result->fetch_assoc()) {
-                                                    ?>
-                                                            <option value="<?php echo $brand_row['brand_id'] ?>" <?php if ($brand_row['brand_id'] == @$brand) { ?> selected <?php } ?>><?php echo $brand_row['brand_name']; ?></option>
-                                                    <?php
+                                                        // brand drop down data fletch 
+                                                        $sql_brand = "SELECT * FROM `brands` WHERE status = 0";
+                                                        $brand_result = $db->query($sql_brand);
 
+                                                        // fletch data
+                                                        if ($brand_result->num_rows > 0) {
+                                                            while ($brand_row = $brand_result->fetch_assoc()) {
+                                                        ?>
+                                                                <option value="<?php echo $brand_row['brand_id'] ?>" <?php if ($brand_row['brand_id'] == @$brand) { ?> selected <?php } ?>><?php echo $brand_row['brand_name']; ?></option>
+                                                        <?php
+
+                                                            }
                                                         }
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Model <span style="color: red;">*</span></label>
-                                                <select class="form-control select2" style="width: 100%;" name="model">
-                                                    <option value="">- Select Model -</option>
-                                                    <?php
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Model <span style="color: red;">*</span></label>
+                                                    <select class="form-control select2" style="width: 100%;" name="model">
+                                                        <option value="">- Select Model -</option>
+                                                        <?php
 
-                                                    // fletch data
-                                                    if ($model_result->num_rows > 0) {
-                                                        while ($model_row = $model_result->fetch_assoc()) {
-                                                    ?>
-                                                            <option value="<?php echo $model_row['model_id'] ?>" <?php if ($model_row['model_id'] == @$model) { ?> selected <?php } ?>><?php echo $model_row['model_name']; ?></option>
-                                                    <?php
+                                                        // model drop down data fletch 
+                                                        $sql_model = "SELECT * FROM `models` WHERE status = 0";
+                                                        $model_result = $db->query($sql_model);
 
+                                                        // fletch data
+                                                        if ($model_result->num_rows > 0) {
+                                                            while ($model_row = $model_result->fetch_assoc()) {
+                                                        ?>
+                                                                <option value="<?php echo $model_row['model_id'] ?>" <?php if ($model_row['model_id'] == @$model) { ?> selected <?php } ?>><?php echo $model_row['model_name']; ?></option>
+                                                        <?php
+
+                                                            }
                                                         }
-                                                    }
-                                                    ?>
-                                                </select>
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>SKU <span style="color: red;">*</span></label>
+                                                    <input type="text" class="form-control" id="sku" placeholder="Unique Code" name="sku" value="<?php echo @$sku ?>">
+                                                    <input type="hidden" class="form-control" id="previous_sku" placeholder="Unique Number 1288898KF" name="previous_sku" value="<?php echo @$sku ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Stock <span style="color: red;">*</span></label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Stock Count" name="stock" value="<?php echo @$stock ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Reorder Level <span style="color: red;">*</span></label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Reorder Level" name="reorder_level" value="<?php echo @$reorder_level ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>GRN Price <span style="color: red;">*</span></label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="158500" name="grn_price" value="<?php echo @$grn_price ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Unit Price <span style="color: red;">*</span></label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="165800" name="unit_price" value="<?php echo @$unit_price ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Sale Price</label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="163000" name="sale_price" value="<?php echo @$sale_price ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label> Warranty Period in Days<span style="color: red;">*</span> </label>
+                                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="365" name="warranty_period" value="<?php echo @$warranty_period ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Product Description</label>
+                                                    <textarea class="form-control" rows="3" placeholder="Additional info of the product" name="additional_info"><?php echo @$additional_info ?></textarea>
+                                                </div>
+
                                             </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">SKU <span style="color: red;">*</span></label>
-                                                <input type="text" class="form-control" id="sku" placeholder="Enter Brand Name" name="sku" value="<?php echo @$sku ?>">
-                                                <input type="hidden" class="form-control" id="previous_sku" placeholder="Enter Brand Name" name="previous_sku" value="<?php echo @$sku ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Reorder Level <span style="color: red;">*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="reorder_level" value="<?php echo @$reorder_level ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">GRN Price <span style="color: red;">*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="grn_price" value="<?php echo @$grn_price ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Unit Price <span style="color: red;">*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="unit_price" value="<?php echo @$unit_price ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Sale Price <span style="color: red;">*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="sale_price" value="<?php echo @$sale_price ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Warranty Period <span style="color: red;">*</span></label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="warranty_period" value="<?php echo @$warranty_period ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Product Description</label>
-                                                <textarea class="form-control" rows="3" placeholder="Enter ..." name="additional_info"><?php echo @$additional_info ?></textarea>
+                                            <div class="col" id="specs">
+                                                <h5>Item Specifications</h5>
+                                                <hr>
+                                                <!-- second colum -->
+                                                <p>Item specification load after selecting the category</p>
+
                                             </div>
                                         </div>
-                                        <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
-                                            <?php
-                                            if ($item_spec->num_rows > 0) {
-                                                while ($spec_row = $item_spec->fetch_assoc()) {
-                                            ?>
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1"><?php echo $spec_row['spec'] ?> <span style="color: red;">*</span></label>
-                                                        <input type="text" class="form-control" id="specs<?php echo $spec_row['spec_id']; ?>" placeholder="Enter <?php echo $spec_row['spec'] ?> " name="specs[<?php echo $spec_row['spec_id']; ?>]">
-                                                    </div>
-                                            <?php
-                                                }
-                                            }
-                                            ?>
 
-                                        </div>
+
+
+
                                     </div>
                                 </div>
                                 <!-- /.card -->
@@ -560,14 +558,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-                            <input type="hidden" name="item_id" value="<?php echo @$item_id ?>">
+                            <input type="hidden" name="item_id" id="item_id" value="<?php echo @$item_id ?>">
                             <button type="submit" class="btn btn-primary" name="action" value="<?php echo @$btn_value ?>"><?php echo @$btn_icon ?> <?php echo @$btn_name ?></button>
                         </div>
                     </form>
                 </div>
             </div>
             <!-- Right Section Start -->
-            <div class="col">
+            <div class="col-12">
                 <?php
 
                 // sql query
@@ -642,18 +640,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 </div>
 
 <?php include '../../footer.php'; ?>
-
+<script src="system/plugins/jquery/jquery.min.js"></script>
 <!-- Page specific script -->
 <script>
     $(function() {
         $('#brand_list').DataTable({
             "paging": true,
-            "lengthChange": false,
-            "searching": false,
+            "lengthChange": true,
+            "searching": true,
             "ordering": true,
             "info": true,
-            "autoWidth": false,
+            "autoWidth": true,
             "responsive": true,
         });
     });
+</script>
+
+<script>
+    function show_spec() {
+
+        var spec = $("#category").val();
+        var item = $("#item_id").val();
+        var dt = "category=" + spec + "&";
+        dt += "item_id=" + item + "&";
+
+        //alert(item);
+
+        $.ajax({
+            type: 'POST',
+            data: dt,
+            url: '../../../ajax/spec.php',
+            success: function(response) {
+                $("#specs").html(response)
+            },
+            error: function(request, status, error) {
+                alert(error);
+            }
+        });
+
+    }
 </script>

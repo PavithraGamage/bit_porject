@@ -16,7 +16,7 @@ if (!empty($category_id)) {
     $sql = "SELECT * FROM `items` WHERE category_id = $category_id;";
 } else {
 
-    header('location:index.php');
+    header('location:home.php');
 }
 
 // fletch data
@@ -115,7 +115,7 @@ $result = $db->query($sql);
                         $sql_brands = "SELECT b.brand_name
                         FROM items i 
                         INNER JOIN brands b ON b.brand_id = i.brand_id 
-                        WHERE i.category_id = $category_id
+                        WHERE i.category_id = $category_id AND b.status = 0
                         GROUP BY (b.brand_id);";
 
                         // fletch data
@@ -148,7 +148,7 @@ $result = $db->query($sql);
                         <?php
 
                         // sql query
-                        $sql_models = "SELECT m.model_name FROM items i INNER JOIN models m ON m.model_id = i.model_id WHERE i.category_id = $category_id GROUP BY (m.model_id);";
+                        $sql_models = "SELECT m.model_name FROM items i INNER JOIN models m ON m.model_id = i.model_id WHERE i.category_id = $category_id AND status = 0 GROUP BY (m.model_id);";
 
                         // fletch data
                         $result_models = $db->query($sql_models);
@@ -170,6 +170,7 @@ $result = $db->query($sql);
 
 
                 </form>
+
 
 
 

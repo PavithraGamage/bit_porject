@@ -180,7 +180,7 @@ if (empty($_SESSION['cart'])) {
                     <tbody>
                         <?php
 
-                       $sql = "SELECT oi.item_qty, i.item_name, i.warranty, i.discount_rate, i.sale_price, i.unit_price FROM orders_items oi INNER JOIN orders o ON o.order_id = oi.order_id INNER JOIN users u ON o.user_id = u.user_id INNER JOIN province p ON o.delivery_charge = p.id INNER JOIN customers c ON u.user_id = c.user_id INNER JOIN items i ON oi.item_id = i.item_id WHERE o.order_id = $order_id;";
+                       $sql = "SELECT oi.item_qty, i.item_name, i.warranty_period, i.discount_rate, i.sale_price, i.unit_price FROM orders_items oi INNER JOIN orders o ON o.order_id = oi.order_id INNER JOIN users u ON o.user_id = u.user_id INNER JOIN province p ON o.delivery_charge = p.id INNER JOIN customers c ON u.user_id = c.user_id INNER JOIN items i ON oi.item_id = i.item_id WHERE o.order_id = $order_id;";
 
                         $result = $db->query($sql);
 
@@ -191,7 +191,7 @@ if (empty($_SESSION['cart'])) {
                                 <tr>
                                     <td><?php echo $row['item_qty']; ?></td>
                                     <td><?php echo $row['item_name']; ?></td>
-                                    <td><?php echo $row['warranty']; ?></td>
+                                    <td><?php echo $row['warranty_period']; ?></td>
                                     <td><?php echo $row['discount_rate']; ?>%</td>
                                     <td><?php echo number_format($row['sale_price'], 2); ?></td>
                                     <td><?php echo number_format($row['unit_price'], 2); ?></td>

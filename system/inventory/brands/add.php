@@ -101,8 +101,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
-     // basic validation
-     if (empty($brand_name)) {
+    // basic validation
+    if (empty($brand_name)) {
         $error['brand_name'] = "Brand Name Should Not Be Empty";
     }
 
@@ -130,16 +130,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     }
 }
 
-// delete recode
+// change brand status to inactive
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
-    $sql = "DELETE FROM `brands` WHERE `brand_id` = '$brand_id'";
+    $sql = "UPDATE `brands` SET `status` = '1' WHERE `brands`.`brand_id` = $brand_id;";
     $db->query($sql);
 
-    $error['delete_msg'] = "Recode Delete";
+    $error['delete_msg'] = "Recode Inactive";
 
     // error styles
     $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+}
+
+// change brand status to active
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
+
+    $sql = "UPDATE `brands` SET `status` = '0' WHERE `brands`.`brand_id` = $brand_id;";
+    $db->query($sql);
+
+    $error['delete_msg'] = "Recode Active";
+
+    // error styles
+    $error_style['success'] = "alert-success";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
 ?>
@@ -184,7 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 <div class="card">
                     <h5 class="card-header bg-danger">Conformation</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $brand_name ?> ?</b> </h5>
+                        <h5 class="card-title">Are You Want to Inactive <b> <?php echo $brand_name ?> ?</b> </h5>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                             <input type="hidden" name="brand_id" value="<?php echo $brand_id ?>"><br>
                             <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
@@ -230,7 +243,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 <?php
 
                 // sql query
-                $sql = "SELECT * FROM `brands`";
+                $sql = "SELECT * 
+                FROM brands b
+                INNER JOIN status s ON s.status_id = b.status;";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -246,8 +261,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             <thead>
                                 <tr>
                                     <th>Brand Name</th>
-                                    <th style="width: 85px !important;">Edit</th>
-                                    <th style="width: 85px !important;">Delete</th>
+                                    <th>Status</th>
+                                    <th>Edit</th>
+                                    <th>Inactive</th>
+                                    <th>Active</th>
 
 
                                 </tr>
@@ -260,6 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                 ?>
                                         <tr>
                                             <td><?php echo $row['brand_name'] ?> </td>
+                                            <td><?php echo $row['status_name'] ?> </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                                     <input type="hidden" name="brand_id" value="<?php echo $row['brand_id'] ?>">
@@ -269,7 +287,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                                     <input type="hidden" name="brand_id" value="<?php echo $row['brand_id'] ?>">
-                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
+                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-ban"></i></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                                    <input type="hidden" name="brand_id" value="<?php echo $row['brand_id'] ?>">
+                                                    <button type="submit" name="action" value="active" class="btn btn-block btn-warning btn-xs"><i class="fas fa-check"></i></button>
                                                 </form>
                                             </td>
                                         </tr>

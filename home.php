@@ -5,15 +5,6 @@ include "system/functions.php";
 // db connect
 $db = db_con();
 
-// sql query
-$sql = "SELECT * FROM `categories`";
-
-// fletch data
-$result = $db->query($sql);
-
-// categories drop down data fletch 
-$cat_result = $db->query($sql);
-
 ?>
 
 
@@ -124,6 +115,13 @@ $cat_result = $db->query($sql);
         <div class="row catagory_row">
 
             <?php
+
+            // sql query
+            $sql = "SELECT * FROM `categories` WHERE status = 0";
+
+            // fletch data
+            $result = $db->query($sql);
+
             // category name
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {

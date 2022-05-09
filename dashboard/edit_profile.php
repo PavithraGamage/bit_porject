@@ -193,16 +193,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update_password') {
     // Advance validation
 
     // check existing password
-    if (!empty($ex_password) AND !empty($new_password_verify)) {
+    if (!empty($ex_password) and !empty($new_password_verify)) {
 
         $sql = "SELECT password FROM users WHERE password = '" . sha1($ex_password) . "' AND user_id = $user_id ";
 
         $result = $db->query($sql);
 
         if ($result->num_rows == 0) {
-         
+
             $error['ex_password'] = "Existing password not match";
-          
         }
     }
 
@@ -251,8 +250,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update_password') {
             <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
                 <?php
 
-
-
                 $sql = "SELECT u.user_id, u.first_name, u.last_name, u.user_name, u.email, u.profile_image, c.contact_nmuber, c.address_l1, c.address_l2, c.city, c.postal_code, p.id
                         FROM customers c
                         INNER JOIN users u ON u.user_id = c.user_id
@@ -278,10 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update_password') {
                         $province = $row['id'];
                     }
                 }
-
-
-
-
+                
                 ?>
                 <div class="card-body">
                     <div class="card card-primary card-outline card-tabs">
@@ -394,10 +388,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update_password') {
                                         </div>
                                     </div>
                                 </div>
-
-
-
-
                             </div>
                         </div>
                         <!-- /.card -->
@@ -426,7 +416,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update_password') {
                             <div class="tab-content" id="custom-tabs-three-tabContent">
                                 <div class="row">
                                     <div class="col-6">
-
                                         <div class="form-group">
                                             <label for="exampleInputPassword1">Existing Password</label>
                                             <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="ex_password">
@@ -434,10 +423,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update_password') {
                                         <div>
                                             <p style="color:red;"> <?php echo @$error['ex_password'] ?></p>
                                         </div>
-
                                     </div>
                                     <div class="col-6">
-
                                         <!-- second colum -->
                                         <div class="form-group">
                                             <label for="exampleInputPassword1">New Password</label>
@@ -453,14 +440,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update_password') {
                                         <div>
                                             <p style="color:red;"> <?php echo @$error['previous_password_verify'] ?></p>
                                         </div>
-
-
                                     </div>
                                 </div>
-
-
-
-
                             </div>
                         </div>
                         <!-- /.card -->

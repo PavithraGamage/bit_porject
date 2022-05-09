@@ -225,19 +225,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     }
 }
 
-// delete recode
+// inactive category  recode
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
-    $sql = "DELETE FROM `categories` WHERE `category_id` = '$category_id'";
+    $sql = "UPDATE `categories` SET `status` = '1' WHERE `categories`.`category_id` = $category_id;";
     $db->query($sql);
 
-    $error['delete_msg'] = "Recode Delete";
+    $error['delete_msg'] = "Recode Inactive";
 
     // error styles
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
 
+
+// change status active
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
+
+    $sql = "UPDATE `categories` SET `status` = '0' WHERE `categories`.`category_id` = $category_id;";
+    $db->query($sql);
+
+    $error['delete_msg'] = "Recode Active";
+
+    // error styles
+    $error_style['success'] = "alert-success";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+}
 ?>
 
 <div class="content-wrapper">
@@ -278,7 +291,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 <div class="card">
                     <h5 class="card-header bg-danger">Conformation</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $category_name ?> ?</b> </h5>
+                        <h5 class="card-title">Are You Want to Inactive <b> <?php echo $category_name ?> ?</b> </h5>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                             <input type="hidden" name="category_id" value="<?php echo $category_id ?>"><br>
                             <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
@@ -296,7 +309,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     </div>
     <div class="container-fluid">
         <div class="row">
-            <div class="col">
+            <div class="col-5">
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title"><?php echo @$form_name ?></h3>
@@ -330,14 +343,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 </div>
             </div>
             <!-- Right Section Start -->
-            <div class="col">
+            <div class="col-7">
                 <?php
 
-                // db connect
-                $db = db_con();
-
                 // sql query
-                $sql = "SELECT * FROM `categories`";
+                $sql = "SELECT * 
+                FROM categories c
+                INNER JOIN status s ON s.status_id =  c.status;";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -352,10 +364,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th style="width: 125px !important;">Category Image</th>
+                                    <th>Category Image</th>
                                     <th>Category Name</th>
-                                    <th style="width: 85px !important;">Edit</th>
-                                    <th style="width: 85px !important;">Delete</th>
+                                    <th>Status</th>
+                                    <th>Edit</th>
+                                    <th>Inactive</th>
+                                    <th>Active</th>
 
                                 </tr>
                             </thead>
@@ -368,6 +382,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                         <tr>
                                             <td><img src="../../../assets/images/<?php echo $row['cat_image'] ?>" class="img-fluid" width="100"></td>
                                             <td><?php echo $row['category_name'] ?> </td>
+                                            <td><?php echo $row['status_name'] ?> </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                                     <input type="hidden" name="category_id" value="<?php echo $row['category_id'] ?>">
@@ -377,7 +392,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                                     <input type="hidden" name="category_id" value="<?php echo $row['category_id'] ?>">
-                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
+                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-ban"></i></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                                    <input type="hidden" name="category_id" value="<?php echo $row['category_id'] ?>">
+                                                    <button type="submit" name="action" value="active" class="btn btn-block btn-warning btn-xs"><i class="fas fa-check"></i></button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -410,11 +431,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         // }).buttons().container().appendTo('#user_list_wrapper .col-md-6:eq(0)');
         $('#brand_list').DataTable({
             "paging": true,
-            "lengthChange": false,
-            "searching": false,
+            "lengthChange": true,
+            "searching": true,
             "ordering": true,
             "info": true,
-            "autoWidth": false,
+            "autoWidth": true,
             "responsive": true,
         });
     });
