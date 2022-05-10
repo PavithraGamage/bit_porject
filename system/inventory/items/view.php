@@ -1,9 +1,17 @@
 <?php
+
+ob_start();
+
 include '../../header.php';
 include '../../nav.php';
 
 // extract variables
 extract($_POST);
+
+// redirect
+if(empty($item_id)){
+    header('location:add.php');
+}
 
 // DB Connection
 $db = db_con();
@@ -17,10 +25,10 @@ $spec_sql = "SELECT si.value, s.spec FROM spec_items si INNER JOIN specification
 $spec_result = $db->query($spec_sql);
 
 
-$stock_count = "SELECT COUNT(item_id) AS item_stock FROM stock WHERE item_id = $item_id GROUP BY item_id;";
-$stock_count_result = $db->query($stock_count);
-$row = $stock_count_result->fetch_assoc();
-$in_stock = $row['item_stock'];
+// $stock_count = "SELECT COUNT(item_id) AS item_stock FROM stock WHERE item_id = $item_id GROUP BY item_id;";
+// $stock_count_result = $db->query($stock_count);
+// $row = $stock_count_result->fetch_assoc();
+// $in_stock = $row['item_stock'];
 
 ?>
 <div class="content-wrapper">
@@ -37,7 +45,7 @@ $in_stock = $row['item_stock'];
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Items</a></li>
+                        <li class="breadcrumb-item"><a href="add.php">Items</a></li>
                         <li class="breadcrumb-item active">View Items</li>
                     </ol>
                 </div><!-- /.col -->
@@ -67,7 +75,7 @@ $in_stock = $row['item_stock'];
                 <h5 class="price_hedding">Discount Rate - <?php echo $row['discount_rate']; ?> %</h5>
                 <h6>SKU: <?php echo $row['sku']; ?> </h6>
                 <h6>Reorder Level: <?php echo $row['recorder_level']; ?></h6>
-                <h6>In Stock: <?php echo $in_stock; ?></h6>
+                <h6>In Stock: <?php echo $row['stock']; ?></h6>
 
             </div>
 
@@ -134,3 +142,5 @@ $in_stock = $row['item_stock'];
         });
     });
 </script>
+
+<?php ob_end_flush() ?>

@@ -194,8 +194,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'register') {
         $_SESSION['req_user_id'] = $user_id;
     }
 
-     // redirect to dashboard
-     if (empty($error)) {
+    // redirect to dashboard
+    if (empty($error)) {
 
         header('Location:profile_wizard.php');
     }
@@ -243,7 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     if (empty($address_line_1)) {
         $error['address_line_1'] = "Address line 1 Should Not Be Empty";
     }
-    
+
     if (empty($city)) {
         $error['city'] = "city Should Not Be Empty";
     }
@@ -262,33 +262,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     if (empty($d_last_name)) {
         $error['d_last_name'] = "Last Name Should Not Be Empty";
     }
+
     if (empty($d_phone)) {
         $error['d_phone'] = "phone Should Not Be Empty";
     }
+
     if (empty($d_email)) {
         $error['d_email'] = "email Should Not Be Empty";
     }
+
     if (empty($d_address_line_1)) {
         $error['d_address_line_1'] = "Address line 1 Should Not Be Empty";
     }
- 
+
     if (empty($d_city)) {
         $error['d_city'] = "city Should Not Be Empty";
     }
+
     if (empty($d_province)) {
         $error['d_province'] = "Province Should Not Be Empty";
     }
+
     if (empty($d_zip)) {
         $error['d_zip'] = "zip Should Not Be Empty";
     }
-
 
     if (empty($payment_method)) {
         $error['payment_method'] = "Select Your Payment Method";
     }
 
     // Advance Validations Billing Details
-
     if (!preg_match("/^[a-zA-Z ]*$/", $frist_name)) {
         $error['frist_name'] = "Only Letters allowed for First Name";
     }
@@ -339,6 +342,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $error['d_email'] = "Email not valid";
     }
 
+    // inset data to relevant tables
     if (empty($error)) {
 
         $discount = $_SESSION['grand_total_sale'];
@@ -359,6 +363,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
         // change order number
         $order_number = $order_number . sprintf('%04d', $order_id);
+
         // order number update
         $sql = "UPDATE orders SET order_number = '$order_number' WHERE order_id = '$order_id'";
         // run database query
@@ -374,6 +379,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         // run database query
         $query = $db->query($sql_delivery);
 
+        // ----------- update order and stock -----------------
 
         // session cart extract
         foreach ($_SESSION['cart'] as $product) {
@@ -385,8 +391,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
             $item_qty = $product['item_qty'];
 
             $sql = "INSERT INTO `orders_items` (`orders_items_id`, `order_id`, `item_id`, `item_qty`, `grn_price`, `unit_price`, `sale_price`) VALUES (NULL, '$order_id', '$item_id', '$item_qty', '$grn_price', '$item_price', '$item_sale_price');";
-
+            //run sql query
             $db->query($sql);
+
+            // fetch the item stock to get stock count
+            $sql_items = "SELECT * FROM `items` WHERE item_id = $item_id";
+            $result = $db->query($sql_items);
+
+            $row = $result->fetch_assoc();
+
+            // take individual item stock
+            $item_stock =  $row['stock'];
+
+            // update new stock
+            $stock_update =  $item_stock - $item_qty;
+
+            // update stock
+            $sql_stock = "UPDATE `items` SET `stock` = '$stock_update' WHERE `items`.`item_id` = $item_id;";
+            //run sql query
+            $db->query($sql_stock);
+
+            // fetch the item stock to update the stock status
+            $sql_stock = "SELECT * FROM `items` WHERE item_id = $item_id";
+            $stock_result = $db->query($sql_stock);
+
+            $stock_row = $stock_result->fetch_assoc();
+
+            $new_stock = $stock_row['stock'];
+
+            if ($new_stock == 0) {
+
+                // update stock status
+                $sql_stock = "UPDATE `items` SET `stock_status` = '1' WHERE `items`.`item_id` = $item_id";
+                //run sql query
+                $db->query($sql_stock);
+            }
         }
     }
 
@@ -613,7 +652,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
                             <label for="inputState">Phone</label>
                             <input type="tel" class="form-control" id="phone" name="phone" value="<?php echo @$_SESSION['contact_nmuber'] ?>">
-                            <p style="color: red;"><?php echo @$error['phone'] ?></p> 
+                            <p style="color: red;"><?php echo @$error['phone'] ?></p>
                             <label for="inputState">Email Address</label>
                             <input type="email" class="form-control" id="email" name="email" value="<?php echo @$_SESSION['email'] ?>">
                             <p style="color: red;"></p> <?php echo @$error['email'] ?>
@@ -656,7 +695,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                             <input type="text" class="form-control" id="zip" name="zip" value="<?php echo @$_SESSION['postal_code'] ?>">
                             <p style="color: red;"><?php echo @$error['zip'] ?></p>
 
-                            
+
                             <input type="checkbox" class="form-check-input" id="check_box" style="margin-right: 10px;" onchange="fill_delivery_details()">
                             <label class="form-check-label" for="exampleCheck1">Use same address as a delivery address</label>
                         </div>
@@ -740,7 +779,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                     }
                                 }
                                 ?>
-                               <p style="color: red;">  <?php echo @$error['payment_method']; ?> </p>
+                                <p style="color: red;"> <?php echo @$error['payment_method']; ?> </p>
                             </div>
                         </div>
                         <div class="col-6 cart_total" id="order_summary">

@@ -95,7 +95,7 @@ if (empty($order_id)) {
                 <tbody>
                     <?php
 
-                    $sql = "SELECT oi.item_qty, i.item_name, i.warranty, i.discount_rate, i.sale_price, i.unit_price FROM orders_items oi INNER JOIN orders o ON o.order_id = oi.order_id INNER JOIN users u ON o.user_id = u.user_id INNER JOIN province p ON o.delivery_charge = p.id INNER JOIN customers c ON u.user_id = c.user_id INNER JOIN items i ON oi.item_id = i.item_id WHERE o.order_id = $order_id;";
+                    $sql = "SELECT oi.item_qty, i.item_name, i.warranty_period, i.discount_rate, i.sale_price, i.unit_price FROM orders_items oi INNER JOIN orders o ON o.order_id = oi.order_id INNER JOIN users u ON o.user_id = u.user_id INNER JOIN province p ON o.delivery_charge = p.id INNER JOIN customers c ON u.user_id = c.user_id INNER JOIN items i ON oi.item_id = i.item_id WHERE o.order_id = $order_id;";
 
                     $result = $db->query($sql);
 
@@ -106,7 +106,7 @@ if (empty($order_id)) {
                             <tr>
                                 <td><?php echo $row['item_qty']; ?></td>
                                 <td><?php echo $row['item_name']; ?></td>
-                                <td><?php echo $row['warranty']; ?></td>
+                                <td><?php echo $row['warranty_period']; ?></td>
                                 <td><?php echo $row['discount_rate']; ?>%</td>
                                 <td><?php echo number_format($row['sale_price'], 2); ?></td>
                                 <td><?php echo number_format($row['unit_price'], 2); ?></td>
@@ -194,9 +194,6 @@ if (empty($order_id)) {
         <a href="orders.php">
             <button type="button" class="btn btn-success float-right"><i class="fas fa-shopping-cart"></i> Orders</button>
         </a>
-
-        <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-        <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;"><i class="fas fa-download"></i> Generate PDF</button>
     </div>
 </div>
         </div>

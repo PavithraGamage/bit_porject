@@ -13,6 +13,7 @@ if (empty($_SESSION['cart'])) {
     header('Location: http://localhost/bit/cart.php');
 }
 
+unset($_SESSION['cart']);
 
 
 ?>

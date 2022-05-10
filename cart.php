@@ -1,10 +1,13 @@
 <?php
 
+include "system/functions.php";
+
 session_start();
 
 
 extract($_POST);
 
+$db = db_con();
 // change the product item quantity
 if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "update_qty") {
     foreach ($_SESSION['cart'] as &$value) {
@@ -119,6 +122,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                     $amount_sale = 0;
                     foreach ($_SESSION['cart'] as $product) {
 
+                        $item_id = $product['item_id'];
+
+                        $sql = "SELECT * FROM `items` WHERE item_id = $item_id;";
+
+                        $result = $db->query($sql);
+
+                        $row = $result->fetch_assoc();
+
                     ?>
 
 
@@ -129,6 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                             <div class="col-5" style="display: flex; flex-direction: column; justify-content: center;">
                                 <div>
                                     <h6><?php echo $product['item_name']; ?></h6>
+        
                                 </div>
 
                             </div>
@@ -138,13 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                     <input type="hidden" name="item_id" value="<?php echo $product['item_id']; ?>">
                                     <input type="hidden" name="action" value="update_qty">
-                                    <select name="qty" id="qty" onchange="this.form.submit();">
-                                        <option value="1" <?php if ($product['item_qty'] == 1) { ?> selected <?php } ?>>1</option>
-                                        <option value="2" <?php if ($product['item_qty'] == 2) { ?> selected <?php } ?>>2</option>
-                                        <option value="3" <?php if ($product['item_qty'] == 3) { ?> selected <?php } ?>>3</option>
-                                        <option value="4" <?php if ($product['item_qty'] == 4) { ?> selected <?php } ?>>4</option>
-                                        <option value="5" <?php if ($product['item_qty'] == 5) { ?> selected <?php } ?>>5</option>
-                                    </select>
+                                    <input type="number" min="1" max="<?php echo $row['stock'] ?>" value="<?php echo $product['item_qty'] ?>" onchange="this.form.submit();" name="qty" id="qty">
                                 </form>
                             </div>
                             <div class="col-2" style="display: flex; flex-direction: column; justify-content: center;">
@@ -270,11 +276,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
     </div>
     <!-- content end-->
     <!-- footer start -->
-    <?php 
-   
-   include "footer.php";
-   
-   ?>
+    <?php
+
+    include "footer.php";
+
+    ?>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
 
 

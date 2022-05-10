@@ -10,17 +10,12 @@ extract($_POST);
 $db = db_con();
 
 // empty check
-if (!empty($category_id)) {
-
-    // sql query
-    $sql = "SELECT * FROM `items` WHERE category_id = $category_id;";
-} else {
+if (empty($category_id)) {
 
     header('location:home.php');
 }
 
-// fletch data
-$result = $db->query($sql);
+
 
 ?>
 <!doctype html>
@@ -180,6 +175,11 @@ $result = $db->query($sql);
                     <!-- items -->
                     <?php
 
+                    // sql query
+                    $sql = "SELECT * FROM `items` WHERE category_id = $category_id AND stock_status = 0;";
+                    // fletch data
+                    $result = $db->query($sql);
+
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
                     ?>
@@ -213,6 +213,8 @@ $result = $db->query($sql);
                             </div>
                     <?php
                         }
+                    }else{
+                        echo "<h3 style = 'color:red'>Currently All Items are Out of Stock</h3>";
                     }
                     ?>
 

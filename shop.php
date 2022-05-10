@@ -106,7 +106,7 @@ $cat_result = $db->query($sql);
 
                     // count of items
                     $cat_id = $row['category_id'];
-                    $count_sql = "SELECT COUNT(items.item_id) AS total FROM items WHERE items.category_id = '$cat_id';";
+                    $count_sql = "SELECT COUNT(items.item_id) AS total FROM items WHERE items.category_id = '$cat_id' AND items.stock_status = 0;";
                     $count_result = $db->query($count_sql);
                     if ($count_result->num_rows > 0) {
                         while ($row_count = $count_result->fetch_assoc()) {
@@ -135,11 +135,11 @@ $cat_result = $db->query($sql);
     <!--card end-->
 
     <!-- footer start -->
-   <?php 
-   
-   include "footer.php";
-   
-   ?>
+    <?php
+
+    include "footer.php";
+
+    ?>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
 
 

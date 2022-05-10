@@ -318,7 +318,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
     // update query
     if (empty($error)) {
-        echo   $sql = "UPDATE `items` 
+        $sql = "UPDATE `items` 
                 SET item_image = '$photo',  item_name = '$item_name', sku = '$sku', recorder_level = $reorder_level, unit_price = $unit_price, sale_price = $sale_price, discount_rate = $discount, item_description = $additional_info, date = $date, category_id = $category, brand_id = $brand, model_id = $model, stock = $stock, warranty_period = $warranty_period, grn_price = $grn_price 
                 WHERE `item_id` = $item_id";
 
@@ -327,7 +327,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
         foreach ($specs as $key => $value) {
 
-          echo  $sql = "UPDATE spec_items SET value = '$value' WHERE spec_id = '$key' AND item_id = '$item_id';";
+            $sql = "UPDATE spec_items SET value = '$value' WHERE spec_id = '$key' AND item_id = '$item_id';";
 
             $db->query($sql);
         }
