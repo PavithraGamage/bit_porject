@@ -139,7 +139,7 @@ if (empty($order_id)) {
         <div class="col-6">
             <?php
 
-            $sql = "SELECT pm.name, o.order_total, o.total_discount, p.price, o.grand_total FROM orders o INNER JOIN payment_methord pm ON o.payment_id = pm.id INNER JOIN province p ON o.delivery_charge = p.id WHERE o.order_id = $order_id;";
+            $sql = "SELECT pm.name, pm.description, o.order_total, o.total_discount, p.price, o.grand_total FROM orders o INNER JOIN payment_methord pm ON o.payment_id = pm.id INNER JOIN province p ON o.delivery_charge = p.id WHERE o.order_id = $order_id;";
 
             $result = $db->query($sql);
 
@@ -150,9 +150,8 @@ if (empty($order_id)) {
             ?>
                     <p class="lead">Payment Method: <?php echo $row['name'] ?></p>
                     <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
-                        Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
-                        plugg
-                        dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+                      
+                        <?php echo $row['description'] ?>
                     </p>
         </div>
         <!-- /.col -->

@@ -15,8 +15,6 @@ if (empty($category_id)) {
     header('location:home.php');
 }
 
-
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -28,17 +26,15 @@ if (empty($category_id)) {
 
     <!-- Bootstrap CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jquery -->
+    <script src="system/plugins/jquery/jquery.min.js"></script>
 
     <title><?php echo ucfirst(pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME));  ?></title>
 
-    <! -- main style -->
-        <link href="assets/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css" />
 
-
-        <!--fontawesome icons-->
-        <link href="assets/icons/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet" type="text/css" />
-
-
+    <!--fontawesome icons-->
+    <link href="assets/icons/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -107,7 +103,7 @@ if (empty($category_id)) {
                         <?php
 
                         // sql query
-                        $sql_brands = "SELECT b.brand_name
+                        $sql_brands = "SELECT b.brand_name, b.brand_id
                         FROM items i 
                         INNER JOIN brands b ON b.brand_id = i.brand_id 
                         WHERE i.category_id = $category_id AND b.status = 0
@@ -121,9 +117,34 @@ if (empty($category_id)) {
 
                         ?>
                                 <div class="wig_items">
-                                    <input type="checkbox" class="form-check-input   wig_input" id="brand_id_<?php echo $row_brands['brand_name']; ?>">
-                                    <label class="form-check-label wig_lable" for="brand_id_<?php echo $row_brands['brand_name']; ?>"><?php echo $row_brands['brand_name']; ?></label>
+                                    <input type="radio" class="form-check-input wig_input" id="brand_id_<?php echo $row_brands['brand_id']; ?>" onclick="filter_brands<?php echo $row_brands['brand_id']; ?>();" name="fitter_brand" value="<?php echo $row_brands['brand_id']; ?>">
+                                    <label class="form-check-label wig_lable" for="brand_id_<?php echo $row_brands['brand_id']; ?>"><?php echo $row_brands['brand_name']; ?></label>
+                                    <input type="hidden" name="category" id="category" value="<?php echo $category_id ?>">
                                 </div>
+
+                                <script>
+                                    // ajax function for filer brands
+                                    function filter_brands<?php echo $row_brands['brand_id']; ?>() {
+
+                                        var brands = $("#brand_id_<?php echo $row_brands['brand_id']; ?>").val();
+                                        var category = $("#category").val();
+                                        var dt = "fitter_brand=" + brands + "&";
+                                        dt += "category=" + category + "&";
+
+                                        $.ajax({
+                                            type: 'POST',
+                                            data: dt,
+                                            url: 'ajax/filter_brands.php',
+                                            success: function(response) {
+                                                $("#products").html(response)
+                                            },
+                                            error: function(request, status, error) {
+                                                alert(error);
+                                            }
+                                        });
+                                    }
+                                </script>
+
                         <?php
                             }
                         }
@@ -143,7 +164,7 @@ if (empty($category_id)) {
                         <?php
 
                         // sql query
-                        $sql_models = "SELECT m.model_name FROM items i INNER JOIN models m ON m.model_id = i.model_id WHERE i.category_id = $category_id AND status = 0 GROUP BY (m.model_id);";
+                        $sql_models = "SELECT m.model_name, m.model_id FROM items i INNER JOIN models m ON m.model_id = i.model_id WHERE i.category_id = 27 AND status = 0 GROUP BY (m.model_id);";
 
                         // fletch data
                         $result_models = $db->query($sql_models);
@@ -153,9 +174,33 @@ if (empty($category_id)) {
 
                         ?>
                                 <div class="wig_items">
-                                    <input type="checkbox" class="form-check-input   wig_input" id="brand_id_<?php echo $row_models['model_name']; ?>">
-                                    <label class="form-check-label wig_lable" for="brand_id_<?php echo $row_models['model_name']; ?>"><?php echo $row_models['model_name']; ?></label>
+                                    <input type="radio" class="form-check-input wig_input" id="model_id_<?php echo $row_models['model_id']; ?>" onclick="filter_models<?php echo $row_models['model_id']; ?>();" name="filter_model" value="<?php echo $row_models['model_id']; ?>">
+                                    <label class="form-check-label wig_lable" for="model_id<?php echo $row_models['model_id']; ?>"><?php echo $row_models['model_name']; ?></label>
+                                    <input type="hidden" name="category" id="category" value="<?php echo $category_id ?>">
                                 </div>
+
+                                <script>
+                                    // ajax function for filer models
+                                    function filter_models<?php echo $row_models['model_id']; ?>() {
+
+                                        var models = $("#model_id_<?php echo $row_models['model_id']; ?>").val();
+                                        var category = $("#category").val();
+                                        var dt = "filter_model=" + models + "&";
+                                        dt += "category=" + category + "&";
+
+                                        $.ajax({
+                                            type: 'POST',
+                                            data: dt,
+                                            url: 'ajax/filter_brands.php',
+                                            success: function(response) {
+                                                $("#products").html(response)
+                                            },
+                                            error: function(request, status, error) {
+                                                alert(error);
+                                            }
+                                        });
+                                    }
+                                </script>
                         <?php
                             }
                         }
@@ -170,7 +215,7 @@ if (empty($category_id)) {
 
 
             </div>
-            <div class="col-10">
+            <div class="col-10" id="products">
                 <div class="row shop_main_row">
                     <!-- items -->
                     <?php
@@ -213,7 +258,7 @@ if (empty($category_id)) {
                             </div>
                     <?php
                         }
-                    }else{
+                    } else {
                         echo "<h3 style = 'color:red'>Currently All Items are Out of Stock</h3>";
                     }
                     ?>
@@ -231,6 +276,9 @@ if (empty($category_id)) {
 
     ?>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <!-- ajax function for filter brand in items -->
+
 
 
 </body>

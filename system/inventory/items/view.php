@@ -24,12 +24,6 @@ $result = $db->query($sql);
 $spec_sql = "SELECT si.value, s.spec FROM spec_items si INNER JOIN specifications s ON s.spec_id = si.spec_id WHERE si.item_id = $item_id";
 $spec_result = $db->query($spec_sql);
 
-
-// $stock_count = "SELECT COUNT(item_id) AS item_stock FROM stock WHERE item_id = $item_id GROUP BY item_id;";
-// $stock_count_result = $db->query($stock_count);
-// $row = $stock_count_result->fetch_assoc();
-// $in_stock = $row['item_stock'];
-
 ?>
 <div class="content-wrapper">
     <div class="content-header">

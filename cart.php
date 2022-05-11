@@ -4,13 +4,16 @@ include "system/functions.php";
 
 session_start();
 
-
 extract($_POST);
+
+// create error array
+$cart_error = array();
 
 $db = db_con();
 // change the product item quantity
 if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "update_qty") {
     foreach ($_SESSION['cart'] as &$value) {
+
         if ($value['item_id'] == $item_id) {
             $value['item_qty'] = $qty;
             break;
@@ -104,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
 
                 <?php
                 if (!empty($_SESSION['cart'])) {
+
                 ?>
                     <div class="row">
                         <div class="col">
@@ -120,15 +124,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                     $grand_total = 0;
                     $grand_total_sale = 0;
                     $amount_sale = 0;
+
+                    // fletch cart session
                     foreach ($_SESSION['cart'] as $product) {
-
-                        $item_id = $product['item_id'];
-
-                        $sql = "SELECT * FROM `items` WHERE item_id = $item_id;";
-
-                        $result = $db->query($sql);
-
-                        $row = $result->fetch_assoc();
 
                     ?>
 
@@ -140,7 +138,29 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                             <div class="col-5" style="display: flex; flex-direction: column; justify-content: center;">
                                 <div>
                                     <h6><?php echo $product['item_name']; ?></h6>
-        
+
+                                    <?php
+                                    
+                                    // out of stock check
+                                     $item_id = $product['item_id'];
+
+                                     $sql = "SELECT * FROM `items` WHERE item_id = $item_id;";
+             
+                                     $result = $db->query($sql);
+             
+                                     $row = $result->fetch_assoc();
+
+                                    if ($product['item_qty'] > $product['stock']) {
+
+                                        // crate variable for stock count to show the error message 
+                                        $stock = $product['stock'];
+                                        $cart_error['out_of_stock'] = "Maximum Quantity <b>$stock</b>";
+
+                                        echo '<p style="color:red ;">'. @$cart_error['out_of_stock'] . '</p>';
+                                    }
+
+                                    ?>
+
                                 </div>
 
                             </div>
@@ -246,15 +266,21 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
 
                                                     ?></h4>
                                     </div>
-                                    <a href="checkout.php">
-                                        <button type="button" class="btn btn-secondary cart_checkout_button"> CHECKOUT ORDER </button>
-                                    </a>
+
+                                    <form action="checkout.php" method="POST">
+                                        <?php
+                                        if (empty($cart_error)) {
+                                            echo '<button type="submit" class="btn btn-secondary cart_checkout_button"  name = "cart" value="1"> CHECKOUT ORDER </button>';
+                                        } else
+
+                                        ?>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 <?php
-                } else { ?>
+            } else { ?>
                     <!--empty cart warnning start-->
                     <div class="row empty_cart">
                         <div class="col">
@@ -264,11 +290,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                             <a href="shop.php">
                                 <button type="button" class="btn btn-secondary card_button">Shop Now</button>
                             </a>
+
                         </div>
                     </div>
                     <!--empty cart warnning end-->
                 <?php
-                }
+            }
                 ?>
             </div>
             <!--cart content end-->

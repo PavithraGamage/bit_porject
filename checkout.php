@@ -23,7 +23,6 @@ if (empty($_SESSION['cart'])) {
     header('Location: http://localhost/bit/cart.php');
 }
 
-
 // date
 $date = date('Y-m-d');
 
@@ -66,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
             $_SESSION['first_name'] = $row['first_name'];
             $_SESSION['last_name'] = $row['last_name'];
             $_SESSION['email'] = $row['email'];
+            $_SESSION['profile_image'] = $row['profile_image'];
         } else {
 
             $error['password'] = "invalided username or password";

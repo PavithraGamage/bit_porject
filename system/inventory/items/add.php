@@ -656,6 +656,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
     });
 </script>
 
+<!-- ajax function for filter specifications by category -->
 <script>
     function show_spec() {
 
@@ -663,8 +664,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         var item = $("#item_id").val();
         var dt = "category=" + spec + "&";
         dt += "item_id=" + item + "&";
-
-        //alert(item);
 
         $.ajax({
             type: 'POST',

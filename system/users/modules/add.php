@@ -346,6 +346,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                             <div class="form-group">
                                 <label for="exampleInputPassword1">Main Module Icon</label>
                                 <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Eg:- fa fa-id-card" name="m_m_icon" value="<?php echo @$m_m_icon ?>">
+                                <a href="https://fontawesome.com/v4/icons/" target="_blank"> Browse Font Awesome icons</a>
                             </div>
                         </div>
                         <!-- /.card-body -->

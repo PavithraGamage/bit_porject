@@ -40,8 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'add_to_cart') {
         $item_qty = 1;
         $item_image = $row['item_image'];
         $discount_rate = $row['discount_rate'];
+        $stock = $row['stock'];
 
-        $cart = array($item_id => array("item_id" => $item_id, "item_name" => $item_name, "item_sku" => $item_sku, "item_price" => $item_price, "sales_price" => $sale_price, "item_qty" => $item_qty, "item_image" => $item_image, "item_discount" => $discount_rate, "grn_price" => $grn_price));
+        $cart = array($item_id => array("item_id" => $item_id, "item_name" => $item_name, "item_sku" => $item_sku, "item_price" => $item_price, "sales_price" => $sale_price, "item_qty" => $item_qty, "item_image" => $item_image, "item_discount" => $discount_rate, "grn_price" => $grn_price, "stock" => $stock));
 
         if (empty($_SESSION['cart'])) {
 

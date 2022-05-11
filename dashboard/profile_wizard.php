@@ -103,10 +103,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
         $db->query($sql_image);
     }
 
-    //redirect to dashboard
+    // redirect to checkout
     if (empty($error)) {
 
-        header('Location:index.php');
+        $error['complete_msg'] = "Profile Successfully Create";
+        $error['button'] = "<button>Login</button>";
     }
 }
 
@@ -140,6 +141,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
     <div class="container">
         <div class="row">
             <div class="col" style="margin:5% 20%; ">
+            <div class="row" style="margin-bottom: 40px;">
+                    <div class="col">
+                        <p><?php echo @$error['complete_msg'] ?></p>
+                        <a href="index.php">
+                                <?php echo @$error['button'] ?>
+                        </a>
+                    </div>
+                </div>
                 <div class="register-box">
                     <div class="card card-outline card-primary">
                         <div class="card-header text-center">
