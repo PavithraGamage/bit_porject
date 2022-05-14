@@ -122,8 +122,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                     <!--cart item start-->
                     <?php
                     $grand_total = 0;
+                    $grand_total_price = 0;
                     $grand_total_sale = 0;
                     $amount_sale = 0;
+
 
                     // fletch cart session
                     foreach ($_SESSION['cart'] as $product) {
@@ -140,15 +142,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                                     <h6><?php echo $product['item_name']; ?></h6>
 
                                     <?php
-                                    
-                                    // out of stock check
-                                     $item_id = $product['item_id'];
 
-                                     $sql = "SELECT * FROM `items` WHERE item_id = $item_id;";
-             
-                                     $result = $db->query($sql);
-             
-                                     $row = $result->fetch_assoc();
+                                    // out of stock check
+                                    $item_id = $product['item_id'];
+
+                                    $sql = "SELECT * FROM `items` WHERE item_id = $item_id;";
+
+                                    $result = $db->query($sql);
+
+                                    $row = $result->fetch_assoc();
 
                                     if ($product['item_qty'] > $product['stock']) {
 
@@ -156,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                                         $stock = $product['stock'];
                                         $cart_error['out_of_stock'] = "Maximum Quantity <b>$stock</b>";
 
-                                        echo '<p style="color:red ;">'. @$cart_error['out_of_stock'] . '</p>';
+                                        echo '<p style="color:red ;">' . @$cart_error['out_of_stock'] . '</p>';
                                     }
 
                                     ?>
@@ -176,24 +178,30 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                             <div class="col-2" style="display: flex; flex-direction: column; justify-content: center;">
                                 <div class="cart_price">
                                     <?php
-                                    if (!$product['sales_price'] == 0) {
 
+                                    if (!$product['sales_price'] == 0 && $product['item_qty'] > 0) {
+
+                                        $amount = $product['item_price'] * $product['item_qty'];
+                                        echo "<h6> LKR: " . number_format($amount, 2) . "</h6>";
+                                        $grand_total += $amount;
 
                                         $amount = $product['sales_price'] * $product['item_qty'];
                                         echo "<h6> Sale LKR: " . number_format($amount, 2) . "</h6>";
-                                        $grand_total += $amount;
+                                        $grand_total_price += $amount;
 
+                                        
                                         // discount price calculation
                                         $amount_sale = ($product['item_price'] * $product['item_qty']) - $amount;
                                         $grand_total_sale += $amount_sale;
                                     } else {
 
-                                        $amount = $product['item_price'] * $product['item_qty'];
-                                        echo "<h6> LKR: " . number_format($amount, 2) . "</h6>";
-                                        $grand_total += $amount;
+                                        if ($product['item_qty'] > 0) {
+
+                                            $amount = $product['item_price'] * $product['item_qty'];
+                                            echo "<h6> LKR: " . number_format($amount, 2) . "</h6>";
+                                            $grand_total += $amount;
+                                        }
                                     }
-
-
 
                                     ?>
                                 </div>
@@ -207,10 +215,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                                 </div>
                             </div>
                         </div>
-
-
-
                     <?php
+                    }
+
+                    // create sessions for checkout redirect management
+                    if (!empty($cart_error)) {
+
+                        $_SESSION['cart_error'] = true;
+                    } else {
+
+                        $_SESSION['cart_error'] = false;
                     }
                     ?>
                     <!--cart item end-->
@@ -221,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                             <div class="row">
                                 <div class="col-5">
                                     <div>
-                                        <h6>Item(s):</h6>
+                                        <h6>Sub Total:</h6>
                                     </div>
                                     <hr>
                                     <div>
@@ -241,6 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                                     </div>
                                     <hr>
                                     <div>
+                                      
                                         <h6>
                                             <?php
                                             echo "LKR: (-" . number_format($grand_total_sale, 2) . ")";
@@ -250,8 +265,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                                         </h6>
                                     </div>
                                     <hr>
-
-
                                     <div>
                                         <h4>LKR: <?php
 
@@ -259,14 +272,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                                                     $est_total = $grand_total - $grand_total_sale;
 
                                                     // session for est total
-
                                                     $_SESSION['est_total'] = $est_total;
 
                                                     echo number_format($est_total, 2);
 
                                                     ?></h4>
                                     </div>
-
                                     <form action="checkout.php" method="POST">
                                         <?php
                                         if (empty($cart_error)) {

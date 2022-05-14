@@ -18,6 +18,10 @@ $db = db_con();
 // create error variable to store error messages
 $error =  array();
 
+if($_SESSION['cart_error'] == true){
+    header('Location: http://localhost/bit/cart.php');
+}
+
 // redirect
 if (empty($_SESSION['cart'])) {
     header('Location: http://localhost/bit/cart.php');
@@ -795,6 +799,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                     </div>
                                     <hr>
                                     <div>
+                                        <h6>Est Total:</h6>
+                                    </div>
+                                    <hr>
+                                    <div>
                                         <h6>Delivery Charges:</h6>
                                     </div>
                                     <hr>
@@ -808,7 +816,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                     </div>
                                     <hr>
                                     <div>
-                                        <h6>LKR: <?php echo  number_format($_SESSION['grand_total_sale']);  ?></h6>
+                                        <h6>LKR: (-<?php echo  number_format($_SESSION['grand_total_sale'],2);  ?>)</h6>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <h6>LKR: <?php echo number_format($_SESSION['grand_total'] - $_SESSION['grand_total_sale'], 2); ?></h6>
                                     </div>
                                     <hr>
                                     <div>

@@ -427,11 +427,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Customers</h1>
+                    <h1 class="m-0">User Report</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Customers</a></li>
+                        <li class="breadcrumb-item"><a href="#">User Reports</a></li>
                         <li class="breadcrumb-item active">Add</li>
                     </ol>
                 </div><!-- /.col -->
@@ -496,7 +496,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                 ?>
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">All Customer List</h3>
+                        <h3 class="card-title">All User List</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -508,9 +508,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Status</th>
-                                    <th>View</th>
+                                    <!-- <th>View</th>
                                     <th>Inactive</th>
-                                    <th>Active</th>
+                                    <th>Active</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -525,7 +525,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                                             <td><?php echo $row['first_name'] ?> </td>
                                             <td><?php echo $row['last_name'] ?> </td>
                                             <td><?php echo $row['status_name'] ?> </td>
-                                            <td>
+                                            <!-- <td>
                                                 <form action="view.php" method="post">
                                                     <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
                                                     <a href="view.php">
@@ -545,7 +545,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                                                     <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
                                                     <button type="submit" name="action" value="active" class="btn btn-block btn-warning btn-xs"><i class="fas fa-check"></i></button>
                                                 </form>
-                                            </td>
+                                            </td> -->
 
                                         </tr>
 

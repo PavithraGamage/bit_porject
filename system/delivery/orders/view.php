@@ -82,8 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
                                     <th>Payment Method</th>
                                     <th>Delivery Charges</th>
                                     <th>City</th>
-                                    <th style="width: 85px !important;">View</th>
-
+                                    <th>View</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -109,7 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
 
-
                                 ?>
                                         <tr>
                                             <td><?php echo  $row['order_number']; ?> </td>
@@ -118,16 +116,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
                                             <td><?php echo  $row['name']; ?> </td>
                                             <td><?php echo  $row['price']; ?></td>
                                             <td><?php echo  $row['city']; ?></td>
-
-
-
                                             <td>
                                                 <form action="update.php" method="post">
                                                     <input type="hidden" name="order_id" value="<?php echo $row['order_id'] ?>">
-
                                                     <button type="submit" name="action" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button>
-
-
                                                 </form>
                                             </td>
 
@@ -136,10 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
 
                                     }
                                 }
-
                                 ?>
-
-
                             </tbody>
 
                         </table>
@@ -165,11 +154,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
         // }).buttons().container().appendTo('#user_list_wrapper .col-md-6:eq(0)');
         $('#brand_list').DataTable({
             "paging": true,
-            "lengthChange": false,
+            "lengthChange": true,
             "searching": true,
             "ordering": true,
             "info": true,
-            "autoWidth": false,
+            "autoWidth": true,
             "responsive": true,
         });
     });

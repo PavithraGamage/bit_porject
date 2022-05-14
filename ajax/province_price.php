@@ -30,6 +30,10 @@ if ($result->num_rows > 0) {
         </div>
         <hr>
         <div>
+            <h6>Est Total:</h6>
+        </div>
+        <hr>
+        <div>
             <h6>Delivery Charges:</h6>
         </div>
         <hr>
@@ -39,7 +43,7 @@ if ($result->num_rows > 0) {
     </div>
     <div class="col-8">
         <div>
-            <h6>LKR: <?php echo  number_format($_SESSION['grand_total'], 2) ; ?> </h6>
+            <h6>LKR: <?php echo  number_format($_SESSION['grand_total'], 2); ?> </h6>
         </div>
         <hr>
         <div>
@@ -47,19 +51,23 @@ if ($result->num_rows > 0) {
         </div>
         <hr>
         <div>
-        
-            <h6 id="delivery_price">LKR: <?php echo number_format($price, 2) ; ?></h6>
+        <h6>LKR: <?php echo number_format($_SESSION['grand_total'] - $_SESSION['grand_total_sale'], 2); ?></h6>
+        </div>
+        <hr>
+        <div>
+
+            <h6 id="delivery_price">LKR: <?php echo number_format($price, 2); ?></h6>
         </div>
         <hr>
         <div>
             <h4>LKR: <?php
 
-                    $g_total = $_SESSION['grand_total'] - $_SESSION['grand_total_sale'] + $price;
-                    echo number_format($g_total, 2); 
-                    
-                    $_SESSION['order_grand_total'] = $g_total;
-                    
-                    ?></h4>
+                        $g_total = $_SESSION['grand_total'] - $_SESSION['grand_total_sale'] + $price;
+                        echo number_format($g_total, 2);
+
+                        $_SESSION['order_grand_total'] = $g_total;
+
+                        ?></h4>
         </div>
         <button type="submit" name="action" value="insert" class="btn btn-secondary cart_checkout_button"> PAY YOUR ORDER </button>
     </div>

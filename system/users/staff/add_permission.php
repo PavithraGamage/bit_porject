@@ -55,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $error['last_main_modulename'] = "Main Module Should not be empty";
     }
 
-
     // Advance validation
 
     if (!preg_match("/^[0-9]*$/", $username)) {
@@ -76,9 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
             $error['main_module'] = "This module already assign  to the selected user";
         }
     }
-
-
-
 
     //insert data to db
     if (empty($error)) {
@@ -148,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert_1') {
         // success message style
         $error_style['success'] = "alert-success";
         $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
-        $error['insert_msg'] = "<b>$username</b> Successfully Insert";
+        $error['insert_msg'] = "Successfully Insert";
     }
 }
 
@@ -300,7 +296,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Permissions</h1>
+                    <h1 class="m-0">Manage Permissions</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">

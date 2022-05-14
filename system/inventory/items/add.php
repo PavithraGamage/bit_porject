@@ -150,16 +150,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $photo = @$previous_item_image;
     }
 
-
-
     //discount rate calculation function
     $discount = discount($unit_price, $sale_price);
 
     //insert data to db
     if (empty($error)) {
 
-        $sql = "INSERT INTO `items` (`item_image`, `item_name`, `sku`, `recorder_level`, `unit_price`, `sale_price`, `discount_rate`, `item_description`, `date`, `stock`, `warranty_period`, `category_id`, `brand_id`, `model_id`) 
-                VALUES ('$photo', '$item_name', '$sku', '$reorder_level', '$unit_price', '$sale_price', '$discount', '$additional_info', '$date', '$stock', '$warranty_period', '$category', '$brand', '$model');";
+        $sql = "INSERT INTO `items` (`item_image`, `item_name`, `sku`, `grn_price`,`recorder_level`, `unit_price`, `sale_price`, `discount_rate`, `item_description`, `date`, `stock`, `warranty_period`, `category_id`, `brand_id`, `model_id`) 
+                VALUES ('$photo', '$item_name', '$sku', '$grn_price','$reorder_level', '$unit_price', '$sale_price', '$discount', '$additional_info', '$date', '$stock', '$warranty_period', '$category', '$brand', '$model');";
 
         //run database query
         $db->query($sql);
@@ -315,11 +313,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         $discount = 0;
     }
 
-
     // update query
     if (empty($error)) {
         $sql = "UPDATE `items` 
-                SET item_image = '$photo',  item_name = '$item_name', sku = '$sku', recorder_level = $reorder_level, unit_price = $unit_price, sale_price = $sale_price, discount_rate = $discount, item_description = $additional_info, date = $date, category_id = $category, brand_id = $brand, model_id = $model, stock = $stock, warranty_period = $warranty_period, grn_price = $grn_price 
+                SET item_image = '$photo',  item_name = '$item_name', sku = '$sku', recorder_level = $reorder_level, unit_price = $unit_price, sale_price = $sale_price, discount_rate = $discount, item_description = '$additional_info', date = $date, category_id = $category, brand_id = $brand, model_id = $model, stock = $stock, warranty_period = $warranty_period, grn_price = $grn_price 
                 WHERE `item_id` = $item_id";
 
         // run database query
@@ -332,6 +329,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
             $db->query($sql);
         }
 
+        if (!empty($stock)) {
+
+            $sql = "UPDATE `items` SET `stock_status` = '0' WHERE `items`.`item_id` = $item_id;";
+
+            // run database query
+            $query = $db->query($sql);
+        }
+
         // success message styles
         $error_style['success'] = "alert-success";
         $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
@@ -339,16 +344,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     }
 }
 
-// delete recode
+// inactive recode
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
-    $sql = "DELETE FROM `items` WHERE `item_id` = '$item_id'";
+    $sql = "UPDATE `items` SET `status` = '1' WHERE `items`.`item_id` = $item_id;";
     $db->query($sql);
 
-    $error['delete_msg'] = "Recode Delete";
+    $error['delete_msg'] = "Item Inactive";
 
     // error styles
     $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+}
+
+// active recode
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
+
+    $sql = "UPDATE `items` SET `status` = '0' WHERE `items`.`item_id` = $item_id;";
+    $db->query($sql);
+
+    $error['delete_msg'] = "Item Active";
+
+    // error styles
+    $error_style['success'] = "alert-success";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
 
@@ -569,7 +587,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 <?php
 
                 // sql query
-                $sql = "SELECT * FROM `items`";
+                $sql = "SELECT i.item_id ,i.item_name, i.item_image, s.status_name
+                FROM items i
+                INNER JOIN status s ON s.status_id = i.status;";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -584,11 +604,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th style="width: 125px !important;">Item Image</th>
+                                    <th>Item Image</th>
                                     <th>Item Name</th>
-                                    <th style="width: 85px !important;">View</th>
-                                    <th style="width: 85px !important;">Edit</th>
-                                    <th style="width: 85px !important;">Delete</th>
+                                    <th>Status</th>
+                                    <th>View</th>
+                                    <th>Edit</th>
+                                    <th>Inactive</th>
+                                    <th>Active</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -600,6 +622,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                         <tr>
                                             <td><img src="../../../assets/images/<?php echo $row['item_image'] ?>" class="img-fluid" width="100"></td>
                                             <td><?php echo $row['item_name'] ?> </td>
+                                            <td><?php echo $row['status_name'] ?> </td>
                                             <td>
                                                 <form action="view.php" method="post">
                                                     <input type="hidden" name="item_id" value="<?php echo $row['item_id'] ?>">
@@ -619,6 +642,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                                     <input type="hidden" name="item_id" value="<?php echo $row['item_id'] ?>">
                                                     <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                                    <input type="hidden" name="item_id" value="<?php echo $row['item_id'] ?>">
+                                                    <button type="submit" name="action" value="active" class="btn btn-block btn-warning btn-xs"><i class="fas fa-check"></i></button>
                                                 </form>
                                             </td>
 
@@ -678,4 +707,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         });
 
     }
+
+
+    $(document).ready(function() {
+        show_spec();
+    })
 </script>

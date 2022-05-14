@@ -180,8 +180,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     $address_line_1 =  data_clean($address_line_1);
     $address_line_2 =  data_clean($address_line_2);
 
-     // basic validation
-     if (empty($company_name)) {
+    // basic validation
+    if (empty($company_name)) {
         $error['company_name'] = "Company Name Should Not Be Empty";
     }
     if (empty($contact_number)) {
@@ -233,17 +233,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     }
 }
 
-// delete recode
+// inactive recode
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
     $sql = "UPDATE `courier_companies` SET `status` = '1' WHERE `courier_companies`.`company_id` = $company_id;";
-    
+
     $db->query($sql);
 
     $error['delete_msg'] = "Recode Delete";
 
     // error styles
     $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+}
+
+// active recode
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
+
+    $sql = "UPDATE `courier_companies` SET `status` = '0' WHERE `courier_companies`.`company_id` = $company_id;";
+
+    $db->query($sql);
+
+    $error['delete_msg'] = "Recode Delete";
+
+    // error styles
+    $error_style['success'] = "alert-success";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
 ?>
@@ -288,7 +302,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 <div class="card">
                     <h5 class="card-header bg-danger">Conformation</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $company_name ?> ?</b> </h5>
+                        <h5 class="card-title">Are You Want to Inactive <b> <?php echo $company_name ?> ?</b> </h5>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                             <input type="hidden" name="company_id" value="<?php echo $company_id ?>"><br>
                             <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
@@ -359,7 +373,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 <?php
 
                 // sql query
-                $sql = "SELECT * FROM `courier_companies` WHERE status = 0;";
+                $sql = "SELECT cc.company_id, cc.company_name, s.status_name
+                FROM courier_companies cc
+                INNER JOIN status s ON s.status_id = cc.status;";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -375,12 +391,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             <thead>
                                 <tr>
                                     <th>Company Name</th>
-                                    <th>Contact Number</th>
-
-                                    <th style="width: 85px !important;">Edit</th>
-                                    <th style="width: 85px !important;">Delete</th>
-
-
+                                    <th>Status</th>
+                                    <th>Edit</th>
+                                    <th>Inactive</th>
+                                    <th>Active</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -391,7 +405,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                 ?>
                                         <tr>
                                             <td><?php echo $row['company_name'] ?> </td>
-                                            <td><?php echo $row['contact_number'] ?> </td>
+                                            <td><?php echo $row['status_name'] ?> </td>
 
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
@@ -402,7 +416,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                                     <input type="hidden" name="company_id" value="<?php echo $row['company_id'] ?>">
-                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
+                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-ban"></i></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                                    <input type="hidden" name="company_id" value="<?php echo $row['company_id'] ?>">
+                                                    <button type="submit" name="action" value="active" class="btn btn-block btn-warning btn-xs"><i class="fas fa-check"></i></button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -435,11 +455,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         // }).buttons().container().appendTo('#user_list_wrapper .col-md-6:eq(0)');
         $('#brand_list').DataTable({
             "paging": true,
-            "lengthChange": false,
+            "lengthChange": true,
             "searching": true,
             "ordering": true,
             "info": true,
-            "autoWidth": false,
+            "autoWidth": true,
             "responsive": true,
         });
     });

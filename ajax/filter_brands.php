@@ -16,14 +16,16 @@ $db = db_con();
                     $f_models = null;
 
                     if(!empty($fitter_brand)){
-
-                        $f_brands = "AND brand_id = $fitter_brand";
+                        // filer brand by array
+                        $fitter_brand = implode(',', $fitter_brand);
+                        $f_brands = "AND brand_id IN ($fitter_brand)";
 
                     }
 
                     if(!empty($filter_model)){
-
-                        $f_models = "AND model_id = $filter_model";
+                        // filter brand by model
+                        $filter_model = implode(',', $filter_model);
+                        $f_models = "AND model_id IN ($filter_model)";
 
                     }
                     // sql query

@@ -68,14 +68,6 @@ $result = $db->query($sql);
 $spec_sql = "SELECT si.value, s.spec FROM spec_items si INNER JOIN specifications s ON s.spec_id = si.spec_id WHERE si.item_id = $item_id";
 $spec_result = $db->query($spec_sql);
 
-//stock count
-$stock_count = "SELECT COUNT(item_id) AS item_stock FROM stock WHERE item_id = $item_id GROUP BY item_id;";
-$stock_count_result = $db->query($stock_count);
-$row = $stock_count_result->fetch_assoc();
-//$in_stock = $row['item_stock'];
-
-
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -192,9 +184,12 @@ $row = $stock_count_result->fetch_assoc();
                     <p>
                         <?php echo $row['item_description']  ?>
                     </p>
+                    <h5 class="price_hedding">In Stock <?php echo $row['stock']; ?></h5>
                     <h4 class="price_hedding">LKR <?php echo number_format($row['unit_price'], 2); ?></h4>
                     <h4 class="price_hedding">
                         <?php
+
+                        // sale price check
                         if (!$row['sale_price'] == 0) {
                             echo "Sale LKR " . number_format($row['sale_price'], 2);
                         }

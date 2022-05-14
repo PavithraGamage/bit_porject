@@ -4,8 +4,6 @@ ob_start(); // multiple headers
 include '../../header.php';
 include '../../nav.php';
 
-
-
 // extract variables
 extract($_POST);
 
@@ -117,7 +115,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 
     // form button icon
     $btn_icon = '<i class="far fa-edit"></i>';
-
 
     // check records
 

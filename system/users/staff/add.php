@@ -453,7 +453,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Staff</h1>
+                    <h1 class="m-0">Manage Staff</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -629,15 +629,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                 <table id="user_list" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th style="width: 125px !important;">Profile Image</th>
+                            <th>Profile Image</th>
                             <th>Username</th>
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Status</th>
-                            <th style="width: 85px !important;">View</th>
-                            <th style="width: 85px !important;">Edit</th>
-                            <th style="width: 85px !important;">Inactive</th>
-                            <th style="width: 85px !important;">Active</th>
+                            <th>View</th>
+                            <th>Edit</th>
+                            <th>Inactive</th>
+                            <th>Active</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -701,11 +701,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
     $(function() {
         $('#user_list').DataTable({
             "paging": true,
-            "lengthChange": false,
-            "searching": false,
+            "lengthChange": true,
+            "searching": true,
             "ordering": true,
             "info": true,
-            "autoWidth": false,
+            "autoWidth": true,
             "responsive": true,
         });
     });

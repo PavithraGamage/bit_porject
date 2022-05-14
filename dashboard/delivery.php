@@ -64,7 +64,7 @@ $db = db_con();
             </tbody>
         </table>
     </div>
-    <!-- Dashbaord Content Area End -->
+    <!-- Dashboard Content Area End -->
 </div>
 </div>
 

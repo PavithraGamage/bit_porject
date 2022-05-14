@@ -96,12 +96,12 @@ unset($_SESSION['cart']);
     <!-- content start-->
     <div class="container">
         <div class="row item_row_main">
-            <div class="row">
+            <div class="row" id="invoice">
 
                 <?php
 
                 //individual order data fletch
-               $sql = "SELECT o.order_date, u.first_name, u.last_name, c.address_l1, c.address_l2, c.contact_nmuber, u.email, o.order_number, c.city FROM orders o INNER JOIN users u ON o.user_id = u.user_id INNER JOIN customers c ON u.user_id = c.user_id WHERE o.order_id = $order_id;";
+                $sql = "SELECT o.order_date, u.first_name, u.last_name, c.address_l1, c.address_l2, c.contact_nmuber, u.email, o.order_number, c.city FROM orders o INNER JOIN users u ON o.user_id = u.user_id INNER JOIN customers c ON u.user_id = c.user_id WHERE o.order_id = $order_id;";
 
                 $result = $db->query($sql);
 
@@ -181,7 +181,7 @@ unset($_SESSION['cart']);
                     <tbody>
                         <?php
 
-                       $sql = "SELECT oi.item_qty, i.item_name, i.warranty_period, i.discount_rate, i.sale_price, i.unit_price FROM orders_items oi INNER JOIN orders o ON o.order_id = oi.order_id INNER JOIN users u ON o.user_id = u.user_id INNER JOIN province p ON o.delivery_charge = p.id INNER JOIN customers c ON u.user_id = c.user_id INNER JOIN items i ON oi.item_id = i.item_id WHERE o.order_id = $order_id;";
+                        $sql = "SELECT oi.item_qty, i.item_name, i.warranty_period, i.discount_rate, i.sale_price, i.unit_price FROM orders_items oi INNER JOIN orders o ON o.order_id = oi.order_id INNER JOIN users u ON o.user_id = u.user_id INNER JOIN province p ON o.delivery_charge = p.id INNER JOIN customers c ON u.user_id = c.user_id INNER JOIN items i ON oi.item_id = i.item_id WHERE o.order_id = $order_id;";
 
                         $result = $db->query($sql);
 
@@ -237,7 +237,7 @@ unset($_SESSION['cart']);
                 ?>
                         <p class="lead">Payment Method: <?php echo $row['name'] ?></p>
                         <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
-                        <?php echo $row['description'] ?>
+                            <?php echo $row['description'] ?>
                         </p>
             </div>
             <!-- /.col -->
@@ -247,7 +247,7 @@ unset($_SESSION['cart']);
                 <div class="table-responsive">
                     <table class="table">
                         <tr>
-                            <th style="width:50%">Subtotal:</th>
+                            <th style="width:50%">Item(s):</th>
                             <td>LKR: <?php echo number_format($row['order_total'], 2); ?></td>
                         </tr>
                         <tr>
@@ -255,12 +255,20 @@ unset($_SESSION['cart']);
                             <td>LKR: (-<?php echo number_format($row['total_discount'], 2); ?>)</td>
                         </tr>
                         <tr>
+                            <th>Est Total:</th>
+                            <td>LKR: <?php echo number_format($row['order_total'] - $row['total_discount'], 2); ?></td>
+                        </tr>
+                        <tr>
                             <th>Delivery:</th>
                             <td>LKR: <?php echo number_format($row['price'], 2); ?></td>
                         </tr>
                         <tr>
-                            <th>Total:</th>
-                            <td>LKR: <?php echo number_format($row['grand_total'], 2); ?></td>
+                            <th>
+                                <h5>Total:</h5>
+                            </th>
+                            <td><b>
+                                    <h5><?php echo number_format($row['grand_total'], 2); ?></h5>
+                                </b></td>
                         </tr>
                     </table>
                 </div>
@@ -281,7 +289,7 @@ unset($_SESSION['cart']);
             <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Dashboard</button>
         </a>
 
-        <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
+        <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default" onclick="window.print(invoice);"><i class="fas fa-print"></i> Print</a>
         <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
             <i class="fas fa-download"></i> Generate PDF
         </button>
@@ -295,9 +303,9 @@ unset($_SESSION['cart']);
     <!-- footer start -->
     <?php
 
-include "footer.php";
+    include "footer.php";
 
-?>
+    ?>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
 
 

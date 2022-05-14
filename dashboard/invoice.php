@@ -12,7 +12,7 @@ if (empty($order_id)) {
 ?>
 <!-- content start-->
 <div class="container">
-    <div class="row item_row_main">
+    <div class="row item_row_main" id="invoice">
         <div class="row">
 
             <?php
@@ -60,8 +60,8 @@ if (empty($order_id)) {
                     To
                     <address>
                         <strong><?php echo $row['first_name'] . " " . $row['last_name']; ?></strong><br>
-                        <?php echo $row['address_l1']?>
-                        <?php echo $row['address_l2']?><br>
+                        <?php echo $row['address_l1'] ?>
+                        <?php echo $row['address_l2'] ?><br>
                         <?php echo $row['city'] ?><br>
                         Phone: <?php echo $row['contact_nmuber'] ?><br>
                         Email: <?php echo $row['email'] ?>
@@ -150,7 +150,7 @@ if (empty($order_id)) {
             ?>
                     <p class="lead">Payment Method: <?php echo $row['name'] ?></p>
                     <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
-                      
+
                         <?php echo $row['description'] ?>
                     </p>
         </div>
@@ -161,7 +161,7 @@ if (empty($order_id)) {
             <div class="table-responsive">
                 <table class="table">
                     <tr>
-                        <th style="width:50%">Subtotal:</th>
+                        <th style="width:50%">Item(s):</th>
                         <td>LKR: <?php echo number_format($row['order_total'], 2); ?></td>
                     </tr>
                     <tr>
@@ -169,12 +169,20 @@ if (empty($order_id)) {
                         <td>LKR: (-<?php echo number_format($row['total_discount'], 2); ?>)</td>
                     </tr>
                     <tr>
+                        <th>Est Total:</th>
+                        <td>LKR: <?php echo number_format($row['order_total'] - $row['total_discount'], 2); ?></td>
+                    </tr>
+                    <tr>
                         <th>Delivery:</th>
                         <td>LKR: <?php echo number_format($row['price'], 2); ?></td>
                     </tr>
                     <tr>
-                        <th>Total:</th>
-                        <td>LKR: <?php echo number_format($row['grand_total'], 2); ?></td>
+                        <th>
+                            <h5>Total:</h5>
+                        </th>
+                        <td><b>
+                                <h5><?php echo number_format($row['grand_total'], 2); ?></h5>
+                            </b></td>
                     </tr>
                 </table>
             </div>
@@ -193,6 +201,7 @@ if (empty($order_id)) {
         <a href="orders.php">
             <button type="button" class="btn btn-success float-right"><i class="fas fa-shopping-cart"></i> Orders</button>
         </a>
+        <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default" onclick="print_invoice();"><i class="fas fa-print"></i> Print</a>
     </div>
 </div>
         </div>
@@ -205,3 +214,16 @@ if (empty($order_id)) {
 include "site_footer.php";
 
 ?>
+
+<script>
+    function print_invoice() {
+
+        var print_win = window.open("");
+
+        print_win.document.write(document.getElementById("invoice").innerHTML);
+
+        print_win.print();
+
+
+    }
+</script>
