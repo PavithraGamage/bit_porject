@@ -2,6 +2,9 @@
 include 'config.php';
 include 'functions.php';
 
+// default time zone
+date_default_timezone_set("Asia/Colombo");
+
 //session start
 session_start();
 

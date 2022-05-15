@@ -43,6 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $error['courier_status'] = "Status Name Should Not Be Empty";
     }
 
+     if (empty($role)) {
+        $error['status'] = "Role Name Should Not Be Empty";
+    }
+
 
     // Advance Validation
     if (!empty($courier_status)) {
@@ -57,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
     if (empty($error)) {
 
-        $sql = "INSERT INTO `courier_status` (`id`, `courier_status`) VALUES (NULL, '$courier_status');";
+        $sql = "INSERT INTO `courier_status` (`id`, `courier_status`, `user_role_id`) VALUES (NULL, '$courier_status', '$role');";
 
         // run database query
         $query = $db->query($sql);
@@ -85,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
     $btn_icon = '<i class="far fa-edit"></i>';
 
     // check recodes in DB
-    $sql = "SELECT * FROM `courier_status` WHERE id = '$id'";
+    $sql = "SELECT * FROM courier_status cs WHERE id = $id;";
 
     $result = $db->query($sql);
 
@@ -95,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 
         $id = $row['id'];
         $courier_status = $row['courier_status'];
+        $role = $row['user_role_id'];
     }
 }
 
@@ -116,20 +121,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         $error['courier_status'] = "Status Name Should Not Be Empty";
     }
 
-
-    // Advance Validation
-    if (!empty($courier_status)) {
-
-        $sql = "SELECT * FROM `courier_status` WHERE courier_status = '$courier_status'";
-        $result = $db->query($sql);
-
-        if ($result->num_rows > 0) {
-            $error['courier_status'] = "Status Name <b> $courier_status </b> Already Exists";
-        }
+    if (empty($role)) {
+        $error['status'] = "Role Name Should Not Be Empty";
     }
+
     // update query
     if (empty($error)) {
-       $sql = "UPDATE `courier_status` SET `courier_status` = '$courier_status' WHERE id = $id;";
+       $sql = "UPDATE `courier_status` SET `courier_status` = '$courier_status' , `user_role_id` = '$role' WHERE id = $id;";
 
         // run database query
         $query = $db->query($sql);
@@ -140,17 +138,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     }
 }
 
-// delete recode
+// inactive  recode
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
     $sql = "UPDATE `courier_status` SET `status` = '1' WHERE id = $id;";
 
     $db->query($sql);
 
-    $error['delete_msg'] = "Recode Delete";
+    $error['delete_msg'] = "Recode Inactive";
 
     // error styles
     $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+}
+
+// inactive  active
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
+
+    $sql = "UPDATE `courier_status` SET `status` = '0' WHERE id = $id;";
+
+    $db->query($sql);
+
+    $error['delete_msg'] = "Recode active";
+
+    // error styles
+    $error_style['success'] = "alert-success";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
 ?>
@@ -195,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 <div class="card">
                     <h5 class="card-header bg-danger">Conformation</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $courier_status ?> ?</b> </h5>
+                        <h5 class="card-title">Are You Want to Inactive <b> <?php echo $courier_status ?> ?</b> </h5>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                             <input type="hidden" name="id" value="<?php echo $id ?>"><br>
                             <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
@@ -222,6 +234,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     <!-- form start -->
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                         <div class="card-body">
+                        <div class="form-group">
+                                <label for="exampleInputEmail1">Role Name</label>
+                                <select class="form-control select2" style="width: 100%;" name="role">
+                                    <option value="">- Select User Role -</option>
+                                    <?php
+
+                                    // model drop down data fletch 
+                                    $sql = "SELECT * FROM `user_roles` WHERE status = 0";
+                                    $result = $db->query($sql);
+
+                                    // fletch data
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
+                                    ?>
+                                            <option value="<?php echo $row['user_role_id'] ?>" <?php if ($row['user_role_id'] == @$role) { ?> selected <?php } ?>><?php echo $row['role_name']; ?></option>
+                                    <?php
+
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Status Name</label>
                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Status Name" name="courier_status" value="<?php echo @$courier_status ?>">
@@ -242,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 <?php
 
                 // sql query
-                $sql = "SELECT * FROM `courier_status` WHERE status = 0;";
+                $sql = "SELECT cs.id, cs.courier_status, ur.role_name, s.status_name FROM courier_status cs INNER JOIN user_roles ur ON ur.user_role_id = cs.user_role_id INNER JOIN status s ON s.status_id = cs.status;";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -258,7 +292,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Status Name</th>
+                                    <th>Courier Status</th>
+                                    <th>User Role</th>
                                     <th>Status</th>
                                     <th>Edit</th>
                                     <th>Inactive</th>
@@ -274,7 +309,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                         <tr>
                                             <td><?php echo $row['id'] ?> </td>
                                             <td><?php echo $row['courier_status'] ?> </td>
-                                            <td><?php echo $row['courier_status'] ?> </td>
+                                            <td><?php echo $row['role_name'] ?> </td>
+                                            <td><?php echo $row['status_name'] ?> </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                                     <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
@@ -315,12 +351,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 <!-- Page specific script -->
 <script>
     $(function() {
-        // $("#user_list").DataTable({
-        //     "responsive": true,
-        //     "lengthChange": false,
-        //     "autoWidth": false,
-        //     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        // }).buttons().container().appendTo('#user_list_wrapper .col-md-6:eq(0)');
         $('#brand_list').DataTable({
             "paging": true,
             "lengthChange": true,

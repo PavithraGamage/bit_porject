@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
                                     <?php
 
                                     // model drop down data fletch 
-                                    $sql = "SELECT * FROM `courier_status` WHERE status = 0";
+                                    $sql = "SELECT * FROM `courier_status` WHERE status = 0 AND user_role_id = 1";
                                     $result = $db->query($sql);
 
                                     // fletch data

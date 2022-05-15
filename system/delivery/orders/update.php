@@ -309,7 +309,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                 <?php
 
                                 // sql query
-                                $sql = "SELECT * FROM `courier_status` WHERE status = 0;";
+                                $sql = "SELECT * FROM `courier_status` WHERE status = 0 AND user_role_id = 2;";
 
                                 // fletch data
                                 $result = $db->query($sql);
@@ -330,7 +330,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="tracking_number" value="<?php echo @$tracking_number ?>">
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Dispatch Date at Warehouse : <span style="color: red;">*</span></label>
+                                <label for="exampleInputEmail1">Dispatch Date: <span style="color: red;">*</span></label>
                                 <input type="date" class="form-control" id="exampleInputEmail1" placeholder="Enter Brand Name" name="dispatch_date" value="<?php echo @$dispatch_date ?>" min="<?php echo date("Y-m-d") ?>">
                             </div>
                         </div>

@@ -23,7 +23,6 @@ if (empty($order_id)) {
     INNER JOIN payment_methord pm ON pm.id = o.payment_id
     WHERE o.order_id = $order_id;";
 
-
     $result = $db->query($sql);
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -49,8 +48,10 @@ if (empty($order_id)) {
            
 
     <?php
-
+           
         }
+    }else{
+        echo "<h3 style = 'color:red'>Please Wait..! Delivery details update when the order dispatched!</h3>";
     }
     ?>
 </div> 

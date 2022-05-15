@@ -1,99 +1,164 @@
 <?php
+ob_start(); // multiple headers
 
+include '../../header.php';
+include '../../nav.php';
 
-session_start();
+// extract variables
+extract($_POST);
 
-$order_id = $_SESSION['order_id'];
-
-include "system/functions.php";
-
+// DB Connection
 $db = db_con();
-// redirect
-if (empty($_SESSION['cart'])) {
-    header('Location: http://localhost/bit/cart.php');
+
+// form Name
+$form_name = 'Insert Courier Details';
+
+// form button name change
+$btn_name = "Insert";
+
+// form button value change
+$btn_value = "insert";
+
+// form button icon
+$btn_icon = '<i class="far fa-save"></i>';
+
+
+// create error variable to store error messages
+$error =  array();
+
+// create error variable to store error message styles
+$error_style =  array();
+$error_style_icon = array();
+
+if (empty($order_id)) {
+    header('Location: http://localhost/bit/system/orders/process/add.php');
 }
 
-unset($_SESSION['cart']);
+
+// update the edit data
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
+
+    // error styles
+    $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+
+    // call data clean function
+    $status =  data_clean($status);
+    
+
+    // basic validation
+    if (empty($status)) {
+        $error['status'] = "Status not be blank";
+    }
+
+
+    // update query
+    if (empty($error)) {
+
+        $sql = "UPDATE `orders` SET `courier_status` = '$status' WHERE `orders`.`order_id` = $order_id;";
+
+        // run database query
+        $query = $db->query($sql);
+
+        $error_style['success'] = "alert-success";
+        $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
+        $error['update'] = "Successfully Updated";
+
+       
+    }
+}
 
 
 ?>
-<!doctype html>
-<html lang="en">
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                        <div class="row">
+                            <div class="col-4">
+                                <h4 class="m-0">Order Status</h4>
+                            </div>
+                            <div class="col-6">
+                                <select class="form-control select2" style="width: 100%;" name="status">
+                                    <option value="">- Select Status -</option>
+                                    <?php
 
-    <!-- Bootstrap CSS -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+                                    // model drop down data fletch 
+                                    $sql = "SELECT * FROM `courier_status` WHERE status = 0 AND user_role_id = 3";
+                                    $result = $db->query($sql);
 
-    <title><?php echo ucfirst(pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME));  ?></title>
+                                    // fletch data
+                                    if ($result->num_rows > 0) {
+                                        while ($row = $result->fetch_assoc()) {
+                                    ?>
+                                            <option value="<?php echo $row['id'] ?>" <?php if ($row['id'] == @$status) { ?> selected <?php } ?>><?php echo $row['courier_status']; ?></option>
+                                    <?php
 
-    <!--main style -->
-    <link href="assets/css/style.css" rel="stylesheet" type="text/css" />
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-2">
 
-
-    <!--fontawesome icons-->
-    <link href="assets/icons/fontawesome-free-5.15.4-web/css/all.css" rel="stylesheet" type="text/css" />
-
-
-
-</head>
-
-<body>
-    <!--Navigation Start-->
-    <div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
-            <div class="container-fluid">
-                <a class="navbar-brand" style="color: white;" href="http://localhost/bit/">
-                    <i class="fas fa-globe"></i> U-Star Digital
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" aria-current="page" href="http://localhost/bit/">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/shop.php">Shop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/about.php">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/services.php">Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/contact.php">Contact</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php">
-                                <i class="fas fa-cart-arrow-down"></i> Cart
-                                <?php
-
-                                if (!empty($_SESSION['cart'])) {
-
-                                    echo count(array_keys($_SESSION['cart']));
-                                }
-
-                                ?>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+                                <input type="hidden" name="order_id" value="<?php echo $order_id ?>">
+                                <button type="submit" class="btn btn-primary" name="action" value="update">Change</button>
+                            </div>
+                        </div>
+                    </form>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Delivery Charges</a></li>
+                        <li class="breadcrumb-item active">Add</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </div>
-    <!--Navigation End-->
+    <!-- Alerts -->
+    <div class="container-fluid">
 
-    <!--Hero Section End-->
-    <!-- content start-->
+        <!-- Insert / update / delete / blank / already exist alerts-->
+        <?php show_error($error, $error_style, $error_style_icon); ?>
+
+        <!-- Delete -->
+        <?php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
+
+            $sql = "SELECT * FROM `orders_company` WHERE order_id = '$order_id'";
+
+            $result = $db->query($sql);
+
+            if ($result->num_rows > 0) {
+
+                $row = $result->fetch_assoc();
+                $order_id = $row['order_id'];
+
+
+        ?>
+                <div class="card">
+                    <h5 class="card-header bg-danger">Conformation</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">Are You Want to DELETE ? </h5>
+                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                            <input type="hidden" name="order_id" value="<?php echo $order_id ?>"><br>
+                            <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
+                            <button type="submit" name="action" value="cancel_delete" class="btn btn-primary btn-s">No</button>
+                        </form>
+
+                    </div>
+                </div>
+
+        <?php
+            }
+        }
+        ?>
+
+    </div>
     <div class="container">
         <div class="row item_row_main">
             <div class="row" id="invoice">
@@ -101,7 +166,7 @@ unset($_SESSION['cart']);
                 <?php
 
                 //individual order data fletch
-                $sql = "SELECT o.order_date, u.first_name, u.last_name, c.address_l1, c.address_l2, c.contact_nmuber, u.email, o.order_number, c.city FROM orders o INNER JOIN users u ON o.user_id = u.user_id INNER JOIN customers c ON u.user_id = c.user_id WHERE o.order_id = $order_id;";
+             $sql = "SELECT o.order_date, u.first_name, u.last_name, c.address_l1, c.address_l2, c.contact_nmuber, u.email, o.order_number, c.city FROM orders o INNER JOIN users u ON o.user_id = u.user_id INNER JOIN customers c ON u.user_id = c.user_id WHERE o.order_id = $order_id;";
 
                 $result = $db->query($sql);
 
@@ -110,10 +175,7 @@ unset($_SESSION['cart']);
 
                 ?>
 
-                        <div class="col">
-                            <h3> <i class="fas fa-map-marker-alt"></i> Invoice for your Order</h3>
-                        </div>
-                        <hr style="margin-top:10px">
+
             </div>
             <div class="invoice p-3 mb-3">
                 <!-- title row -->
@@ -280,36 +342,32 @@ unset($_SESSION['cart']);
                     }
                 }
 ?>
-<!-- /.row -->
-
-<!-- this row will not appear when printing -->
-<div class="row no-print">
-    <div class="col-12">
-        <a href="dashboard/dashboard.php">
-            <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Dashboard</button>
-        </a>
-
-        <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default" onclick="window.print(invoice);"><i class="fas fa-print"></i> Print</a>
-        <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-            <i class="fas fa-download"></i> Generate PDF
-        </button>
-    </div>
-</div>
             </div>
-
         </div>
     </div>
-    <!-- content end-->
-    <!-- footer start -->
-    <?php
-
-    include "footer.php";
-
-    ?>
-    <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
 
 
-</body>
+</div>
+<?php include '../../footer.php'; ?>
 
-</html>
-<!-- footer end -->
+<!-- Page specific script -->
+<script>
+    $(function() {
+        // $("#user_list").DataTable({
+        //     "responsive": true,
+        //     "lengthChange": false,
+        //     "autoWidth": false,
+        //     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        // }).buttons().container().appendTo('#user_list_wrapper .col-md-6:eq(0)');
+        $('#brand_list').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+        });
+    });
+</script>
+<?php ob_end_flush(); ?>

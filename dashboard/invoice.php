@@ -181,7 +181,7 @@ if (empty($order_id)) {
                             <h5>Total:</h5>
                         </th>
                         <td><b>
-                                <h5><?php echo number_format($row['grand_total'], 2); ?></h5>
+                                <h5>LKR: <?php echo number_format($row['grand_total'], 2); ?></h5>
                             </b></td>
                     </tr>
                 </table>

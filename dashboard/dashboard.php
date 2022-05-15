@@ -50,7 +50,22 @@ $user_id =  $_SESSION['user_id'];
                     <h6> <i class="fas fa-truck"></i> Delivery</h6>
                 </div>
                 <div class="col-3">
-                    <h6 class="dash_info_box_number">10</h6>
+                  
+                    <h6 class="dash_info_box_number">
+                        <?php
+
+                        $sql = "SELECT COUNT(*) FROM orders o WHERE o.user_id = $user_id AND o.courier_status = 8;";
+
+                        $result = $db->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo $row['COUNT(*)'];
+                            }
+                        }
+
+                        ?>
+                    </h6>
                 </div>
             </div>
         </div>

@@ -16,7 +16,8 @@ $db = db_con();
                 <tr>
                     <th scope="col" class="table_head">Order Number</th>
                     <th scope="col" class="table_head">Order Date</th>
-                    <th scope="col" class="table_head">Delivery Company Name</th>
+                    <th scope="col" class="table_head">Delivery Charges</th>
+                    <th scope="col" class="table_head">Payment Method</th>
                     <th scope="col" class="table_head">Status</th>
                     <th scope="col" class="table_head">Action</th>
                 </tr>
@@ -25,29 +26,33 @@ $db = db_con();
 
                 <?php
 
+                // create session for the user id
                 $user_id =  $_SESSION['user_id'];
 
+                // query for fletch data 
+                $sql = "SELECT o.order_id, o.order_number, o.order_date, p.price, pm.name, cs.courier_status
+                FROM orders o
+                INNER JOIN province p ON p.id = o.delivery_charge
+                INNER JOIN payment_methord pm ON pm.id = o.payment_id
+                INNER JOIN courier_status cs ON cs.id = o.courier_status
+                WHERE o.user_id = $user_id ORDER BY `o`.`order_date` DESC";
 
-                $sql = "SELECT o.order_number, o.order_date, cp.company_name, oc.dispatch_date, cs.courier_status, o.order_id FROM orders_company oc INNER JOIN orders o ON o.order_id = oc.order_id INNER JOIN courier_companies cp ON cp.company_id = oc.company_id INNER JOIN courier_status cs ON cs.id = o.courier_status WHERE o.user_id = $user_id ORDER BY `o`.`order_date` DESC";
-
+                // run query
                 $result = $db->query($sql);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
 
-
                 ?>
                         <tr>
-
                             <td class="table_body"><?php echo $row['order_number']; ?></td>
                             <td class="table_body"><?php echo $row['order_date']; ?></td>
-                            <td class="table_body"><?php echo $row['company_name']; ?></td>
+                            <td class="table_body"><?php echo "LKR " . number_format($row['price'], 2); ?></td>
+                            <td class="table_body"><?php echo $row['name']; ?></td>
                             <td class="table_body"><?php echo $row['courier_status']; ?></td>
                             <td>
                                 <form action="delivery_info.php" method="post">
                                     <input type="hidden" name="order_id" value="<?php echo $row['order_id'] ?>">
-                                    <a href="view.php">
-                                        <button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i> View</button>
-                                    </a>
+                                    <button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"> <i class="fas fa-eye"></i> View</button>
                                 </form>
 
                             </td>

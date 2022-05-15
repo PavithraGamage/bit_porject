@@ -8,19 +8,9 @@ extract($_POST);
 // DB Connection
 $db = db_con();
 
+// error array for error messages
 $error = array();
 
-// insert brands
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
-
-    if (empty($start_date)) {
-        $error['start_date'] = "Select Start Date";
-    }
-
-    if (empty($end_date)) {
-        $error['end_date'] = "Select End Date";
-    }
-}
 ?>
 
 <div class="content-wrapper">
@@ -60,21 +50,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
                                 <div class="col-3">
                                     <label>Start Date: </label>
                                     <input type="date" name="start_date" value="<?php echo @$start_date ?>">
-                                    <p style="color: red;"><?php echo @$error['start_date'] ?></p>
                                 </div>
                                 <div class="col-3">
-
                                     <label>End Date: </label>
                                     <input type="date" name="end_date" value="<?php echo @$end_date ?>">
-                                    <p style="color: red;"><?php echo @$error['end_date'] ?></p>
-
                                 </div>
                                 <div class="col-3">
-                                    <button name="action" class="btn btn-primary" value="search" type="submit">View</button>
-                                    <button name="action" class="btn btn-primary" value="reset" onclick="location.reload();" type="submit">Reset</button>
+                                    <button name="action" class="btn btn-primary" value="search" type="submit">Filter by Date</button>
+                                    <button name="action" class="btn btn-primary" value="today" type="submit">Today</button>
                                 </div>
                             </div>
-
                         </form>
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
@@ -92,12 +77,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
                             <tbody>
                                 <?php
 
+                                // crate variable for store dynamic query
+                                $where = null;
+
+                                // date range check
+                                if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
+
+                                    // date validations
+                                    if (empty($start_date)) {
+
+                                        $error['start_date'] = "Select Start Date";
+                                        echo  "<div style = 'color:red;'>" . @$error['start_date'] . "</div>";
+                                    }
+
+                                    if (empty($end_date)) {
+
+                                        $error['end_date'] = "Select End Date";
+                                        echo  "<div style = 'color:red;'>" . @$error['end_date'] . "</div>";
+                                    }
+
+                                    // dynamic query
+                                    if (!empty($start_date) and !empty($end_date)) {
+
+                                        $where = "WHERE (o.order_date BETWEEN '$start_date' AND '$end_date')";
+                                    }
+                                }
+                                
+                                // today orders check
+                                if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'today') {
+
+                                    $date = date("Y-m-d");
+                                    // dynamic query
+                                    $where = "WHERE o.order_date = '$date';";
+                                }
+
                                 $sql = "SELECT o.order_id, o.order_number, o.order_date, u.user_name, o.grand_total, pm.name, o.order_time, cs.courier_status
                                 FROM orders o
                                 INNER JOIN users u ON u.user_id = o.user_id
                                 INNER JOIN customers c ON c.user_id = u.user_id
                                 INNER JOIN payment_methord pm ON pm.id = o.payment_id
-                                INNER JOIN courier_status cs ON cs.id = o.courier_status;";
+                                INNER JOIN courier_status cs ON cs.id = o.courier_status $where";
 
                                 $result = $db->query($sql);
 
@@ -123,9 +142,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
 
                                         </tr>
                                 <?php
-
-
-                                            
                                     }
                                 }
                                 ?>
