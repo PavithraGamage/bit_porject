@@ -4,12 +4,21 @@ include '../../nav.php';
 
 // extract variables
 extract($_POST);
+extract($_GET);
 
 // DB Connection
 $db = db_con();
 
 // error array for error messages
 $error = array();
+
+// update notification
+if(!empty($notification_order_id)){
+
+$sql = "UPDATE `orders` SET `notifications` = '1' WHERE `orders`.`order_id` = $notification_order_id;";
+$db->query($sql);
+
+}
 
 ?>
 

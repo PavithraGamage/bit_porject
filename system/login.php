@@ -85,6 +85,8 @@ session_start();
                             $_SESSION['profile_image'] = $row['profile_image'];
                             $_SESSION['created_date'] = $row['created_date'];
                             $_SESSION['status'] = $row['status'];
+                            $_SESSION['user_role'] = $row['user_role'];
+
                         } else {
 
                             $error['password'] = "Invalided user name or password";

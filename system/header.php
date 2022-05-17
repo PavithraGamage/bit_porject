@@ -1,12 +1,13 @@
 <?php
+//session start
+session_start();
+
 include 'config.php';
 include 'functions.php';
 
 // default time zone
 date_default_timezone_set("Asia/Colombo");
 
-//session start
-session_start();
 
 //validate user login
 if (!isset($_SESSION['user_id'])) {
@@ -15,8 +16,6 @@ if (!isset($_SESSION['user_id'])) {
     $path = SITE_URL . "login.php";
     header("Location: $path");
 }
-
-
 
 ?>
 <!DOCTYPE html>

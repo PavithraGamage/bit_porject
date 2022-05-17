@@ -4,6 +4,15 @@ include '../../nav.php';
 
 // extract variables
 extract($_POST);
+extract($_GET);
+
+// update notification
+if (!empty($notification_user_id)) {
+
+    $sql = "UPDATE `users` SET `u_notification` = '1' WHERE `users`.`user_id` = $notification_user_id;";
+    $db->query($sql);
+}
+
 
 // DB Connection
 $db = db_con();
@@ -479,7 +488,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
     </div>
     <div class="container-fluid">
         <div class="row">
-           
+
             <!-- Right Section Start -->
             <div class="col">
                 <?php

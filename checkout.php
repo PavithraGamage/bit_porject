@@ -18,7 +18,7 @@ $db = db_con();
 // create error variable to store error messages
 $error =  array();
 
-if($_SESSION['cart_error'] == true){
+if ($_SESSION['cart_error'] == true) {
     header('Location: http://localhost/bit/cart.php');
 }
 
@@ -383,7 +383,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         // run database query
         $query = $db->query($sql_delivery);
 
-        // ----------- update order and stock -----------------
+        // ----------- update order -----------------
 
         // session cart extract
         foreach ($_SESSION['cart'] as $product) {
@@ -398,6 +398,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
             //run sql query
             $db->query($sql);
 
+            // ----------- update stock --------------------
+
             // fetch the item stock to get stock count
             $sql_items = "SELECT * FROM `items` WHERE item_id = $item_id";
             $result = $db->query($sql_items);
@@ -406,6 +408,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
             // take individual item stock
             $item_stock =  $row['stock'];
+
+            // take re order level
+            $reorder_level = $row['recorder_level'];
 
             // update new stock
             $stock_update =  $item_stock - $item_qty;
@@ -429,6 +434,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                 $sql_stock = "UPDATE `items` SET `stock_status` = '1' WHERE `items`.`item_id` = $item_id";
                 //run sql query
                 $db->query($sql_stock);
+            }
+            
+            // low stock check
+            if ($reorder_level != $new_stock) {
+
+                // update stock status
+                $sql_reorder_stock = "UPDATE `items` SET `item_notification` = '1' WHERE `items`.`item_id` = $item_id";
+                //run sql query
+                $db->query($sql_reorder_stock);
             }
         }
     }
@@ -816,7 +830,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                     </div>
                                     <hr>
                                     <div>
-                                        <h6>LKR: (-<?php echo  number_format($_SESSION['grand_total_sale'],2);  ?>)</h6>
+                                        <h6>LKR: (-<?php echo  number_format($_SESSION['grand_total_sale'], 2);  ?>)</h6>
                                     </div>
                                     <hr>
                                     <div>

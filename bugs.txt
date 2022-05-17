@@ -57,3 +57,14 @@ SELECT *
 FROM users u
 INNER JOIN staff s ON s.user_id = u.user_id
 WHERE u.status = 0;
+
+
+Appointments Query
+-----------------------------------------------------
+SELECT i.item_name
+FROM orders_items oi
+INNER JOIN items i ON i.item_id = oi.item_id
+INNER JOIN orders o ON o.order_id = oi.order_id
+INNER JOIN users u ON u.user_id = o.user_id
+WHERE o.user_id = 4
+GROUP BY (i.item_name);

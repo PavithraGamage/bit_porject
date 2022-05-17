@@ -4,6 +4,15 @@ include '../../nav.php';
 
 // extract variables
 extract($_POST);
+extract($_GET);
+
+// update notification
+if (!empty($notification_order_id)) {
+
+    $sql = "UPDATE `orders` SET `notifications` = '3' WHERE `orders`.`order_id` = $notification_order_id;";
+    $db->query($sql);
+}
+
 
 // DB Connection
 $db = db_con();
@@ -69,6 +78,7 @@ $error = array();
                                     <th>Order Time</th>
                                     <th>Customer First Name</th>
                                     <th>Customer Last Name</th>
+                                    <th>Status</th>
                                     <th>View</th>
                                 </tr>
                             </thead>
@@ -109,11 +119,13 @@ $error = array();
                                     $where = "WHERE o.order_date = '$date'";
                                 }
 
-                                $sql = "SELECT o.order_id, o.order_number, o.order_date, o.order_time, u.first_name, u.last_name
-                                FROM orders o 
-                                INNER JOIN users u ON u.user_id = o.user_id 
-                                INNER JOIN customers c ON c.user_id = u.user_id 
-                                INNER JOIN payment_methord pm ON pm.id = o.payment_id  $where AND o.courier_status = 3";
+                                $sql = "SELECT o.order_id, o.order_number, o.order_date, o.order_time, u.first_name, u.last_name, cs.courier_status
+                              FROM orders o 
+                              INNER JOIN users u ON u.user_id = o.user_id 
+                              INNER JOIN customers c ON c.user_id = u.user_id 
+                              INNER JOIN payment_methord pm ON pm.id = o.payment_id
+                              INNER JOIN courier_status cs ON cs.id = o.courier_status
+                              AND o.courier_status IN (3,5,6);";
 
                                 $result = $db->query($sql);
 
@@ -125,10 +137,9 @@ $error = array();
                                             <td><?php echo  $row['order_number']; ?> </td>
                                             <td><?php echo  $row['order_date']; ?></td>
                                             <td><?php echo  $row['order_time']; ?></td>
-                                            <td><?php echo  $row['first_name'];?></td>
-                                           
+                                            <td><?php echo  $row['first_name']; ?></td>
                                             <td><?php echo  $row['last_name']; ?> </td>
-
+                                            <td><?php echo  $row['courier_status']; ?></td>
                                             <td>
                                                 <form action="view_invoice.php" method="post">
                                                     <input type="hidden" name="order_id" value="<?php echo $row['order_id'] ?>">

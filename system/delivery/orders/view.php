@@ -4,6 +4,14 @@ include '../../nav.php';
 
 // extract variables
 extract($_POST);
+extract($_GET);
+
+// update notification
+if (!empty($notification_order_id)) {
+
+    $sql = "UPDATE `orders` SET `notifications` = '2' WHERE `orders`.`order_id` = $notification_order_id;";
+    $db->query($sql);
+}
 
 // DB Connection
 $db = db_con();
@@ -52,7 +60,7 @@ $error = array();
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                             <div class="row">
                                 <div class="col-3">
                                     <label>Start Date: </label>
@@ -84,7 +92,7 @@ $error = array();
                             <tbody>
                                 <?php
 
-                                
+
                                 // crate variable for store dynamic query
                                 $where = null;
 
@@ -110,7 +118,7 @@ $error = array();
                                         $where = "WHERE (o.order_date BETWEEN '$start_date' AND '$end_date')";
                                     }
                                 }
-                                
+
                                 // today orders check
                                 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'today') {
 
@@ -120,7 +128,7 @@ $error = array();
                                 }
 
 
-                                 $sql = "SELECT o.order_number, o.order_date, dd.frist_name, dd.last_name, pm.name, p.price, dd.city, o.order_id, cs.courier_status
+                                $sql = "SELECT o.order_number, o.order_date, dd.frist_name, dd.last_name, pm.name, p.price, dd.city, o.order_id, cs.courier_status
                                 FROM orders o 
                                 INNER JOIN delivery_details dd ON dd.order_id = o.order_id 
                                 INNER JOIN payment_methord pm ON pm.id = o.payment_id 

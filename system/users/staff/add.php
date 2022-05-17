@@ -38,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
     // call data clean function
-
     $first_name = data_clean($first_name);
     $last_name =  data_clean($last_name);
     $nic = data_clean($nic);
@@ -51,9 +50,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     $city = data_clean($city);
     $postal_code = data_clean($postal_code);
 
-    // basic validation
+    // basic empty validation
     if (empty($first_name)) {
         $error['first_name'] = "First Name Should not be empty";
+    }
+
+    if (empty($user_roles)) {
+        $error['user_roles'] = "User Role Should not be empty";
     }
 
     if (empty($last_name)) {
@@ -101,7 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     }
 
     // Advance validation
-
     if (!preg_match("/^[a-zA-Z ]*$/", $first_name)) {
         $error['first_name'] = "Only Letters allowed for First Name";
     }
@@ -112,6 +114,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
     if (!preg_match("/^[0-9]*$/", $contact_number)) {
         $error['phone'] = "Phone number not valid";
+    }
+
+    if (!empty($nic)) {
+
+        // check old and new nic length
+        if ((strlen($nic) != 10) and (strlen($nic) != 12)) {
+
+            $error['nic'] = "NIC not valid";
+        }
+
+        // check old nic last string equal to V
+        if (strlen($nic) == 10) {
+
+            if (substr($nic, -1) != "V") {
+                $error['nic'] = "NIC not valid format";
+            }
+        }
     }
 
     if (!preg_match("/^[a-zA-Z ]*$/", $city)) {
@@ -141,7 +160,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         } else {
 
             $sql_e = "SELECT * FROM users WHERE email = '$email'";
+
             $result_e = $db->query($sql_e);
+
             if ($result_e->num_rows > 0) {
                 $error['email'] = "Email Already Exists";
             }
@@ -180,7 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     //insert data to db
     if (empty($error)) {
 
-        $sql = "INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `first_name`, `last_name`, `profile_image`, `created_date`, `status`) VALUES (NULL, '$username', '$email', SHA1('$password'), '$first_name', '$last_name', '$photo', '$date', '0');";
+        $sql = "INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `first_name`, `last_name`, `profile_image`, `created_date`, `status`, `user_role`) VALUES (NULL, '$username', '$email', SHA1('$password'), '$first_name', '$last_name', '$photo', '$date', '0', '$user_roles');";
 
         //run database query
         $db->query($sql);
@@ -228,6 +249,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
         $username = $row['user_name'];
         $email = $row['email'];
         $password = $row['password'];
+        $user_roles = $row['user_role'];
     }
 
     $sql = "SELECT * FROM `staff` WHERE user_id = $user_id";
@@ -271,6 +293,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     // basic validation
     if (empty($first_name)) {
         $error['first_name'] = "First Name Should not be empty";
+    }
+
+    if (empty($user_roles)) {
+        $error['user_roles'] = "User Role Should not be empty";
     }
 
     if (empty($last_name)) {
@@ -399,7 +425,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     // update query
     if (empty($error)) {
 
-        $sql = "UPDATE `users` SET `user_name` = '$username', `email` = '$email', `password` = SHA1('$password'), `first_name` = '$first_name', `last_name` = '$last_name', `profile_image` = '$photo'    WHERE `user_id` = $user_id";
+        $sql = "UPDATE `users` SET `user_name` = '$username', `email` = '$email', `password` = SHA1('$password'), `first_name` = '$first_name', `last_name` = '$last_name', `profile_image` = '$photo', `user_role` = '$user_roles' WHERE `user_id` = $user_id";
         // run database query
         $query = $db->query($sql);
 
@@ -524,6 +550,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                                                     <label class="form-label" for="image">Profile Image <span style="color: red;">*</span></label>
                                                     <input type="file" class="form-control" id="profile_image" style="height: auto;" name="profile_image" />
                                                     <input type="hidden" class="form-control" id="previous_profile_image" name="previous_profile_image" value="<?php echo @$profile_image ?>">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>User Role <span style="color: red;">*</span></label>
+                                                    <select class="form-control select2" style="width: 100%;" name="user_roles">
+                                                        <option value="">- Select User Role -</option>
+                                                        <?php
+
+                                                        // categories drop down data fletch 
+                                                        $sql = "SELECT * FROM `user_roles` WHERE status = 0";
+                                                        $result = $db->query($sql);
+
+                                                        // fletch data
+                                                        if ($result->num_rows > 0) {
+                                                            while ($row = $result->fetch_assoc()) {
+                                                        ?>
+                                                                <option value="<?php echo $row['user_role_id'] ?>" <?php if ($row['user_role_id'] == @$user_roles) { ?> selected <?php } ?>><?php echo $row['role_name']; ?></option>
+                                                        <?php
+
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1">First Name</label>
