@@ -473,7 +473,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Category <span style="color: red;">*</span></label>
-                                                    <select class="form-control select2" style="width: 100%;" name="category" onchange="show_spec()" id="category">
+                                                    <select class="form-control select2" style="width: 100%;" name="category" onchange="show_spec()" onselect="filter_model()" id="category">
                                                         <option value="">- Select Category -</option>
                                                         <?php
 
@@ -723,6 +723,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
 
     }
 
+    function filter_model(){
+        alert("hello");
+    }
 
     $(document).ready(function() {
         show_spec();

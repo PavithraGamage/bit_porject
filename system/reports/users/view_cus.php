@@ -4,422 +4,26 @@ include '../../nav.php';
 
 // extract variables
 extract($_POST);
+extract($_GET);
+
+// update notification
+if (!empty($notification_user_id)) {
+
+    $sql = "UPDATE `users` SET `u_notification` = '1' WHERE `users`.`user_id` = $notification_user_id;";
+    $db->query($sql);
+}
+
 
 // DB Connection
 $db = db_con();
 
-// form Name
-$form_name = 'Insert New Customer';
-
-// form button name change
-$btn_name = "Insert";
-
-// form button value change
-$btn_value = "insert";
-
-// form button icon
-$btn_icon = '<i class="far fa-save"></i>';
 
 // create error variable to store error messages
 $error =  array();
 
-// create error variable to store error message styles
-$error_style =  array();
-$error_style_icon = array();
-
 // date
 $date = date('Y-m-d');
 
-//insert item
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
-
-    // error styles
-    $error_style['success'] = "alert-danger";
-    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
-
-    // call data clean function
-
-    $first_name = data_clean($first_name);
-    $last_name =  data_clean($last_name);
-    $username = data_clean($username);
-    $email = data_clean($email);
-    $contact_number = data_clean($contact_number);
-    $address_line_1 = data_clean($address_line_1);
-    $address_line_2 = data_clean($address_line_2);
-    $city = data_clean($city);
-    $postal_code = data_clean($postal_code);
-
-    // basic validation
-    if (empty($first_name)) {
-        $error['first_name'] = "First Name Should not be empty";
-    }
-
-    if (empty($last_name)) {
-        $error['last_name'] = "Last Name Should not be empty";
-    }
-
-    if (empty($username)) {
-        $error['username'] = "Username Should not be empty";
-    }
-
-    if (empty($email)) {
-        $error['email'] = "Email Should not be empty";
-    }
-
-    if (empty($password)) {
-        $error['password'] = "Password Should not be empty";
-    }
-
-    if (empty($verify_password)) {
-        $error['error_item_name'] = "Verify Password Should not be empty";
-    }
-
-    if (empty($contact_number)) {
-        $error['contact_number'] = "Contact Number Should not be empty";
-    }
-
-    if (empty($address_line_1)) {
-        $error['address_line_1'] = "Address line 1 Should not be empty";
-    }
-
-    if (empty($city)) {
-        $error['city'] = "City Should not be empty";
-    }
-
-    if (empty($postal_code)) {
-        $error['postal_code'] = "Postal Code Should not be empty";
-    }
-
-    // Advance validation
-
-    if (!preg_match("/^[a-zA-Z ]*$/", $first_name)) {
-        $error['first_name'] = "Only Letters allowed for First Name";
-    }
-
-    if (!preg_match("/^[a-zA-Z ]*$/", $last_name)) {
-        $error['last_name'] = "Only Letters allowed for Last Name";
-    }
-
-    if (!preg_match("/^[0-9]*$/", $contact_number)) {
-        $error['phone'] = "Phone number not valid";
-    }
-
-    if (!preg_match("/^[a-zA-Z ]*$/", $city)) {
-        $error['city'] = "Only Letters allowed for city";
-    }
-
-    if (!preg_match("/^[0-9]*$/", $postal_code)) {
-        $error['city'] = "Postal Code not valid";
-    }
-
-    if (!empty($username)) {
-
-        $sql = "SELECT * FROM users WHERE user_name = '$username'";
-
-        $result = $db->query($sql);
-
-        if ($result->num_rows > 0) {
-            $error['user_name'] = "<b> $username </b> User Already Exists";
-        }
-    }
-
-    if (!empty($email)) {
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-            $error['email'] = "Email Address is not valid";
-        } else {
-
-            $sql_e = "SELECT * FROM users WHERE email = '$email'";
-            $result_e = $db->query($sql_e);
-            if ($result_e->num_rows > 0) {
-                $error['email'] = "Email Already Exists";
-            }
-        }
-    }
-
-    if (!empty($password)) {
-        if (strlen($password) < 8) {
-            $error['password'] = "Password Should be at least 8 characters";
-        }
-    }
-
-    if (!empty($password) && !empty($verify_password)) {
-
-        if ($password != $verify_password) {
-            $error['password_verify'] = "Password not match";
-        }
-    }
-
-    // image upload function
-    if (!empty($_FILES['profile_image']['name']) && empty($error)) {
-
-        $photo =  image_upload("profile_image", "../../../assets/images/");
-
-        if (array_key_exists("photo", $photo)) {
-
-            $photo = $photo['photo'];
-        } else {
-
-            $error['profile_image'] = $photo['profile_image'];
-        }
-    } else {
-        $photo = @$previous_item_image;
-    }
-
-    //insert data to db
-    if (empty($error)) {
-
-        $sql = "INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `first_name`, `last_name`, `profile_image`, `created_date`, `status`) VALUES (NULL, '$username', '$email', SHA1('$password'), '$first_name', '$last_name', '$photo', '$date', '1');";
-
-        //run database query
-        $db->query($sql);
-
-        //capture last insert ID
-        $user_id = $db->insert_id;
-        $sql_staff = "INSERT INTO `customers` (`cus_id`, `contact_nmuber`, `address_l1`, `address_l2`, `city`, `postal_code`, `user_id`) VALUES (NULL, '$contact_number', '$address_line_1', '$address_line_2', '$city', '$postal_code', '$user_id');";
-
-        //run database query
-        $db->query($sql_staff);
-
-        // success message style
-        $error_style['success'] = "alert-success";
-        $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
-        $error['insert_msg'] = "<b>$username</b> Successfully Insert";
-    }
-}
-
-// edit items
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
-
-    // from name change
-    $form_name = "Edit Items";
-
-    // form button name change
-    $btn_name = "Update";
-
-    // form button value change
-    $btn_value = "update";
-
-    // form button icon
-    $btn_icon = '<i class="far fa-edit"></i>';
-
-    // check recodes in DB
-    $sql = "SELECT * FROM `users` WHERE user_id = $user_id";
-    $result = $db->query($sql);
-
-    if ($result->num_rows > 0) {
-
-        $row = $result->fetch_assoc();
-
-        $profile_image = $row['profile_image'];
-        $first_name = $row['first_name'];
-        $last_name = $row['last_name'];
-        $username = $row['user_name'];
-        $email = $row['email'];
-        $password = $row['password'];
-    }
-
-    $sql = "SELECT * FROM `customers` WHERE user_id = $user_id";
-    $result = $db->query($sql);
-
-    if ($result->num_rows > 0) {
-
-        $row = $result->fetch_assoc();
-
-        $contact_number = $row['contact_nmuber'];
-        $address_line_1 = $row['address_l1'];
-        $address_line_2 = $row['address_l2'];
-        $city = $row['city'];
-        $postal_code = $row['postal_code'];
-    }
-}
-
-// update the edit data
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
-
-    // error styles
-    $error_style['success'] = "alert-danger";
-    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
-
-    // call data clean function
-
-    $first_name = data_clean($first_name);
-    $last_name =  data_clean($last_name);
-    $username = data_clean($username);
-    $email = data_clean($email);
-    $contact_number = data_clean($contact_number);
-    $address_line_1 = data_clean($address_line_1);
-    $address_line_2 = data_clean($address_line_2);
-    $city = data_clean($city);
-    $postal_code = data_clean($postal_code);
-
-    // basic validation
-    if (empty($first_name)) {
-        $error['first_name'] = "First Name Should not be empty";
-    }
-
-    if (empty($last_name)) {
-        $error['last_name'] = "Last Name Should not be empty";
-    }
-
-    if (empty($username)) {
-        $error['username'] = "Username Should not be empty";
-    }
-
-    if (empty($email)) {
-        $error['email'] = "Email Should not be empty";
-    }
-
-    if (empty($password) && empty($previous_password)) {
-        $error['password'] = "Password Should not be empty";
-    }
-
-    if (empty($verify_password) && empty($previous_password_verify)) {
-        $error['error_item_name'] = "Verify Password Should not be empty";
-    }
-
-    if (empty($contact_number)) {
-        $error['contact_number'] = "Contact Number Should not be empty";
-    }
-
-    if (empty($address_line_1)) {
-        $error['address_line_1'] = "Address line 1 Should not be empty";
-    }
-
-    if (empty($city)) {
-        $error['city'] = "City Should not be empty";
-    }
-
-    if (empty($postal_code)) {
-        $error['province'] = "Province Should not be empty";
-    }
-
-
-    // Advance validation
-
-    if (!preg_match("/^[a-zA-Z ]*$/", $first_name)) {
-        $error['first_name'] = "Only Letters allowed for First Name";
-    }
-
-    if (!preg_match("/^[a-zA-Z ]*$/", $last_name)) {
-        $error['last_name'] = "Only Letters allowed for Last Name";
-    }
-
-    if (!preg_match("/^[0-9]*$/", $contact_number)) {
-        $error['phone'] = "Phone number not valid";
-    }
-
-    if (!preg_match("/^[a-zA-Z ]*$/", $city)) {
-        $error['city'] = "Only Letters allowed for city";
-    }
-
-    if (!preg_match("/^[0-9]*$/", $postal_code)) {
-        $error['city'] = "Postal Code not valid";
-    }
-
-    if (!empty($username) && @$previous_username != $username) {
-
-        $sql = "SELECT * FROM users WHERE user_name = '$username'";
-
-        $result = $db->query($sql);
-
-        if ($result->num_rows > 0) {
-            $error['user_name'] = "<b> $username </b> User Already Exists";
-        }
-    }
-
-    if (!empty($email) && @$previous_email != $email) {
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-            $error['email'] = "Email Address is not valid";
-        } else {
-
-            $sql_e = "SELECT * FROM users WHERE email = '$email'";
-            $result_e = $db->query($sql_e);
-            if ($result_e->num_rows > 0) {
-                $error['email'] = "Email Already Exists";
-            }
-        }
-    }
-
-    if (!empty($password)) {
-        if (strlen($password) < 8) {
-            $error['password'] = "Password Should be at least 8 characters";
-        }
-    }
-
-    if (!empty($password) && !empty($verify_password)) {
-
-        if ($password != $verify_password) {
-            $error['password_verify'] = "Password not match";
-            echo $password;
-        }
-    }
-
-    if (!empty($_FILES['profile_image']['name']) && empty($error)) {
-
-        // image upload function
-        $photo =  image_upload("profile_image", "../../../assets/images/");
-
-        if (array_key_exists("photo", $photo)) {
-
-            $photo = $photo['photo'];
-        } else {
-
-            $error['profile_image'] = $photo['profile_image'];
-        }
-    } else {
-        $photo = @$previous_profile_image;
-    }
-
-    // update query
-    if (empty($error)) {
-        $sql = "UPDATE `users` SET `user_name` = '$username', `email` = '$email', `password` = SHA1('$password'), `first_name` = '$first_name', `last_name` = '$last_name', `profile_image` = '$photo'    WHERE `user_id` = $user_id";
-
-        // run database query
-        $query = $db->query($sql);
-
-        $sql = "UPDATE `customers` SET contact_nmuber = '$contact_number', address_l1 = '$address_line_1', address_l2 = '$address_line_2', city = '$city', postal_code = '$postal_code' WHERE `user_id` = $user_id;";
-
-        // run database query
-        $query = $db->query($sql);
-
-        // success message styles
-        $error_style['success'] = "alert-success";
-        $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
-        $error['update'] = "<b>$username</b> Successfully Updated";
-    }
-}
-
-// update user status to inactive
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
-
-    $sql = "UPDATE `users` SET `status` = '1' WHERE `users`.`user_id` = '$user_id;'";
-    $db->query($sql);
-
-
-    $error['delete_msg'] = "Recode Delete";
-
-    // error styles
-    $error_style['success'] = "alert-danger";
-    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
-}
-
-// change status active
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
-
-    $sql = "UPDATE `users` SET `status` = '0' WHERE `users`.`user_id` = '$user_id;'";
-    $db->query($sql);
-
-
-    $error['delete_msg'] = "Recode Active";
-
-    // error styles
-    $error_style['success'] = "alert-success";
-    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
-}
 ?>
 
 <div class="content-wrapper">
@@ -431,135 +35,238 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">User Reports</a></li>
-                        <li class="breadcrumb-item active">Add</li>
+                        <li class="breadcrumb-item"><a href="#">Customer Report</a></li>
+                        <li class="breadcrumb-item active">Customer</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
-    <!-- Alerts -->
-    <div class="container-fluid">
-
-        <!-- Insert / update / delete / blank / already exist alerts-->
-        <?php show_error($error, $error_style, $error_style_icon); ?>
-
-        <!-- Delete Confirmation -->
-        <?php
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
-            $sql = "SELECT * FROM users WHERE user_id = '$user_id'";
-
-            $result = $db->query($sql);
-
-
-            if ($result->num_rows > 0) {
-
-                $row = $result->fetch_assoc();
-                $user_id = $row['user_id'];
-                $user_name = $row['user_name'];
-        ?>
-                <div class="card">
-                    <h5 class="card-header bg-danger">Conformation</h5>
-                    <div class="card-body">
-                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $user_name ?> ?</b> </h5>
-                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                            <input type="hidden" name="user_id" value="<?php echo $user_id ?>"><br>
-                            <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
-                            <button type="submit" name="action" value="cancel_delete" class="btn btn-primary btn-s">No</button>
-                        </form>
-
-                    </div>
-                </div>
-
-        <?php
-            }
-        }
-        ?>
-
-    </div>
     <div class="container-fluid">
         <div class="row">
-           
             <!-- Right Section Start -->
             <div class="col">
-                <?php
-
-                // db connect
-                $db = db_con();
-
-                // sql query
-                $sql = "SELECT u.user_name, u.first_name, u.last_name, u.user_id, s.status_name, u.profile_image FROM users u INNER JOIN status s ON s.status_id = u.status INNER JOIN customers c ON c.user_id = u.user_id;";
-
-                // fletch data
-                $result = $db->query($sql);
-
-                ?>
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">All Customer List</h3>
+                        <div class="row">
+                            <div class="col">
+                                <h3 class="card-title">All User List</h3>
+                            </div>
+                        </div>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
+                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                            <!-- date rang row -->
+                            <div class="row">
+                                <div class="col-3">
+                                    <label>Start Date: </label>
+                                    <input type="date" name="start_date" value="<?php echo @$start_date ?>"><br>
+                                </div>
+                                <div class="col-2">
+                                    <label>End Date: </label>
+                                    <input type="date" name="end_date" value="<?php echo @$end_date ?>"><br>
+                                </div>
+                                <div class="col">
+                                    <button name="action" class="btn btn-primary" value="today" type="submit">Today</button>
+
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-primary" onclick="exportTableToExcel('user_list', 'user_details')">Export to Excel</button>
+                                </div>
+                            </div>
+                            <hr>
+                            <!-- dropdown row -->
+                            <div class="row">
+                                <div class="col-2">
+                                    <label>User Status</label>
+                                    <select class="form-control select2" style="width: 100%;" name="status">
+                                        <option value="">- Select User Status -</option>
+                                        <?php
+
+                                        // model drop down data fletch 
+                                        $sql = "SELECT * FROM `status`";
+                                        $result = $db->query($sql);
+
+                                        // fletch data
+                                        if ($result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) {
+                                        ?>
+                                                <option value="<?php echo $row['status_id'] ?>" <?php if ($row['status_id'] == @$status) { ?> selected <?php } ?>><?php echo $row['status_name']; ?></option>
+                                        <?php
+
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-2">
+                                    <label>City</label>
+                                    <select class="form-control select2" style="width: 100%;" name="city">
+                                        <option value="">- Select City -</option>
+                                        <?php
+
+                                        // model drop down data fletch 
+                                        $sql = "SELECT city FROM `staff` WHERE status = 0 GROUP BY (city) ORDER BY `staff`.`city` ASC";
+                                        $result = $db->query($sql);
+
+                                        // fletch data
+                                        if ($result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) {
+                                        ?>
+                                                <option value="<?php echo $row['city'] ?>" <?php if ($row['city'] == @$city) { ?> selected <?php } ?>><?php echo $row['city']; ?></option>
+                                        <?php
+
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-2">
+                                    <label>User Role</label>
+                                    <select class="form-control select2" style="width: 100%;" name="user_roles">
+                                        <option value="">- Select User Role -</option>
+                                        <?php
+
+                                        // model drop down data fletch 
+                                        $sql = "SELECT ur.user_role_id, ur.role_name
+                                        FROM user_roles ur
+                                        INNER JOIN status s ON s.status_id = ur.status
+                                        WHERE ur.user_role_id in (1,2,3,4,6) AND ur.status = 0 ORDER BY `ur`.`role_name` ASC";
+                                        $result = $db->query($sql);
+
+                                        // fletch data
+                                        if ($result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) {
+                                        ?>
+                                                <option value="<?php echo $row['user_role_id'] ?>" <?php if ($row['user_role_id'] == @$user_roles) { ?> selected <?php } ?>><?php echo $row['role_name']; ?></option>
+                                        <?php
+
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <label>Search Table Data</label>
+                                    <input type="text" class="form-control" id="sku" placeholder="Search Data" name="cus_search" value="<?php echo @$cus_search ?>">
+                                </div>
+                                <div class="col-2" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
+                                    <button type="submit" class="btn btn-primary" style="display: flex; margin-left: 10px; margin-top: 30px; " name="action" value="search">Search</button>
+                                </div>
+                            </div>
+                        </form><br>
                         <table id="user_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>Profile Image</th>
+                                    <th>Register Date</th>
                                     <th>Username</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Status</th>
-                                    <!-- <th>View</th>
-                                    <th>Inactive</th>
-                                    <th>Active</th> -->
+                                    <th>User Role</th>
+                                    <th>Name</th>
+                                    <th>Contact Number</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>Profile Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
+                                // $recode_cont = 1;
+                                $where = null;
+                                $date = null;
 
+                                // filters by search button
+                                if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
+
+                                    // table wide search
+                                    if (!empty($cus_search)) {
+
+                                        $where .= "CONCAT(u.user_id, s.staff_id, s.contact_number, s.address_l1, s.address_l2, s.city, u.user_name, u.first_name, u.last_name, u.profile_image, u.created_date, st.status_name, ur.role_name, u.email) LIKE '%$cus_search%' AND ";
+                                    }
+
+                                    // filter by status
+                                    if ($status != null) {
+
+                                        $where .= "st.status_id = $status AND ";
+                                    }
+
+                                    // filter by city
+                                    if (!empty($city)) {
+
+                                        $where .= "s.city LIKE '%$city%' AND ";
+                                    }
+
+                                    // filter by user role
+                                    if (!empty($user_roles)) {
+
+                                        $where .= "ur.user_role_id = $user_roles AND ";
+                                    }
+
+                                    if (!empty($start_date) and !empty($end_date)) {
+
+                                        $where .= "(u.created_date BETWEEN '$start_date' AND '$end_date') AND ";
+                                    }
+
+                                    // remove the last 4 digits of the $where part "AND "
+                                    if (!empty($where)) {
+
+                                        $where = substr($where, 0, -4);
+
+                                        // take Mysql WHERE and take $where query parts 
+                                        $where = "WHERE $where";
+                                    }
+                                }
+
+
+                                // filters by today
+                                if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'today') {
+
+                                    // get today date
+                                    $date = date("Y-m-d");
+
+                                    $where = "WHERE u.created_date = '$date'";
+                                }
+
+                                // sql query
+                                $sql = "SELECT u.user_id, s.staff_id, s.contact_number, s.address_l1, s.address_l2, s.city, u.user_name, u.first_name, u.last_name, u.profile_image, u.created_date, st.status_name, ur.role_name, u.email
+                                FROM staff s
+                                INNER JOIN users u ON u.user_id = s.user_id
+                                INNER JOIN status st on st.status_id = u.status
+                                INNER JOIN user_roles ur ON ur.user_role_id = u.user_role $where";
+
+                                // fletch data
+                                $result = $db->query($sql);
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
+
                                 ?>
                                         <tr>
                                             <td><img src="../../../assets/images/<?php echo $row['profile_image'] ?>" class="img-fluid" width="100"></td>
+                                            <td><?php echo $row['created_date'] ?> </td>
                                             <td><?php echo $row['user_name'] ?> </td>
-                                            <td><?php echo $row['first_name'] ?> </td>
-                                            <td><?php echo $row['last_name'] ?> </td>
+                                            <td><?php echo $row['role_name'] ?> </td>
+                                            <td><?php echo $row['first_name'] . " " . $row['last_name']  ?> </td>
+                                            <td><?php echo $row['contact_number'] ?> </td>
+                                            <td><?php echo $row['email'] ?> </td>
+                                            <td><?php echo $row['address_l1'] . ", " . $row['address_l2'] . ", " . $row['city'] ?> </td>
+                                            <td><?php echo $row['city'] ?> </td>
                                             <td><?php echo $row['status_name'] ?> </td>
-                                            <!-- <td>
-                                                <form action="view.php" method="post">
-                                                    <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
-                                                    <a href="view.php">
-                                                        <button type="submit" name="action" value="view" class="btn btn-block btn-success btn-xs"><i class="fas fa-eye"></i></button>
-                                                    </a>
-                                                </form>
-                                            </td>
-                                            
-                                            <td>
-                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
-                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-ban"></i></button>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="user_id" value="<?php echo $row['user_id'] ?>">
-                                                    <button type="submit" name="action" value="active" class="btn btn-block btn-warning btn-xs"><i class="fas fa-check"></i></button>
-                                                </form>
-                                            </td> -->
 
                                         </tr>
 
                                 <?php
+
                                     }
                                 }
                                 ?>
                             </tbody>
-
                         </table>
+                        <h3 class="card-title">Total User Count: <b> <?php echo $user_count = $result->num_rows ?></b></h3>
                     </div>
                     <!-- /.card-body -->
                 </div>
-
             </div>
         </div>
     </div>
@@ -567,17 +274,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
 
 <?php include '../../footer.php'; ?>
 
-<!-- Page specific script -->
 <script>
-    $(function() {
-        $('#user_list').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-    });
+    // excel export
+    function exportTableToExcel(tableID, filename = '') {
+
+        var downloadLink;
+
+        //ms office file type
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+        // Specify file name (short if)
+        filename = filename ? filename + '.xls' : 'excel_data.xls';
+
+        // Create download link element
+        downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        // for netscape navigator browsers
+        if (navigator.msSaveOrOpenBlob) {
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob(blob, filename);
+        } else {
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+    }
 </script>

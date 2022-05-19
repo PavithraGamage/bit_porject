@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     }
 
     if (empty($error)) {
-        $sql = "INSERT INTO `models` (`model_id`, `model_name`) VALUES (NULL, '$model_name');";
+        $sql = "INSERT INTO `models` (`model_id`, `model_name`, `category_id`) VALUES (NULL, '$model_name', '$category');";
 
         // run database query
         $query = $db->query($sql);
@@ -92,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
         $row = $result->fetch_assoc();
         $model_id = $row['model_id'];
         $model_name = $row['model_name'];
+        $category = $row['category_id'];
     }
 }
 
@@ -222,6 +223,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                     <!-- form start -->
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                         <div class="card-body">
+                            <div class="form-group">
+                                <label>Category <span style="color: red;">*</span></label>
+                                <select class="form-control select2" style="width: 100%;" name="category" id="category">
+                                    <option value="">- Select Category -</option>
+                                    <?php
+
+                                    // categories drop down data fletch 
+                                    $sql_cat = "SELECT * FROM `categories` WHERE status = 0";
+                                    $cat_result = $db->query($sql_cat);
+
+                                    // fletch data
+                                    if ($cat_result->num_rows > 0) {
+                                        while ($cat_row = $cat_result->fetch_assoc()) {
+                                    ?>
+                                            <option value="<?php echo $cat_row['category_id'] ?>" <?php if ($cat_row['category_id'] == @$category) { ?> selected <?php } ?>><?php echo $cat_row['category_name']; ?></option>
+                                    <?php
+
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Model Name</label>
                                 <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Model Name" name="model_name" value="<?php echo @$model_name ?>">

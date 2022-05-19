@@ -437,7 +437,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
             }
             
             // low stock check
-            if ($reorder_level != $new_stock) {
+            if ($reorder_level >= $new_stock) {
 
                 // update stock status
                 $sql_reorder_stock = "UPDATE `items` SET `item_notification` = '1' WHERE `items`.`item_id` = $item_id";

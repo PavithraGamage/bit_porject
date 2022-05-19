@@ -1116,8 +1116,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     onrendered: function (canvas) {
                         var pdf = new jsPDF('L', 'pt', '[1000,1500]');
 
-                        var pageHeight = 2160;
-                        var pageWidth = 3840;
+                        var pageHeight = 1280;
+                        var pageWidth = 1280;
                         for (var i = 0; i <= elementHTML.clientHeight / pageHeight; i++) {
                             var srcImg = canvas;
                             var sX = 0;

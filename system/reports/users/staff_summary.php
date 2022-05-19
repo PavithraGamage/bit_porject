@@ -31,7 +31,7 @@ $date = date('Y-m-d');
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">User Report</h1>
+                    <h1 class="m-0">Staff Summary Report</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -67,63 +67,7 @@ $date = date('Y-m-d');
                                     <label>End Date: </label>
                                     <input type="date" name="end_date" value="<?php echo @$end_date ?>"><br>
                                 </div>
-                                <div class="col">
-                                    <button name="action" class="btn btn-primary" value="today" type="submit">Today</button>
-
-                                </div>
-                                <div class="col">
-                                    <button class="btn btn-primary" onclick="exportTableToExcel('user_list', 'user_details')">Export to Excel</button>
-                                </div>
-                            </div>
-                            <hr>
-                            <!-- dropdown row -->
-                            <div class="row">
                                 <div class="col-2">
-                                    <label>User Status</label>
-                                    <select class="form-control select2" style="width: 100%;" name="status">
-                                        <option value="">- Select User Status -</option>
-                                        <?php
-
-                                        // model drop down data fletch 
-                                        $sql = "SELECT * FROM `status`";
-                                        $result = $db->query($sql);
-
-                                        // fletch data
-                                        if ($result->num_rows > 0) {
-                                            while ($row = $result->fetch_assoc()) {
-                                        ?>
-                                                <option value="<?php echo $row['status_id'] ?>" <?php if ($row['status_id'] == @$status) { ?> selected <?php } ?>><?php echo $row['status_name']; ?></option>
-                                        <?php
-
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="col-2">
-                                    <label>City</label>
-                                    <select class="form-control select2" style="width: 100%;" name="city">
-                                        <option value="">- Select City -</option>
-                                        <?php
-
-                                        // model drop down data fletch 
-                                        $sql = "SELECT city FROM `staff` WHERE status = 0 GROUP BY (city) ORDER BY `staff`.`city` ASC";
-                                        $result = $db->query($sql);
-
-                                        // fletch data
-                                        if ($result->num_rows > 0) {
-                                            while ($row = $result->fetch_assoc()) {
-                                        ?>
-                                                <option value="<?php echo $row['city'] ?>" <?php if ($row['city'] == @$city) { ?> selected <?php } ?>><?php echo $row['city']; ?></option>
-                                        <?php
-
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="col-2">
-                                    <label>User Role</label>
                                     <select class="form-control select2" style="width: 100%;" name="user_roles">
                                         <option value="">- Select User Role -</option>
                                         <?php
@@ -147,15 +91,12 @@ $date = date('Y-m-d');
                                         ?>
                                     </select>
                                 </div>
-                                <div class="col-4">
-                                    <label>Search Table Data</label>
-                                    <input type="text" class="form-control" id="sku" placeholder="Search Data" name="cus_search" value="<?php echo @$cus_search ?>">
-                                </div>
-                                <div class="col-2" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
-                                    <button type="submit" class="btn btn-primary" style="display: flex; margin-left: 10px; margin-top: 30px; " name="action" value="search">Search</button>
+                                <div class="col">
+                                    <button name="action" class="btn btn-primary" value="today" type="submit">Today</button>
                                 </div>
                             </div>
-                        </form><br>
+                            <hr>
+                        </form>
                         <table id="user_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -226,11 +167,12 @@ $date = date('Y-m-d');
                                     // get today date
                                     $date = date("Y-m-d");
 
+                                    print_r($_POST);
                                     $where = "WHERE u.created_date = '$date'";
                                 }
 
                                 // sql query
-                                $sql = "SELECT u.user_id, s.staff_id, s.contact_number, s.address_l1, s.address_l2, s.city, u.user_name, u.first_name, u.last_name, u.profile_image, u.created_date, st.status_name, ur.role_name, u.email
+                                echo   $sql = "SELECT u.user_id, s.staff_id, s.contact_number, s.address_l1, s.address_l2, s.city, u.user_name, u.first_name, u.last_name, u.profile_image, u.created_date, st.status_name, ur.role_name, u.email
                                 FROM staff s
                                 INNER JOIN users u ON u.user_id = s.user_id
                                 INNER JOIN status st on st.status_id = u.status
@@ -274,44 +216,17 @@ $date = date('Y-m-d');
 
 <?php include '../../footer.php'; ?>
 
-<!-- pdf support links -->
-<script src="http://localhost/bit/system/dist/js/html2canvas.min.js" type="text/javascript"></script>
-<script src="http://localhost/bit/system/dist/js/jspdf.min.js" type="text/javascript"></script>
-
+<!-- Page specific script -->
 <script>
-    // excel export
-    function exportTableToExcel(tableID, filename = '') {
-
-        var downloadLink;
-
-        //ms office file type
-        var dataType = 'application/vnd.ms-excel';
-        var tableSelect = document.getElementById(tableID);
-        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-
-        // Specify file name (short if)
-        filename = filename ? filename + '.xls' : 'excel_data.xls';
-
-        // Create download link element
-        downloadLink = document.createElement("a");
-
-        document.body.appendChild(downloadLink);
-
-        // for netscape navigator browsers
-        if (navigator.msSaveOrOpenBlob) {
-            var blob = new Blob(['\ufeff', tableHTML], {
-                type: dataType
-            });
-            navigator.msSaveOrOpenBlob(blob, filename);
-        } else {
-            // Create a link to the file
-            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-
-            // Setting the file name
-            downloadLink.download = filename;
-
-            //triggering the function
-            downloadLink.click();
-        }
-    }
+    $(function() {
+        $('#user_list').DataTable({
+            "paging": false,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": false,
+            "info": false,
+            "autoWidth": true,
+            "responsive": true,
+        });
+    });
 </script>
