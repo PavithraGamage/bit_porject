@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'login') {
     // advance validation
     if (empty($error)) {
 
-        $sql = "SELECT * FROM users WHERE user_name = '$username' AND password = '" . sha1($password) . "' AND status = 0";
+        $sql = "SELECT * FROM users WHERE user_name = '$username' OR email = '$username' AND password = '" . sha1($password) . "' AND status = 0";
 
         // run database query
         $result = $db->query($sql);
@@ -206,7 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'register') {
 
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Username" name="username">
+                                <input type="text" class="form-control" placeholder="Username or Email" name="username">
                             </div>
                             <div style="color: red; margin-bottom: 5px">
                                 <?php echo  @$error['username'] ?>
@@ -219,9 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'register') {
                             </div>
                             <div class="row">
                                 <div class="col-8">
-                                    <p class="mb-1">
-                                        <a href="forgot-password.html">I forgot my password</a>
-                                    </p>
+                                   
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-4" style="display: flex; flex-direction: row; justify-content: flex-end;">

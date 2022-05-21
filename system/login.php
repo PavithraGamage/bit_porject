@@ -142,7 +142,7 @@ session_start();
             <!-- /.card-body -->
         </div>
         <!-- /.card -->
-        go to U-Star Digital Website
+        <a style="margin-top:30px;" href="http://localhost/bit/home.php">Go to U-Star Digital Website </a>
     </div>
     <!-- /.login-box -->
 

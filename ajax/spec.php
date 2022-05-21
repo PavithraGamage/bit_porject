@@ -7,9 +7,6 @@ extract($_POST);
 
 $db = db_con();
 
-
-
-
 ?>
 
 

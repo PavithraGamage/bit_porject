@@ -13,10 +13,8 @@ if (!empty($notification_user_id)) {
     $db->query($sql);
 }
 
-
 // DB Connection
 $db = db_con();
-
 
 // create error variable to store error messages
 $error =  array();
@@ -107,7 +105,7 @@ $date = date('Y-m-d');
                                         <?php
 
                                         // model drop down data fletch 
-                                        $sql = "SELECT city FROM `staff` WHERE status = 0 GROUP BY (city) ORDER BY `staff`.`city` ASC";
+                                        $sql = "SELECT c.city FROM customers c INNER JOIN users u ON u.user_id = c.user_id WHERE u.status = 0 GROUP BY (city) ORDER BY `c`.`city` ASC";
                                         $result = $db->query($sql);
 
                                         // fletch data
@@ -123,23 +121,20 @@ $date = date('Y-m-d');
                                     </select>
                                 </div>
                                 <div class="col-2">
-                                    <label>User Role</label>
-                                    <select class="form-control select2" style="width: 100%;" name="user_roles">
-                                        <option value="">- Select User Role -</option>
+                                    <label>Province</label>
+                                    <select class="form-control select2" style="width: 100%;" name="province">
+                                        <option value="">- Select Province -</option>
                                         <?php
 
                                         // model drop down data fletch 
-                                        $sql = "SELECT ur.user_role_id, ur.role_name
-                                        FROM user_roles ur
-                                        INNER JOIN status s ON s.status_id = ur.status
-                                        WHERE ur.user_role_id in (1,2,3,4,6) AND ur.status = 0 ORDER BY `ur`.`role_name` ASC";
+                                        $sql = "SELECT * FROM province WHERE status = 0 ORDER BY `province`.`name` ASC";
                                         $result = $db->query($sql);
 
                                         // fletch data
                                         if ($result->num_rows > 0) {
                                             while ($row = $result->fetch_assoc()) {
                                         ?>
-                                                <option value="<?php echo $row['user_role_id'] ?>" <?php if ($row['user_role_id'] == @$user_roles) { ?> selected <?php } ?>><?php echo $row['role_name']; ?></option>
+                                                <option value="<?php echo $row['id'] ?>" <?php if ($row['id'] == @$province) { ?> selected <?php } ?>><?php echo $row['name']; ?></option>
                                         <?php
 
                                             }
@@ -147,12 +142,13 @@ $date = date('Y-m-d');
                                         ?>
                                     </select>
                                 </div>
+
                                 <div class="col-4">
                                     <label>Search Table Data</label>
                                     <input type="text" class="form-control" id="sku" placeholder="Search Data" name="cus_search" value="<?php echo @$cus_search ?>">
                                 </div>
                                 <div class="col-2" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
-                                    <button type="submit" class="btn btn-primary" style="display: flex; margin-left: 10px; margin-top: 30px; " name="action" value="search">Search</button>
+                                    <button type="submit" class="btn btn-primary" style="display: flex; margin-top: 30px; " name="action" value="search">Search</button>
                                 </div>
                             </div>
                         </form><br>
@@ -162,12 +158,13 @@ $date = date('Y-m-d');
                                     <th>Profile Image</th>
                                     <th>Register Date</th>
                                     <th>Username</th>
-                                    <th>User Role</th>
                                     <th>Name</th>
                                     <th>Contact Number</th>
                                     <th>Email</th>
                                     <th>Address</th>
                                     <th>City</th>
+                                    <th>Postal Code</th>
+                                    <th>Province</th>
                                     <th>Profile Status</th>
                                 </tr>
                             </thead>
@@ -183,7 +180,7 @@ $date = date('Y-m-d');
                                     // table wide search
                                     if (!empty($cus_search)) {
 
-                                        $where .= "CONCAT(u.user_id, s.staff_id, s.contact_number, s.address_l1, s.address_l2, s.city, u.user_name, u.first_name, u.last_name, u.profile_image, u.created_date, st.status_name, ur.role_name, u.email) LIKE '%$cus_search%' AND ";
+                                        $where .= "CONCAT(c.cus_id, u.user_id, c.contact_nmuber, c.address_l1, c.address_l2, c.city, c.postal_code,u.user_name, u.email, u.first_name, u.last_name, u.profile_image, u.created_date, st.status_name, p.name) LIKE '%$cus_search%' AND ";
                                     }
 
                                     // filter by status
@@ -195,7 +192,7 @@ $date = date('Y-m-d');
                                     // filter by city
                                     if (!empty($city)) {
 
-                                        $where .= "s.city LIKE '%$city%' AND ";
+                                        $where .= "c.city LIKE '%$city%' AND ";
                                     }
 
                                     // filter by user role
@@ -230,11 +227,11 @@ $date = date('Y-m-d');
                                 }
 
                                 // sql query
-                                $sql = "SELECT u.user_id, s.staff_id, s.contact_number, s.address_l1, s.address_l2, s.city, u.user_name, u.first_name, u.last_name, u.profile_image, u.created_date, st.status_name, ur.role_name, u.email
-                                FROM staff s
-                                INNER JOIN users u ON u.user_id = s.user_id
-                                INNER JOIN status st on st.status_id = u.status
-                                INNER JOIN user_roles ur ON ur.user_role_id = u.user_role $where";
+                                $sql = "SELECT c.cus_id, u.user_id, c.contact_nmuber, c.address_l1, c.address_l2, c.city, c.postal_code,u.user_name, u.email, u.first_name, u.last_name, u.profile_image, u.created_date, st.status_name, p.name
+                              FROM customers c
+                              INNER JOIN users u ON u.user_id = c.user_id
+                              INNER JOIN status st on st.status_id = u.status
+                              INNER JOIN province p ON p.id = c.province_id $where";
 
                                 // fletch data
                                 $result = $db->query($sql);
@@ -246,12 +243,13 @@ $date = date('Y-m-d');
                                             <td><img src="../../../assets/images/<?php echo $row['profile_image'] ?>" class="img-fluid" width="100"></td>
                                             <td><?php echo $row['created_date'] ?> </td>
                                             <td><?php echo $row['user_name'] ?> </td>
-                                            <td><?php echo $row['role_name'] ?> </td>
                                             <td><?php echo $row['first_name'] . " " . $row['last_name']  ?> </td>
-                                            <td><?php echo $row['contact_number'] ?> </td>
+                                            <td><?php echo $row['contact_nmuber'] ?> </td>
                                             <td><?php echo $row['email'] ?> </td>
                                             <td><?php echo $row['address_l1'] . ", " . $row['address_l2'] . ", " . $row['city'] ?> </td>
                                             <td><?php echo $row['city'] ?> </td>
+                                            <td><?php echo $row['postal_code'] ?> </td>
+                                            <td><?php echo $row['name'] ?> </td>
                                             <td><?php echo $row['status_name'] ?> </td>
 
                                         </tr>
@@ -310,4 +308,19 @@ $date = date('Y-m-d');
             downloadLink.click();
         }
     }
+</script>
+
+<script>
+    // data table for responsive
+    $(function() {
+        $('#user_list').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": false,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+        });
+    });
 </script>

@@ -188,6 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
             $db->query($sql);
         }
 
+       
         // success message style
         $error_style['success'] = "alert-success";
         $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
@@ -346,7 +347,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
         if (!empty($stock)) {
 
-            $sql = "UPDATE `items` SET `stock_status` = '0' WHERE `items`.`item_id` = $item_id;";
+            $sql = "UPDATE `items` SET `stock_status` = '0', `date` = '$date' WHERE `items`.`item_id` = $item_id;";
 
             // run database query
             $query = $db->query($sql);
@@ -473,7 +474,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Category <span style="color: red;">*</span></label>
-                                                    <select class="form-control select2" style="width: 100%;" name="category" onchange="show_spec()" onselect="filter_model()" id="category">
+                                                    <select class="form-control select2" style="width: 100%;" name="category" onchange="show_spec(), filter_model()" onselect="filter_model()" id="category">
                                                         <option value="">- Select Category -</option>
                                                         <?php
 
@@ -517,7 +518,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Model <span style="color: red;">*</span></label>
-                                                    <select class="form-control select2" style="width: 100%;" name="model">
+                                                    <select class="form-control select2" style="width: 100%;" name="model" id="model">
                                                         <option value="">- Select Model -</option>
                                                         <?php
 
@@ -702,6 +703,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
 
 <!-- ajax function for filter specifications by category -->
 <script>
+    // show category related specifications 
     function show_spec() {
 
         var spec = $("#category").val();
@@ -723,10 +725,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
 
     }
 
-    function filter_model(){
-        alert("hello");
+     // show category related models 
+    function filter_model() {
+
+        var spec = $("#category").val();
+        var dt = "category=" + spec + "&";
+
+        $.ajax({
+            type: 'POST',
+            data: dt,
+            url: '../../../ajax/filter_item_models.php',
+            success: function(response) {
+                $("#model").html(response)
+            },
+            error: function(request, status, error) {
+                alert(error);
+            }
+        });
+
     }
 
+    // on load fire function show_spec()
     $(document).ready(function() {
         show_spec();
     })

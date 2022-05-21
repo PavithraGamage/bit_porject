@@ -224,13 +224,13 @@ $date = date('Y-m-d');
                                 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'today') {
 
                                     // get today date
-                                    $date = date("Y-m-d");
+                                    $date .= date("Y-m-d");
 
                                     $where = "WHERE u.created_date = '$date'";
                                 }
 
                                 // sql query
-                                $sql = "SELECT u.user_id, s.staff_id, s.contact_number, s.address_l1, s.address_l2, s.city, u.user_name, u.first_name, u.last_name, u.profile_image, u.created_date, st.status_name, ur.role_name, u.email
+                              echo  $sql = "SELECT u.user_id, s.staff_id, s.contact_number, s.address_l1, s.address_l2, s.city, u.user_name, u.first_name, u.last_name, u.profile_image, u.created_date, st.status_name, ur.role_name, u.email
                                 FROM staff s
                                 INNER JOIN users u ON u.user_id = s.user_id
                                 INNER JOIN status st on st.status_id = u.status
@@ -314,4 +314,19 @@ $date = date('Y-m-d');
             downloadLink.click();
         }
     }
+</script>
+
+<script>
+    // data table for responsive
+$(function () {
+    $('#user_list').DataTable({
+      "paging": false,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": false,
+      "info": false,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
 </script>

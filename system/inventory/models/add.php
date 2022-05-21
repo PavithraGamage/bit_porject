@@ -108,20 +108,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         $error['model_name'] = "Model Name Should not be empty";
     }
 
-    // Advance Validation
-    if (!empty($model_name)) {
-
-        $sql = "SELECT * FROM `models` WHERE model_name = '$model_name'";
-
-        $result = $db->query($sql);
-
-        if ($result->num_rows > 0) {
-            $error['model_name'] = "Manufacturer <b> $model_name </b> Already Exists";
-        }
-    }
+   
 
     if (empty($error)) {
-        $sql = "UPDATE `models` SET `model_name` = '$model_name' WHERE `model_id` = '$model_id';";
+        $sql = "UPDATE `models` SET `model_name` = '$model_name', `category_id` = '$category' WHERE `model_id` = '$model_id';";
 
         // run database query
         $query = $db->query($sql);
