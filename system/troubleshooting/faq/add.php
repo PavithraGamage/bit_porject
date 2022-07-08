@@ -27,7 +27,7 @@ $error =  array();
 $error_style =  array();
 $error_style_icon = array();
 
-// insert brands
+// insert faq
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
     // error styles
@@ -35,42 +35,75 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
     // call data clean function
-    $brand_name =  data_clean($brand_name);
+    $question =  data_clean($question);
+    $video_url =  data_clean($video_url);
+    $answer =  data_clean($answer);
 
     // basic validation
-    if (empty($brand_name)) {
-        $error['brand_name'] = "Brand Name Should Not Be Empty";
+    if (empty($question)) {
+        $error['question'] = "Question Should Not Be Empty";
+    }
+
+    if (empty($video_url)) {
+        $error['video_url'] = "Video URL Should Not Be Empty";
+    }
+
+    if (empty($answer)) {
+        $error['answer'] = "Answer Should Not Be Empty";
     }
 
     // Advance Validation
-    if (!empty($brand_name)) {
+    if (!empty($question)) {
 
-        $sql = "SELECT * FROM `brands` WHERE brand_name = '$brand_name'";
+        $sql = "SELECT * FROM `troubleshoots` WHERE trub_name = '$question'";
         $result = $db->query($sql);
 
         if ($result->num_rows > 0) {
-            $error['brand_name'] = "Manufacturer <b> $brand_name </b> Already Exists";
+            $error['question'] = "Status <b> $question </b> Already Exists";
         }
+    }
+
+    if (!empty($video_url)) {
+
+        $sql = "SELECT * FROM `troubleshoots` WHERE trub_video = '$video_url'";
+        $result = $db->query($sql);
+
+        if ($result->num_rows > 0) {
+            $error['video_url'] = "<b> $video_url </b> Already Exists";
+        }
+    }
+
+    // url validation
+    if (!filter_var($video_url, FILTER_VALIDATE_URL)) {
+
+        $error['video_url'] = "<b> $video_url </b> URL not valid";
     }
 
     if (empty($error)) {
 
-        $sql = "INSERT INTO `brands` (`brand_id`, `brand_name`) VALUES (NULL, '$brand_name');";
+        // short the url video to embed
+        $short_video_url = substr($video_url, 32);
+
+        $sql = "INSERT INTO `troubleshoots` (`troub_id`, `trub_name`, `trub_description`, `trub_video`) VALUES (NULL, '$question', '$answer', '$short_video_url');";
 
         // run database query
         $query = $db->query($sql);
 
+        $question = null;
+        $video_url = null;
+        $answer = null;
+
         $error_style['success'] = "alert-success";
         $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
-        $error['insert_msg'] = "<b>$brand_name</b> Successfully Insert";
+        $error['insert_msg'] = "Successfully Insert";
     }
 }
 
-// edit manufacturers
+// edit faq
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 
     // from name change
-    $form_name = "Edit Brand";
+    $form_name = "Edit Question";
 
     // form button name change
     $btn_name = "Update";
@@ -82,15 +115,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
     $btn_icon = '<i class="far fa-edit"></i>';
 
     // check recodes in DB
-    $sql = "SELECT * FROM `brands` WHERE brand_id = '$brand_id'";
+    $sql = "SELECT * FROM `troubleshoots` WHERE troub_id = $troub_id;";
 
     $result = $db->query($sql);
 
     if ($result->num_rows > 0) {
 
         $row = $result->fetch_assoc();
-        $brand_id = $row['brand_id'];
-        $brand_name = $row['brand_name'];
+
+        $question =  $row['trub_name'];
+        $short_video_url = $row['trub_video'];
+        $answer =  $row['trub_description'];
+
+        $video_url = "https://www.youtube.com/watch?v=" . $short_video_url;
     }
 }
 
@@ -101,39 +138,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 
+    // call data clean function
+    $question =  data_clean($question);
+    $video_url =  data_clean($video_url);
+    $answer =  data_clean($answer);
+
     // basic validation
-    if (empty($brand_name)) {
-        $error['brand_name'] = "Brand Name Should Not Be Empty";
+    if (empty($question)) {
+        $error['question'] = "Question Should Not Be Empty";
     }
 
-    // Advance Validation
-    if (!empty($brand_name)) {
+    if (empty($video_url)) {
+        $error['video_url'] = "Video URL Should Not Be Empty";
+    }
 
-        $sql = "SELECT * FROM `brands` WHERE brand_name = '$brand_name'";
-        $result = $db->query($sql);
+    if (empty($answer)) {
+        $error['answer'] = "Answer Should Not Be Empty";
+    }
 
-        if ($result->num_rows > 0) {
-            $error['brand_name'] = "Manufacturer <b> $brand_name </b> Already Exists";
-        }
+    // url validation
+    if (!filter_var($video_url, FILTER_VALIDATE_URL)) {
+
+        $error['video_url'] = "<b> $video_url </b> URL not valid";
     }
 
     // update query
     if (empty($error)) {
-        $sql = "UPDATE `brands` SET `brand_name` = '$brand_name' WHERE `brand_id` = '$brand_id';";
+
+        // short the url video to embed
+        $short_video_url = substr($video_url, 32);
+
+        $sql = "UPDATE `troubleshoots` SET trub_name = '$question', trub_description = '$answer', trub_video = '$short_video_url' WHERE `troubleshoots`.`troub_id` = $troub_id;";
 
         // run database query
         $query = $db->query($sql);
 
+        $question = null;
+        $video_url = null;
+        $answer = null;
+
         $error_style['success'] = "alert-success";
         $error_style_icon['fa-check'] = '<i class="icon fas fa-check"></i>';
-        $error['update'] = "<b>$brand_name</b> Successfully Updated";
+        $error['update'] = "Successfully Updated";
     }
 }
 
 // delete recode
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
-    $sql = "DELETE FROM `brands` WHERE `brand_id` = '$brand_id'";
+    $sql = "DELETE FROM `troubleshoots` WHERE `troub_id` = '$troub_id'";
     $db->query($sql);
 
     $error['delete_msg'] = "Recode Delete";
@@ -170,23 +223,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
 
-            $sql = "SELECT * FROM `brands` WHERE brand_id = '$brand_id'";
+            $sql = "SELECT * FROM `troubleshoots` WHERE troub_id = $troub_id;";
 
             $result = $db->query($sql);
 
             if ($result->num_rows > 0) {
 
                 $row = $result->fetch_assoc();
-                $brand_id = $row['brand_id'];
-                $brand_name = $row['brand_name'];
+
+                $troub_id = $row['troub_id'];
+                $question =  $row['trub_name'];
+                $short_video_url = $row['trub_video'];
+                $answer =  $row['trub_description'];
+
 
         ?>
                 <div class="card">
                     <h5 class="card-header bg-danger">Conformation</h5>
                     <div class="card-body">
-                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $brand_name ?> ?</b> </h5>
+                        <h5 class="card-title">Are You Want to DELETE <b> <?php echo $question ?> ?</b> </h5>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                            <input type="hidden" name="brand_id" value="<?php echo $brand_id ?>"><br>
+                            <input type="hidden" name="troub_id" value="<?php echo $troub_id ?>"><br>
                             <button type="submit" name="action" value="confirm_delete" class="btn btn-danger btn-s">Yes</button>
                             <button type="submit" name="action" value="cancel_delete" class="btn btn-primary btn-s">No</button>
                         </form>
@@ -212,28 +269,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Current Status <span style="color: red;">*</span></label>
-                                <select class="form-control select2" style="width: 100%;" name="category">
-                                    <option value="">- Select Category -</option>
-                                    <option>No Power</option>
-                                    <option>No Display</option>
-                                    <option>3 Shote Beeps</option>
-                                    <option>Continues Beeps</option>
-                                </select>
+                                <label for="exampleInputEmail1">Status</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Qutions" name="question" value="<?php echo @$question ?>">
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Question</label>
-                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Qutions" name="brand_name" value="<?php echo @$brand_name ?>">
+                                <label for="exampleInputEmail1">Video URL</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Qutions" name="video_url" value="<?php echo @$video_url ?>">
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Answer</label>
-                                <textarea class="form-control" rows="3" placeholder="Enter ..." name="additional_info"><?php echo @$additional_info ?></textarea>
+                                <textarea class="form-control" rows="3" placeholder="Enter ..." name="answer"><?php echo @$answer ?></textarea>
                             </div>
                         </div>
 
                         <!-- /.card-body -->
                         <div class="card-footer">
-                            <input type="hidden" name="brand_id" value="<?php echo @$brand_id ?>">
+                            <input type="hidden" name="troub_id" value="<?php echo @$troub_id ?>">
                             <button type="submit" class="btn btn-primary" name="action" value="<?php echo $btn_value ?>"><?php echo $btn_icon ?> <?php echo $btn_name ?></button>
                         </div>
                     </form>
@@ -242,48 +293,75 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
             <!-- Right Section Start -->
             <div class="col">
                 <!-- Table Data Fletch -->
-                <?php
-
-                // sql query
-                $sql = "SELECT * FROM `brands`";
-
-                // fletch data
-                $result = $db->query($sql);
-
-                ?>
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Available Brands</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" class="form-control" placeholder="Search Data" name="cus_search" value="<?php echo @$cus_search ?>">
+                                </div>
+                                <div class="col-1" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
+                                    <button type="submit" class="btn btn-primary" name="action" value="search">Search</button>
+                                </div>
+                            </div>
+                        </form>
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Brand Name</th>
-                                    <th style="width: 85px !important;">Edit</th>
-                                    <th style="width: 85px !important;">Delete</th>
-
-
+                                    <th>Status</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
+                                // crate variable for store dynamic query
+                                $where = null;
+
+                                // date range check
+                                if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
+
+                                    // table wide search 
+                                    if (!empty($cus_search)) {
+
+                                        $where .= "CONCAT(trub_name) LIKE '%$cus_search%' AND ";
+                                    }
+
+                                    // remove the last 4 digits of the $where part "AND "
+                                    if (!empty($where)) {
+
+                                        $where = substr($where, 0, -4);
+
+                                        // take Mysql WHERE and take $where query parts 
+                                        $where = "WHERE $where";
+                                    }
+                                }
+
+
+                                // sql query
+                                $sql = "SELECT * FROM `troubleshoots` $where";
+
+                                // fletch data
+                                $result = $db->query($sql);
 
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
                                 ?>
                                         <tr>
-                                            <td><?php echo $row['brand_name'] ?> </td>
+                                            <td><?php echo $row['trub_name'] ?> </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="brand_id" value="<?php echo $row['brand_id'] ?>">
+                                                    <input type="hidden" name="troub_id" value="<?php echo $row['troub_id'] ?>">
                                                     <button type="submit" name="action" value="edit" class="btn btn-block btn-primary btn-xs"><i class="fas fa-edit"></i></button>
                                                 </form>
                                             </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                                                    <input type="hidden" name="brand_id" value="<?php echo $row['brand_id'] ?>">
+                                                    <input type="hidden" name="troub_id" value="<?php echo $row['troub_id'] ?>">
                                                     <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
                                                 </form>
                                             </td>
@@ -309,18 +387,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 <!-- Page specific script -->
 <script>
     $(function() {
-        // $("#user_list").DataTable({
-        //     "responsive": true,
-        //     "lengthChange": false,
-        //     "autoWidth": false,
-        //     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        // }).buttons().container().appendTo('#user_list_wrapper .col-md-6:eq(0)');
         $('#brand_list').DataTable({
-            "paging": true,
-            "lengthChange": false,
+            "paging": false,
+            "lengthChange": true,
             "searching": false,
-            "ordering": true,
-            "info": true,
+            "ordering": false,
+            "info": false,
             "autoWidth": false,
             "responsive": true,
         });

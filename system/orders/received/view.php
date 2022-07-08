@@ -13,11 +13,10 @@ $db = db_con();
 $error = array();
 
 // update notification
-if(!empty($notification_order_id)){
+if (!empty($notification_order_id)) {
 
-$sql = "UPDATE `orders` SET `notifications` = '1' WHERE `orders`.`order_id` = $notification_order_id;";
-$db->query($sql);
-
+    $sql = "UPDATE `orders` SET `notifications` = '1' WHERE `orders`.`order_id` = $notification_order_id;";
+    $db->query($sql);
 }
 
 ?>
@@ -31,8 +30,8 @@ $db->query($sql);
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Received Orders</a></li>
-                        <li class="breadcrumb-item active">Add</li>
+                        <li class="breadcrumb-item"><a href="http://localhost/bit/system/orders/received/view.php">Order Management</a></li>
+                        <li class="breadcrumb-item active">Received Orders</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -64,9 +63,14 @@ $db->query($sql);
                                     <label>End Date: </label>
                                     <input type="date" name="end_date" value="<?php echo @$end_date ?>">
                                 </div>
-                                <div class="col-3">
-                                    <button name="action" class="btn btn-primary" value="search" type="submit">Filter by Date</button>
+                                <div class="col-1">
                                     <button name="action" class="btn btn-primary" value="today" type="submit">Today</button>
+                                </div>
+                                <div class="col-3">
+                                    <input type="text" class="form-control" placeholder="Search Data" name="cus_search" value="<?php echo @$cus_search ?>">
+                                </div>
+                                <div class="col-1" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
+                                    <button type="submit" class="btn btn-primary" name="action" value="search">Search</button>
                                 </div>
                             </div>
                         </form>
@@ -92,40 +96,42 @@ $db->query($sql);
                                 // date range check
                                 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
 
-                                    // date validations
-                                    if (empty($start_date)) {
+                                    // table wide search 
+                                    if (!empty($cus_search)) {
 
-                                        $error['start_date'] = "Select Start Date";
-                                        echo  "<div style = 'color:red;'>" . @$error['start_date'] . "</div>";
+                                        $where .= "CONCAT(o.order_id, o.order_number, o.order_date, u.user_name, o.grand_total, pm.name, o.order_time, cs.courier_status) LIKE '%$cus_search%' AND ";
                                     }
-
-                                    if (empty($end_date)) {
-
-                                        $error['end_date'] = "Select End Date";
-                                        echo  "<div style = 'color:red;'>" . @$error['end_date'] . "</div>";
-                                    }
-
                                     // dynamic query
                                     if (!empty($start_date) and !empty($end_date)) {
 
-                                        $where = "WHERE (o.order_date BETWEEN '$start_date' AND '$end_date')";
+                                        $where .= "(o.order_date BETWEEN '$start_date' AND '$end_date') AND ";
+                                    }
+
+                                    // remove the last 4 digits of the $where part "AND "
+                                    if (!empty($where)) {
+
+                                        $where = substr($where, 0, -4);
+
+                                        // take Mysql WHERE and take $where query parts 
+                                        $where = "WHERE $where";
                                     }
                                 }
-                                
+
                                 // today orders check
                                 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'today') {
 
                                     $date = date("Y-m-d");
                                     // dynamic query
-                                    $where = "WHERE o.order_date = '$date';";
+                                    $where = "WHERE o.order_date = '$date'";
                                 }
 
-                                $sql = "SELECT o.order_id, o.order_number, o.order_date, u.user_name, o.grand_total, pm.name, o.order_time, cs.courier_status
-                                FROM orders o
-                                INNER JOIN users u ON u.user_id = o.user_id
-                                INNER JOIN customers c ON c.user_id = u.user_id
-                                INNER JOIN payment_methord pm ON pm.id = o.payment_id
-                                INNER JOIN courier_status cs ON cs.id = o.courier_status $where";
+                                $sql = "SELECT o.order_id, o.order_number, o.order_date, u.user_name, o.grand_total, pm.name, o.order_time, cs.courier_status FROM orders o 
+                               INNER JOIN users u ON u.user_id = o.user_id 
+                               INNER JOIN customers c ON c.user_id = u.user_id 
+                               INNER JOIN payment_methord pm ON pm.id = o.payment_id 
+                               INNER JOIN courier_status cs ON cs.id = o.courier_status
+                               $where  
+                               ORDER BY `o`.`order_number`  DESC";
 
                                 $result = $db->query($sql);
 
@@ -171,18 +177,13 @@ $db->query($sql);
 <!-- Page specific script -->
 <script>
     $(function() {
-        // $("#user_list").DataTable({
-        //     "responsive": true,
-        //     "lengthChange": false,
-        //     "autoWidth": false,
-        //     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        // }).buttons().container().appendTo('#user_list_wrapper .col-md-6:eq(0)');
+
         $('#brand_list').DataTable({
-            "paging": true,
+            "paging": false,
             "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
+            "searching": false,
+            "ordering": false,
+            "info": false,
             "autoWidth": true,
             "responsive": true,
         });

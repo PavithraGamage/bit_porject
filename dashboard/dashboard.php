@@ -82,7 +82,7 @@ $user_id =  $_SESSION['user_id'];
                 </div>
             </div>
         </div> -->
-        <div class="col-3 dash_info_box">
+        <!-- <div class="col-3 dash_info_box">
             <div class="row">
                 <div class="col-9">
                     <h6> <i class="fas fa-tools"></i> Troubleshoots</h6>
@@ -91,7 +91,7 @@ $user_id =  $_SESSION['user_id'];
                     <h6 class="dash_info_box_number">16</h6>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
 

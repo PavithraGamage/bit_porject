@@ -48,7 +48,7 @@ $date = date('Y-m-d');
                     <div class="card-header">
                         <div class="row">
                             <div class="col">
-                                <h3 class="card-title">All User List</h3>
+                                <h3 class="card-title">All Customer List</h3>
                             </div>
                         </div>
                     </div>
@@ -61,7 +61,7 @@ $date = date('Y-m-d');
                                     <label>Start Date: </label>
                                     <input type="date" name="start_date" value="<?php echo @$start_date ?>"><br>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-3">
                                     <label>End Date: </label>
                                     <input type="date" name="end_date" value="<?php echo @$end_date ?>"><br>
                                 </div>
@@ -79,7 +79,7 @@ $date = date('Y-m-d');
                                 <div class="col-2">
                                     <label>User Status</label>
                                     <select class="form-control select2" style="width: 100%;" name="status">
-                                        <option value="">- Select User Status -</option>
+                                        <option value="">- Select Status -</option>
                                         <?php
 
                                         // model drop down data fletch 
@@ -120,7 +120,7 @@ $date = date('Y-m-d');
                                         ?>
                                     </select>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-3">
                                     <label>Province</label>
                                     <select class="form-control select2" style="width: 100%;" name="province">
                                         <option value="">- Select Province -</option>
@@ -147,7 +147,7 @@ $date = date('Y-m-d');
                                     <label>Search Table Data</label>
                                     <input type="text" class="form-control" id="sku" placeholder="Search Data" name="cus_search" value="<?php echo @$cus_search ?>">
                                 </div>
-                                <div class="col-2" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
+                                <div class="col-1" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
                                     <button type="submit" class="btn btn-primary" style="display: flex; margin-top: 30px; " name="action" value="search">Search</button>
                                 </div>
                             </div>
@@ -155,7 +155,7 @@ $date = date('Y-m-d');
                         <table id="user_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Profile Image</th>
+                                    <th style="width: 100px;">Profile Image</th>
                                     <th>Register Date</th>
                                     <th>Username</th>
                                     <th>Name</th>

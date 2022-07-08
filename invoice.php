@@ -1,6 +1,5 @@
 <?php
 
-
 session_start();
 
 $order_id = $_SESSION['order_id'];
@@ -42,56 +41,8 @@ unset($_SESSION['cart']);
 </head>
 
 <body>
-    <!--Navigation Start-->
-    <div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
-            <div class="container-fluid">
-                <a class="navbar-brand" style="color: white;" href="http://localhost/bit/">
-                    <i class="fas fa-globe"></i> U-Star Digital
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" aria-current="page" href="http://localhost/bit/">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/shop.php">Shop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/about.php">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/services.php">Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/contact.php">Contact</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php">
-                                <i class="fas fa-cart-arrow-down"></i> Cart
-                                <?php
-
-                                if (!empty($_SESSION['cart'])) {
-
-                                    echo count(array_keys($_SESSION['cart']));
-                                }
-
-                                ?>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </div>
-    <!--Navigation End-->
-
+   <!-- nav -->
+   <?php include "nav.php"; ?>
     <!--Hero Section End-->
     <!-- content start-->
     <div class="container">
@@ -288,11 +239,6 @@ unset($_SESSION['cart']);
         <a href="dashboard/dashboard.php">
             <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Dashboard</button>
         </a>
-
-        <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default" onclick="window.print(invoice);"><i class="fas fa-print"></i> Print</a>
-        <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-            <i class="fas fa-download"></i> Generate PDF
-        </button>
     </div>
 </div>
             </div>

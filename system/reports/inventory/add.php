@@ -31,12 +31,12 @@ if (!empty($notification_item_id_low_stock)) {
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Customer Report</h1>
+                    <h1 class="m-0">Inventory Report</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Customer Report</a></li>
-                        <li class="breadcrumb-item active">Customer</li>
+                        <li class="breadcrumb-item"><a href="#">Inventory Report</a></li>
+                        <li class="breadcrumb-item active">Inventory</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -50,7 +50,7 @@ if (!empty($notification_item_id_low_stock)) {
                     <div class="card-header">
                         <div class="row">
                             <div class="col">
-                                <h3 class="card-title">All User List</h3>
+                                <h3 class="card-title">All Inventory List</h3>
                             </div>
                         </div>
                     </div>
@@ -63,7 +63,7 @@ if (!empty($notification_item_id_low_stock)) {
                                     <label>Start Date: </label>
                                     <input type="date" name="start_date" value="<?php echo @$start_date ?>"><br>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-3">
                                     <label>End Date: </label>
                                     <input type="date" name="end_date" value="<?php echo @$end_date ?>"><br>
                                 </div>
@@ -72,7 +72,7 @@ if (!empty($notification_item_id_low_stock)) {
 
                                 </div>
                                 <div class="col">
-                                    <button class="btn btn-primary" onclick="exportTableToExcel('user_list', 'user_details')">Export to Excel</button>
+                                    <button class="btn btn-primary" onclick="exportTableToExcel('item_list', 'item_list')">Export to Excel</button>
                                 </div>
                             </div>
                             <hr>
@@ -102,7 +102,7 @@ if (!empty($notification_item_id_low_stock)) {
                                 </div>
                                 <div class="col-2">
                                     <label>Category</label>
-                                    <select class="form-control select2" style="width: 100%;" name="category" onchange="show_spec()" onselect="filter_model()" id="category">
+                                    <select class="form-control select2" style="width: 100%;" name="category" onchange="filter_model()" id="category">
                                         <option value="">- Select Category -</option>
                                         <?php
 
@@ -145,7 +145,7 @@ if (!empty($notification_item_id_low_stock)) {
                                     </select>
                                 </div>
                                 <div class="col-2">
-                                    <label>Model <span style="color: red;">*</span></label>
+                                    <label>Model</label>
                                     <select class="form-control select2" style="width: 100%;" name="model" id="model">
                                         <option value="">- Select Model -</option>
                                         <?php
@@ -169,14 +169,14 @@ if (!empty($notification_item_id_low_stock)) {
 
                                 <div class="col-3">
                                     <label>Search Table Data</label>
-                                    <input type="text" class="form-control" id="sku" placeholder="Search Data" name="cus_search" value="<?php echo @$cus_search ?>">
+                                    <input type="text" class="form-control" id="sku" placeholder="Search Data" name="item_search" value="<?php echo @$item_search ?>">
                                 </div>
                                 <div class="col-1" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
                                     <button type="submit" class="btn btn-primary" style="display: flex; margin-top: 30px; " name="action" value="search">Search</button>
                                 </div>
                             </div>
                         </form><br>
-                        <table id="user_list" class="table table-bordered table-hover">
+                        <table id="item_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>Item Id</th>
@@ -185,7 +185,7 @@ if (!empty($notification_item_id_low_stock)) {
                                     <th>Stock</th>
                                     <th>Reorder Level</th>
                                     <th>SKU</th>
-                                    <th>GRN Price LKR</th>
+                                    <th>Purchased Price LKR</th>
                                     <th>Total Purchased Cost LKR</th>
                                     <th>Mark Price LKR</th>
                                     <th>Discount Price LKR</th>
@@ -203,14 +203,15 @@ if (!empty($notification_item_id_low_stock)) {
                                 $where = null;
                                 $item_count = null;
                                 $stock = null;
+                                $all_grn_price = null;
 
                                 // filters by search button
                                 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
 
                                     // table wide search
-                                    if (!empty($cus_search)) {
+                                    if (!empty($item_search)) {
 
-                                        $where .= "CONCAT(c.cus_id, u.user_id, c.contact_nmuber, c.address_l1, c.address_l2, c.city, c.postal_code,u.user_name, u.email, u.first_name, u.last_name, u.profile_image, u.created_date, st.status_name, p.name) LIKE '%$cus_search%' AND ";
+                                        $where .= "CONCAT(i.item_id, i.item_name, i.sku, i.recorder_level, i.date, i.grn_price, i.unit_price, i.sale_price, i.discount_rate, i.date, i.stock, i.warranty_period, c.category_name, b.brand_name, m.model_name, s.status_name) LIKE '%$item_search%' AND ";
                                     }
 
                                     // filter by status
@@ -219,18 +220,25 @@ if (!empty($notification_item_id_low_stock)) {
                                         $where .= "s.status_id = $status AND ";
                                     }
 
-                                    // filter by city
-                                    if (!empty($city)) {
+                                    // filter by category
+                                    if (!empty($category)) {
 
-                                        $where .= "c.city LIKE '%$city%' AND ";
+                                        $where .= "c.category_id = $category AND ";
                                     }
 
-                                    // filter by user role
-                                    if (!empty($user_roles)) {
+                                    // filter by brand
+                                    if (!empty($brand)) {
 
-                                        $where .= "ur.user_role_id = $user_roles AND ";
+                                        $where .= "b.brand_id = $brand AND ";
                                     }
 
+                                    // filter by model
+                                    if (!empty($model)) {
+
+                                        $where .= "m.model_id = $model AND ";
+                                    }
+
+                                    // filter by date range
                                     if (!empty($start_date) and !empty($end_date)) {
 
                                         $where .= "(i.date BETWEEN '$start_date' AND '$end_date') AND ";
@@ -246,14 +254,13 @@ if (!empty($notification_item_id_low_stock)) {
                                     }
                                 }
 
-
                                 // filters by today
                                 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'today') {
 
                                     // get today date
                                     $date = date("Y-m-d");
 
-                                    $where = "WHERE u.created_date = '$date'";
+                                    $where = "WHERE i.date = '$date'";
                                 }
 
                                 // sql query
@@ -268,10 +275,10 @@ if (!empty($notification_item_id_low_stock)) {
                                 $result = $db->query($sql);
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
-
+                                        $total_purchase_price = $row['grn_price'] *  $row['stock'];
                                 ?>
                                         <tr>
-
+                                            
                                             <td><?php echo $row['item_id'] ?> </td>
                                             <td><?php echo $row['date'] ?> </td>
                                             <td><?php echo $row['item_name'] ?> </td>
@@ -279,7 +286,7 @@ if (!empty($notification_item_id_low_stock)) {
                                             <td><?php echo $row['recorder_level'] ?> </td>
                                             <td><?php echo $row['sku'] ?> </td>
                                             <td><?php echo number_format($row['grn_price'], 2) ?> </td>
-                                            <td><?php echo number_format($row['grn_price'] *  $row['stock'], 2) ?> </td>
+                                            <td><?php echo number_format($total_purchase_price, 2); $all_grn_price += $total_purchase_price; ?> </td>
                                             <td><?php echo number_format($row['unit_price'], 2) ?> </td>
                                             <td><?php echo number_format($row['sale_price'], 2) ?> </td>
                                             <td><?php echo $row['discount_rate'] ?>% </td>
@@ -299,7 +306,8 @@ if (!empty($notification_item_id_low_stock)) {
 
                                 ?>
 
-                                <b>Total Stock Count: <?php echo $stock ?></b>
+                                <b>Total Stock Count: <?php echo number_format($stock) ?></b>
+                                <b style="margin-left:15px ;">Total Stock Value: LKR <?php echo number_format($all_grn_price, 2)  ?></b>
                             </tbody>
                         </table>
                         <h3 class="card-title">Total Result Count: <b> <?php echo $user_count = $result->num_rows ?></b></h3>
@@ -354,7 +362,7 @@ if (!empty($notification_item_id_low_stock)) {
 <script>
     // data table for responsive
     $(function() {
-        $('#user_list').DataTable({
+        $('#item_list').DataTable({
             "paging": false,
             "lengthChange": false,
             "searching": false,
@@ -364,4 +372,26 @@ if (!empty($notification_item_id_low_stock)) {
             "responsive": true,
         });
     });
+</script>
+
+<script>
+    // show category related models 
+    function filter_model() {
+
+        var spec = $("#category").val();
+        var dt = "category=" + spec + "&";
+
+        $.ajax({
+            type: 'POST',
+            data: dt,
+            url: '../../../ajax/filter_item_models.php',
+            success: function(response) {
+                $("#model").html(response)
+            },
+            error: function(request, status, error) {
+                alert(error);
+            }
+        });
+
+    }
 </script>

@@ -83,3 +83,31 @@ SELECT DAY(created_date) AS date, COUNT(user_id) AS my_count
 FROM `users`
 WHERE user_role IN (1,2,3,4,6)
 GROUP BY DAY(created_date);
+
+SELECT WEEK(created_date) AS date, COUNT(user_id) AS my_count  
+FROM `users`
+WHERE user_role IN (1,2,3,4,6)
+GROUP BY WEEK(created_date);
+
+SELECT MONTH(created_date) AS date, COUNT(user_id) AS my_count  
+FROM `users`
+WHERE user_role IN (1,2,3,4,6)
+GROUP BY MONTH(created_date);
+
+SELECT YEAR(created_date) AS date, COUNT(user_id) AS my_count  
+FROM `users`
+WHERE user_role IN (1,2,3,4,6)
+GROUP BY YEAR(created_date);
+
+SELECT DAY(o.order_date) AS date, o.order_date, SUM(oi.grn_price) AS grn_price, SUM(oi.unit_price) AS unit_price, SUM(oi.sale_price) AS sale_price, COUNT(o.order_date) AS number_of_orders
+FROM orders_items oi
+LEFT JOIN orders o ON o.order_id = oi.order_id
+GROUP BY DAY(o.order_date);
+
+SELECT o.order_number, o.order_date, dd.frist_name
+FROM orders_company oc
+INNER JOIN orders o ON o.order_id = oc.order_id
+INNER JOIN courier_companies cc ON cc.company_id = oc.company_id
+INNER JOIN users u ON u.user_id = o.user_id
+INNER JOIN delivery_details dd ON dd.order_id = o.order_id;
+

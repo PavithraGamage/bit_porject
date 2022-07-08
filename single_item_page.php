@@ -24,6 +24,7 @@ if (!empty($item_id)) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'add_to_cart') {
 
+    // fetch item data
     $sql = "SELECT * FROM `items`  WHERE `item_id` = '$item_id'";
     $result = $db->query($sql);
 
@@ -42,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'add_to_cart') {
         $discount_rate = $row['discount_rate'];
         $stock = $row['stock'];
 
+        // create manual multidimensional array
         $cart = array($item_id => array("item_id" => $item_id, "item_name" => $item_name, "item_sku" => $item_sku, "item_price" => $item_price, "sales_price" => $sale_price, "item_qty" => $item_qty, "item_image" => $item_image, "item_discount" => $discount_rate, "grn_price" => $grn_price, "stock" => $stock));
 
         if (empty($_SESSION['cart'])) {
@@ -54,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'add_to_cart') {
 
                 $error['already'] = "This product already in the cart";
             } else {
+
                 $_SESSION['cart'] += $cart;
             }
         }
@@ -95,55 +98,8 @@ $spec_result = $db->query($spec_sql);
 
 <body>
 
-    <!--Navigation Start-->
-    <div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
-            <div class="container-fluid">
-                <a class="navbar-brand" style="color: white;" href="http://localhost/bit/">
-                    <i class="fas fa-globe"></i> U-Star Digital
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" aria-current="page" href="http://localhost/bit/">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/shop.php">Shop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/about.php">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/services.php">Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/contact.php">Contact</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php">
-                                <i class="fas fa-cart-arrow-down"></i> Cart
-                                <?php
-
-                                if (!empty($_SESSION['cart'])) {
-
-                                    echo count(array_keys($_SESSION['cart']));
-                                }
-
-                                ?>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </div>
-    <!--Navigation End-->
+   <!-- nav -->
+   <?php include "nav.php"; ?>
 
     <!-- content start-->
     <div class="container">
@@ -248,11 +204,11 @@ $spec_result = $db->query($spec_sql);
     <!-- content end-->
 
     <!-- footer start -->
-    <?php 
-   
-   include "footer.php";
-   
-   ?>
+    <?php
+
+    include "footer.php";
+
+    ?>
     <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
 
 

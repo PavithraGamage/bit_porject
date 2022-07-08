@@ -238,25 +238,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                 </div>
             </div>
             <!-- Right Section Start -->
-            <div class="col">
+            <div class="col-8">
                 <!-- Table Data Fletch -->
-                <?php
-
-                // sql query
-                $sql = "SELECT * 
-                FROM brands b
-                INNER JOIN status s ON s.status_id = b.status;";
-
-                // fletch data
-                $result = $db->query($sql);
-
-                ?>
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Available Brands</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
+                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" class="form-control" placeholder="Search Data" name="cus_search" value="<?php echo @$cus_search ?>">
+                                </div>
+                                <div class="col-1" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
+                                    <button type="submit" class="btn btn-primary" name="action" value="search">Search</button>
+                                </div>
+                            </div>
+                        </form>
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -265,12 +264,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                                     <th>Edit</th>
                                     <th>Inactive</th>
                                     <th>Active</th>
-
-
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
+
+                                // crate variable for store dynamic query
+                                $where = null;
+
+                                // date range check
+                                if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
+
+                                    // table wide search 
+                                    if (!empty($cus_search)) {
+
+                                        $where .= "CONCAT(b.brand_name, s.status_name) LIKE '%$cus_search%' AND ";
+                                    }
+
+                                    // remove the last 4 digits of the $where part "AND "
+                                    if (!empty($where)) {
+
+                                        $where = substr($where, 0, -4);
+
+                                        // take Mysql WHERE and take $where query parts 
+                                        $where = "WHERE $where";
+                                    }
+                                }
+
+                                // sql query
+                                $sql = "SELECT * 
+                                FROM brands b
+                                INNER JOIN status s ON s.status_id = b.status $where;";
+
+                                // fletch data
+                                $result = $db->query($sql);
 
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
@@ -318,19 +345,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
 <!-- Page specific script -->
 <script>
     $(function() {
-        // $("#user_list").DataTable({
-        //     "responsive": true,
-        //     "lengthChange": false,
-        //     "autoWidth": false,
-        //     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        // }).buttons().container().appendTo('#user_list_wrapper .col-md-6:eq(0)');
+
         $('#brand_list').DataTable({
-            "paging": true,
-            "lengthChange": false,
+            "paging": false,
+            "lengthChange": true,
             "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
+            "ordering": false,
+            "info": false,
+            "autoWidth": true,
             "responsive": true,
         });
     });

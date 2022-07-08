@@ -188,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'register') {
 
     if (empty($error)) {
 
-        $sql = "INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `first_name`, `last_name`, `profile_image`, `created_date`, `status`) VALUES (NULL, '$reg_username', '$reg_email', SHA1('$reg_password'), '$reg_first_name', '$reg_last_name', '', '$date', '0');";
+        $sql = "INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `first_name`, `last_name`, `profile_image`, `created_date`, `status`,`user_role`) VALUES (NULL, '$reg_username', '$reg_email', SHA1('$reg_password'), '$reg_first_name', '$reg_last_name', '', '$date', '0','5');";
 
         //run database query
         $db->query($sql);
@@ -357,6 +357,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
         // insert order
         $sql_order = "INSERT INTO `orders` (`order_id`, `order_number`, `order_total`, `total_discount`, `delivery_charge`, `order_date`, `order_time`, `user_id`, `payment_id`, `grand_total`, `courier_status`) VALUES (NULL, '$order_number', '$order_total', '$discount', '$d_province', '$date', '$time','$user_id', '$payment_method', '$grand_total', 1);";
+
         // run database query
         $query = $db->query($sql_order);
 
@@ -370,16 +371,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
         // order number update
         $sql = "UPDATE orders SET order_number = '$order_number' WHERE order_id = '$order_id'";
+
         // run database query
         $query = $db->query($sql);
 
         // insert billing
         $sql_billing = "INSERT INTO `billing_details` (`id`, `first_name`, `last_name`, `phone`, `email`, `address_line_1`, `address_line_2`, `provinces`, `city`, `zip`, `order_id`) VALUES (NULL, '$frist_name', '$last_name', '$phone', '$email', '$address_line_1', '$address_line_2', '$province', '$city', '$zip', '$order_id');";
+
         // run database query
         $query = $db->query($sql_billing);
 
         // insert delivery 
         $sql_delivery = "INSERT INTO `delivery_details` (`id`, `frist_name`, `last_name`, `phone`, `email`, `address_line_1`, `address_line_2`, `city`, `province_id`, `zip`, `order_id`) VALUES (NULL, '$d_frist_name', '$d_last_name', '$d_phone', '$d_email', '$d_address_line_1', '$d_address_line_2', '$d_city', '$d_province', '$d_zip', '$order_id');";
+
         // run database query
         $query = $db->query($sql_delivery);
 
@@ -394,9 +398,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
             $grn_price = $product['grn_price'];
             $item_qty = $product['item_qty'];
 
-            $sql = "INSERT INTO `orders_items` (`orders_items_id`, `order_id`, `item_id`, `item_qty`, `grn_price`, `unit_price`, `sale_price`) VALUES (NULL, '$order_id', '$item_id', '$item_qty', '$grn_price', '$item_price', '$item_sale_price');";
+            // set order price
+            $new_grn_price = $grn_price * $item_qty;
+            $new_item_sale_price = $item_sale_price * $item_qty;
+            $new_item_price = $item_price * $item_qty;
+
+            $sql = "INSERT INTO `orders_items` (`orders_items_id`, `order_id`, `item_id`, `item_qty`, `grn_price`, `unit_price`, `sale_price`, `net_price`) VALUES (NULL, '$order_id', '$item_id', '$item_qty', '$new_grn_price', '$new_item_price', '$new_item_sale_price', '$new_item_sale_price');";
+
             //run sql query
             $db->query($sql);
+
+            // last index
+            $order_items_id = $db->insert_id;
+
+            // update net price 
+            if ($new_item_sale_price == 0) {
+
+                $sql = "UPDATE `orders_items` SET `net_price` = '$new_item_price' WHERE `orders_items`.`orders_items_id` = $order_items_id;";
+
+                //run sql query
+                $db->query($sql);
+            }
 
             // ----------- update stock --------------------
 
@@ -435,7 +457,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                 //run sql query
                 $db->query($sql_stock);
             }
-            
+
             // low stock check
             if ($reorder_level >= $new_stock) {
 
@@ -481,56 +503,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 </head>
 
 <body>
-    <!--Navigation Start-->
-    <div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
-            <div class="container-fluid">
-                <a class="navbar-brand" style="color: white;" href="http://localhost/bit/">
-                    <i class="fas fa-globe"></i> U-Star Digital
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" aria-current="page" href="http://localhost/bit/">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/shop.php">Shop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/about.php">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/services.php">Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/contact.php">Contact</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php">
-                                <i class="fas fa-cart-arrow-down"></i> Cart
-                                <?php
-
-                                if (!empty($_SESSION['cart'])) {
-
-                                    echo count(array_keys($_SESSION['cart']));
-                                }
-
-                                ?>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </div>
-    <!--Navigation End-->
-
+   <!-- nav -->
+   <?php include "nav.php"; ?>
+   
     <!--Hero Section End-->
     <!-- content start-->
     <div class="container">
@@ -565,7 +540,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                     <div class="row">
                                         <div class="col-8">
                                             <div class="icheck-primary">
-                                               
+
                                             </div>
                                         </div>
                                         <!-- /.col -->
@@ -842,7 +817,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
                                     <div>
                                         <h4>LKR: <?php echo number_format($_SESSION['grand_total'] - $_SESSION['grand_total_sale'], 2); ?></h4>
                                     </div>
-                                    <button type="submit" name="action" value="insert" class="btn btn-secondary cart_checkout_button"> PAY YOUR ORDER </button>
+                                    <button type="submit" name="action" value="insert" class="btn btn-secondary cart_checkout_button"> COMPLETE ORDER </button>
                                 </div>
                             </div>
                         </div>

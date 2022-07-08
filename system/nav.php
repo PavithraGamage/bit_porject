@@ -168,7 +168,7 @@ if ($_SESSION['user_role'] == 1) {
                         while ($row = $result->fetch_assoc()) {
 
                     ?>
-                            <form action="http://localhost/bit/system/reports/users/view.php" method="get" id="notification_form<?php echo $row['user_id'] ?>">
+                            <form action="http://localhost/bit/system/reports/users/view_cus.php" method="get" id="notification_form<?php echo $row['user_id'] ?>">
 
                                 <div class="dropdown-divider"></div>
 
@@ -651,7 +651,7 @@ if ($_SESSION['user_role'] == 6) {
                 $sql = "SELECT m.module_id, m.description, m.path, m.view, m.icon, m.status, um.status
                     FROM users_modules um
                     INNER JOIN modules m ON m.module_id = um.module_id
-                    WHERE length(m.module_id) = '2' AND um.user_id ='" . $_SESSION['user_id'] . "' AND m.status = '0' AND um.status = '0'";
+                    WHERE length(m.module_id) = '2' AND um.user_id ='" . $_SESSION['user_id'] . "' AND m.status = '0' AND um.status = '0' ORDER BY `m`.`nav_order` ASC";
 
                 // assign the query
                 $result = $db->query($sql);

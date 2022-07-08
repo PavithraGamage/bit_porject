@@ -31,7 +31,7 @@ $date = date('Y-m-d');
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">User Report</h1>
+                    <h1 class="m-0">Staff Report</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -50,7 +50,7 @@ $date = date('Y-m-d');
                     <div class="card-header">
                         <div class="row">
                             <div class="col">
-                                <h3 class="card-title">All User List</h3>
+                                <h3 class="card-title">All Staff List</h3>
                             </div>
                         </div>
                     </div>
@@ -63,7 +63,7 @@ $date = date('Y-m-d');
                                     <label>Start Date: </label>
                                     <input type="date" name="start_date" value="<?php echo @$start_date ?>"><br>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-3">
                                     <label>End Date: </label>
                                     <input type="date" name="end_date" value="<?php echo @$end_date ?>"><br>
                                 </div>
@@ -81,7 +81,7 @@ $date = date('Y-m-d');
                                 <div class="col-2">
                                     <label>User Status</label>
                                     <select class="form-control select2" style="width: 100%;" name="status">
-                                        <option value="">- Select User Status -</option>
+                                        <option value="">- Select Status -</option>
                                         <?php
 
                                         // model drop down data fletch 
@@ -100,7 +100,7 @@ $date = date('Y-m-d');
                                         ?>
                                     </select>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-3">
                                     <label>City</label>
                                     <select class="form-control select2" style="width: 100%;" name="city">
                                         <option value="">- Select City -</option>
@@ -122,10 +122,10 @@ $date = date('Y-m-d');
                                         ?>
                                     </select>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-3">
                                     <label>User Role</label>
                                     <select class="form-control select2" style="width: 100%;" name="user_roles">
-                                        <option value="">- Select User Role -</option>
+                                        <option value="">- Select Role -</option>
                                         <?php
 
                                         // model drop down data fletch 
@@ -147,19 +147,19 @@ $date = date('Y-m-d');
                                         ?>
                                     </select>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-3">
                                     <label>Search Table Data</label>
                                     <input type="text" class="form-control" id="sku" placeholder="Search Data" name="cus_search" value="<?php echo @$cus_search ?>">
                                 </div>
-                                <div class="col-2" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
-                                    <button type="submit" class="btn btn-primary" style="display: flex; margin-left: 10px; margin-top: 30px; " name="action" value="search">Search</button>
+                                <div class="col-1" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
+                                    <button type="submit" class="btn btn-primary" style="display: flex; margin-top: 30px; " name="action" value="search">Search</button>
                                 </div>
                             </div>
                         </form><br>
                         <table id="user_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
-                                    <th>Profile Image</th>
+                                    <th style="width: 100px;">Profile Image</th>
                                     <th>Register Date</th>
                                     <th>Username</th>
                                     <th>User Role</th>
@@ -173,7 +173,7 @@ $date = date('Y-m-d');
                             </thead>
                             <tbody>
                                 <?php
-                                // $recode_cont = 1;
+                               
                                 $where = null;
                                 $date = null;
 
@@ -230,7 +230,7 @@ $date = date('Y-m-d');
                                 }
 
                                 // sql query
-                              echo  $sql = "SELECT u.user_id, s.staff_id, s.contact_number, s.address_l1, s.address_l2, s.city, u.user_name, u.first_name, u.last_name, u.profile_image, u.created_date, st.status_name, ur.role_name, u.email
+                                $sql = "SELECT u.user_id, s.staff_id, s.contact_number, s.address_l1, s.address_l2, s.city, u.user_name, u.first_name, u.last_name, u.profile_image, u.created_date, st.status_name, ur.role_name, u.email
                                 FROM staff s
                                 INNER JOIN users u ON u.user_id = s.user_id
                                 INNER JOIN status st on st.status_id = u.status

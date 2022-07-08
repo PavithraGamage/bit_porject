@@ -2,7 +2,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-8">
-                    <a class="navbar-brand" style="color: white;" href="http://localhost/bit/">
+                    <a class="navbar-brand" style="color: white;" href="http://localhost/bit/home.php">
                         <i class="fas fa-globe"></i> U-Star Digital
                     </a>
                     <hr class="footer_hr">

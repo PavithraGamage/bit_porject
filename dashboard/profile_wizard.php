@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
     }
 
     if (!empty($contact_number)) {
-        if (strlen($contact_number) < 10) {
+        if (strlen($contact_number) != 10) {
             $error['contact_number'] = "Contact Number Should be at least 10 digits";
         }
     }
@@ -67,6 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
 
     if (!preg_match("/^[0-9]*$/", $postal_code)) {
         $error['postal_code'] = "Only Numbers Allowed";
+    }
+
+    if (!empty($postal_code)) {
+        if (strlen($postal_code) != 5) {
+            $error['postal_code'] = "Postal Code Should be at least 5 digits";
+        }
     }
 
     if (!preg_match("/^[0-9]*$/", $province)) {
@@ -89,8 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
         $photo = @$previous_profile_image;
     }
 
- 
-// database section
+
+    // database section
     if (empty($error)) {
 
         $sql = "INSERT INTO `customers` (`cus_id`, `contact_nmuber`, `address_l1`, `address_l2`, `city`, `postal_code`, `user_id`, `province_id`) VALUES (NULL, '$contact_number', '$address_line_1', '$address_line_2', '$city', '$postal_code', '$req_user_id', '$province');";
@@ -98,9 +104,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
         $db->query($sql);
 
         // user image upload
-         $sql_image = "UPDATE `users` SET `profile_image` = '$photo' WHERE `users`.`user_id` = $req_user_id";
+        $sql_image = "UPDATE `users` SET `profile_image` = '$photo' WHERE `users`.`user_id` = $req_user_id";
         //run database query
         $db->query($sql_image);
+
+        // form reload value null
+        $contact_number = null;
+        $address_line_1 = null;
+        $address_line_2 = null;
+        $city = null;
+        $postal_code = null;
+        $province = null;
     }
 
     // redirect to checkout
@@ -141,11 +155,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
     <div class="container">
         <div class="row">
             <div class="col" style="margin:5% 20%; ">
-            <div class="row" style="margin-bottom: 40px;">
+                <div class="row" style="margin-bottom: 40px;">
                     <div class="col">
                         <p><?php echo @$error['complete_msg'] ?></p>
                         <a href="index.php">
-                                <?php echo @$error['button'] ?>
+                            <?php echo @$error['button'] ?>
                         </a>
                     </div>
                 </div>
@@ -187,6 +201,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'done') {
                                 </div>
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control" placeholder="Postal Code" name="postal_code" value="<?php echo @$postal_code ?>">
+                                </div>
+                                <div>
+                                    <a href="https://nation.lk/postalcode/" target="blank">Postal Codes</a>
                                 </div>
                                 <div>
                                     <p style="color: red;"> <?php echo @$error['postal_code'] ?> </p>

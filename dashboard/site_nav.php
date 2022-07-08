@@ -34,7 +34,7 @@ include "../system/functions.php";
     <div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
             <div class="container-fluid">
-                <a class="navbar-brand" style="color: white;" href="http://localhost/bit/">
+                <a class="navbar-brand" style="color: white;" href="http://localhost/bit/home.php">
                     <i class="fas fa-globe"></i> U-Star Digital
                 </a>
 
@@ -44,7 +44,7 @@ include "../system/functions.php";
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link sys_nav_link" aria-current="page" href="http://localhost/bit/">Home</a>
+                            <a class="nav-link sys_nav_link" aria-current="page" href="http://localhost/bit/home.php">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link sys_nav_link" href="http://localhost/bit/shop.php">Shop</a>

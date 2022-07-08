@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <link href="myprojectstyle.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        <!--
+        <h1 class="myhead1" id="head1">BE A PART OF THE KNOWLEDGE SOCIETY WITH A BIT @ UCSC</h1>
+        <p>
+            Welcome to the official website of the Bachelor of Information Technology(External); a degree programme conducted by the University of Colombo School of Computing (UCSC) and offered by the University of Colombo (UoC). The aim of our website is to provide you with comprehensive information on BIT and to guide you throughout the programme.
+        </p>
+        <h1 class="myhead1" id="head2">BIT @ UCSC –A Rewarding Career Path in Information Technology</h1>
+        <p class="para1">
+            As technology progresses rapidly, the demand f o r I n f o r mat i o n Technology professionals keeps increasing day by day. If you are seeking for a degree programme with a high employability rate and you are interested in obtaining an internationally recognized degree in IT, then the Bachelor of Information Technology (BIT) conducted by the University of Colombo School of Computing (UCSC) is especially for you. 
+        </p>
+        -->
+        <?php
+        //Discount Calculate
+        /* echo "Welcome  BIT  Project";
+          echo "IT Project";
+
+         */
+        // $x=5/*+6-3*/*2;
+        //echo $x;
+        /*  ECHO "<h1>Hello World!</h1><br>";
+          echo "Hello World!<br>";
+          EcHo "Hello World!<br>";
+         */
+//        $age=50;
+//        $AGE=25;
+//        $firstname="Kamal";
+//        $_firstname="Nimal";
+//        $8age=34;
+        //$txt = "Information Technology";
+        //echo "$txt";
+        //echo 'I love "'.$txt.'"!';
+//        $x = "5";
+//        $y = "4";
+//        var_dump($x);
+//        echo "<br>";
+//        var_dump($y);
+//        echo "<br>";
+//        echo $x + $y;
+//        $x=0;
+//        $x+=print "A";
+//         $x+=print "B";
+//         $x+=print "C";
+//        echo "Welcome PHP!";
+//        echo "<br>";
+//        echo $x;
+//        var_dump($x);
+//        $title="Contact Management System";
+//        print "Hello"." ". "$title";
+//        $pet = "bird";
+//        echo "The {$pet}cage has arrived.";
+//        $weekday = "Monday";
+//        print_r($weekday);
+//        $months=array("JAN","FEB","MAR","APR","MAY","JUN");
+//        var_dump($months);
+//        $x = 5;
+//        $y=10;
+//        function cal() {
+//            global $x;
+//            global $y;
+//            global $z;
+//            $z=$x+$y;
+//            
+//        }
+//        cal();
+//        echo "<br>";
+//        echo $z;
+//        echo $x;
+//        function myTest() {
+//             static $x = 0;
+//             $x++;
+//            echo $x;
+//             
+//        }
+//
+//        myTest();
+//        myTest();
+//        myTest();
+//         myTest();
+//        $many = 2.2888800;
+//        $many_2 = 2.2111200;
+//        $few = $many + $many_2;
+//        print("$many + $many_2 = $few <br>");
+//        $x = true;
+//        $y = false;
+//
+//        echo $x;
+//        echo "<br>";
+//        echo  $y;
+//        var_dump($x);
+//        var_dump($y);
+//        $cars = array("Volvo",100.45,"Toyota");
+//        var_dump($cars);
+//        $x = null;
+//        var_dump($x);
+//        print_r($x);
+//        $nic="834567861v";
+//         echo strlen($nic); 
+//        $x = "Information Technology";
+//        echo $x;
+//        echo "<br>";
+//       $y= convert_uuencode($x);
+//       echo $y;
+//       echo "<br>";
+//       echo convert_uudecode($y);
+//$str="Welcome Information Technology";
+//       
+//function myexplode($sep,$str){
+//$myarray= explode($sep,$str);
+//return  $myarray;
+//}
+//print_r($myarray);
+//        
+//        echo $myarray[2];
+//        
+//        $mydate="2021-08-01";
+//        
+//        $myarray= explode("-", $mydate);
+//        
+//        $tel="+94-1123456"
+//        $a=array("Welcome","Information","Technology");
+//        print_r($a);
+//        
+//        echo "<br>";
+//        
+//        $str= implode(" ", $a);
+//        
+//        echo $str;
+        // $sql="SELECT * FROM tb_user WHERE  name='Kamal' AND"
+//       $first_name="Kamal                                      ";
+//       $first_name= trim($first_name);
+//       var_dump($first_name);
+//echo $password="abc@1234";
+//echo "<br>";
+//$encPassword= sha1($password,true);
+//        
+//echo $encPassword;
+//echo $nic="930402036v";
+//$nic1="980253414v";
+//echo "<br>";
+//$birthyear= substr($nic, 0,-6);
+//echo $birthyear;
+//define('PROJECT_URL', 'http://localhost/bitproject');
+//
+//function showMyProjectPath(){
+//    echo PROJECT_URL;
+//}
+//
+//showMyProjectPath();
+//$x=10;
+//$y=20;
+//
+//$x+=$y;
+//$x=10;
+//
+//echo ++$x;
+//echo "<br>";
+//echo $x;
+//$x=100;
+//$y=50;
+//
+//if($x!=100  ){
+//    echo "Yes......!";
+//}else{
+//    echo "No....!";
+//}
+//$str1="Information";
+//$str2="Technology";
+//
+//echo $str1." ".$str2;
+//echo "<br>";
+//echo $str1;
+//
+//$str1.=$str2;
+//
+//echo $str1;
+        date_default_timezone_set('Asia/Colombo');
+//        $t=date('Y-m-d');
+//        echo $t;
+//$age=30;
+//
+//if($age>=30){
+//    echo "You are eligible for Vacine...!";
+//}
+//    $age=21;
+//    
+//    if($age<=20){
+//        echo "You are teen..!";
+//    }else{
+//        echo "You are elder..!";
+//    }
+//    
+//    $nic="930402036v"
+//$km=20;
+//if($km>=75){
+//    echo "Your cost is Rs. 25000.00";
+//}elseif($km>=50){
+//    echo "Your cost is Rs. 20000.00";
+//}elseif($km>=25){
+//    echo "Your cost is Rs. 15000.00";
+//}elseif($km>=1){
+//    echo "Your cost is Rs. 10000.00";
+//}else{
+//    echo "Not valid packages..!";
+//}
+//$marks=51;
+//
+//echo $marks>=50?'Pass':'Fail';
+//
+//$birthdate="";
+//$curr_date=
+//        
+// $age=
+//$mycolor="Blue";
+//
+//switch($mycolor){
+//    case "Red":
+//        echo "My color is Red";
+//        break;
+//    case "Blue":
+//        echo "My color is Blue";
+//        break;
+//    case "Green":
+//        echo "My color is Green";
+//        break;
+//    default:
+//        echo "Invalid color";
+//         
+//}
+//$x=1;
+//
+//while ($x<=10){
+//    $y=1;
+//    while ($y<=$x){
+//    echo "*";
+//    $y++;
+//    }
+//    echo "<br>";    
+//    $x++;
+//}
+//     $nic="86785345v";
+//     $x= str_split($nic);
+//     print_r($x);
+//$x=11;
+//
+//do{
+//  echo "*";
+//  $x++;
+//}while ($x<=10);
+//echo $x;
+//for($i=2000;$i<=2030;$i++){
+//    //echo $i;
+//}
+        ?>
+
+
+        <?php
+//        $year=array("2000","2001","2002","2003","2004","2005");
+//        
+//        foreach ($year as $value){
+//            echo $value;
+//            echo "<br>";
+//        }
+//        $nic="93234567v";
+//                $x= str_split($nic);
+//                $i=1;
+//                foreach ($x as $value){
+//                    if($i==2){
+//                    echo $value;
+//                    echo "<br>";
+//                    }
+//                    $i++;
+//                }
+        ?>
+        <?php
+//        function myGreeting() {
+//            echo "Welcome Year 2021";
+//        }
+        //myGreeting();
+//        function circlePerimeter() {
+//            echo 2 * 22 / 7 * 7;
+//        }
+//
+//        // circlePerimeter();
+//
+//        function circleDimantion() {
+//
+//            $x = 2;
+//            $y = 22 / 7;
+//            $r = 10;
+//
+//            $z = $x * $y * $r;
+//            echo $z;
+//        }
+//
+//        //circleDimantion();
+//
+//        function myGreeting($year) {
+//            echo "Welcome Year $year";
+//        }
+//
+//        //myGreeting("2023");
+//
+//        function calAmount($nos = null, $price = null) {
+//
+//            $total = $nos * $price;
+//            return $total;
+//        }
+//
+//        function calDiscount($cost = null, $rate = null) {
+//            return ($cost * $rate) / 100;
+//        }
+//
+//        $cost=calAmount(120,895);
+//        $discount=calDiscount($cost, 5);
+//        echo "Total Cost = $cost";
+//        echo "<br>";
+//        echo "Discount Amount = $discount";
+//        echo "<br>";
+//        echo "Net Amount = ".$cost-$discount;
+        // $district=array("Colombo","Kandy","Gampaha","Matara","Hambanthota","Kaluthara");
+        //method 1
+        $persons = array("EmployeeNo" => "EMP001", "FirstName" => "Sampath", "LastName" => "Perera", "District" => "Colombo", "Age" => 25, "Salary" => 45550.75);
+//      //method 2
+//        $student["Name"]="Kithasara";
+//        $student['Age']=24;
+//        $student["Subject"]="IT";
+//        $student["Marks"]=82;
+//        
+//        foreach ($person as $key=>$value){
+//            echo $key,":",$value;
+//            echo "<br>";
+//        }
+
+        $students = array(
+            array("Sampath", 82.5, 75),
+            array("Amila", 65.25, 56),
+            array("Kamal", 58.50, 45),
+            array("Anil", 75.50, 82)
+        );
+
+//        for ($i = 0; $i < count($students); $i++) {
+//            for ($x = 0; $x < count($students[$i]); $x++) {
+//                echo $students[$i][$x];
+//            }
+//            echo "<br>";
+//        }
+
+      
+
+        $person = array(
+                
+            array("EmpNo" => "EMP1581","FristName" => "Amal", "LastName" => "Perera", "District" => "Kaluthara", "Age" => 25, "Salary" => 45550.65),
+            array("EmpNo" => "EMP1585","FristName" => "Kamal", "LastName" => "Samaranayeke", "District" => "Horena", "Age" => 27, "Salary" => 65550.65),
+            array("EmpNo" => "EMP1588","FristName" => "Nimal", "LastName" => "Gamage", "District" => "Bandaragama", "Age" => 28, "Salary" => 85550.65),
+            array("EmpNo" => "EMP1555","FristName" => "Sunimal", "LastName" => "Arachchi", "District" => "Panadura", "Age" => 23, "Salary" => 48550.65),
+            array("EmpNo" => "EMP1584","FristName" => "Priyal", "LastName" => "Perera", "District" => "Rathnapura", "Age" => 29, "Salary" => 49550.65),
+                
+                
+                );
+        
+                foreach ($person as $key => $value) {
+                    echo $value["EmpNo"]," ",$value["FristName"]," ",$value["LastName"]," ",$value["District"]," ",$value["Age"]," ",$value["Salary"];
+                    echo "<br>";
+                }
+
+        
+        ?>
+
+    </body>
+</html>
+
+
+ if (strlen($_POST["password"]) <= 8) {
+        $passwordErr = "Your Password Must Contain At Least 8 Characters!";
+    }
+    elseif(!preg_match("#[0-9]+#",$password)) {
+        $passwordErr = "Your Password Must Contain At Least 1 Number!";
+    }
+    elseif(!preg_match("#[A-Z]+#",$password)) {
+        $passwordErr = "Your Password Must Contain At Least 1 Capital Letter!";
+    }
+    elseif(!preg_match("#[a-z]+#",$password)) {
+        $passwordErr = "Your Password Must Contain At Least 1 Lowercase Letter!";
+    } else {
+        $cpasswordErr = "Please Check You've Entered Or Confirmed Your Password!";
+    }
+
+
+    <?php 
+    $count =null;
+foreach ($_SESSION['cart'] as $product) {
+    $item_price = $product['item_price'];
+      $count += $item_price;
+}
+    
+    echo $count;
+    ?>

@@ -24,7 +24,7 @@ $db = db_con();
 
                 $user_id =  $_SESSION['user_id'];
 
-                $sql = "SELECT * FROM orders o WHERE o.user_id = $user_id ORDER BY `o`.`order_date` DESC";
+                $sql = "SELECT * FROM orders o WHERE o.user_id = $user_id ORDER BY `o`.`order_number` DESC";
 
                 $result = $db->query($sql);
 

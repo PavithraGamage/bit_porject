@@ -167,21 +167,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'register') {
     }
 
     if (!empty($reg_password)) {
+
         if (strlen($reg_password) < 8) {
             $error['reg_password'] = "Password Should be at least 8 characters";
         }
+
     }
 
     if (empty($error)) {
 
-        $sql = "INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `first_name`, `last_name`, `profile_image`, `created_date`, `status`) VALUES (NULL, '$reg_username', '$reg_email', SHA1('$reg_password'), '$reg_first_name', '$reg_last_name', '', '$date', '0');";
+        $sql = "INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `first_name`, `last_name`, `profile_image`, `created_date`, `status`, `user_role`) VALUES (NULL, '$reg_username', '$reg_email', SHA1('$reg_password'), '$reg_first_name', '$reg_last_name', '', '$date', '0','5');";
 
         //run database query
         $db->query($sql);
 
         //capture last insert ID
-        echo $user_id = $db->insert_id;
-        echo $_SESSION['req_user_id'] = $user_id;
+         $user_id = $db->insert_id;
+         $_SESSION['req_user_id'] = $user_id;
     }
 
     // redirect to dashboard

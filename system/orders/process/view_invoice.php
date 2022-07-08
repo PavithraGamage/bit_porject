@@ -34,6 +34,17 @@ if (empty($order_id)) {
     header('Location: http://localhost/bit/system/orders/process/add.php');
 }
 
+// update the status of the page view
+$sql = "SELECT * FROM `orders` WHERE order_id = $order_id;";
+$result = $db->query($sql);
+
+$row = $result->fetch_assoc();
+
+if($row['courier_status'] != 5){
+
+    $sql = "UPDATE `orders` SET `courier_status` = '5' WHERE `orders`.`order_id` = $order_id;";
+    $query = $db->query($sql);
+}
 
 // update the edit data
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
@@ -87,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
                                     <?php
 
                                     // model drop down data fletch 
-                                    $sql = "SELECT * FROM `courier_status` WHERE status = 0 AND user_role_id = 3";
+                                    $sql = "SELECT * FROM `courier_status` WHERE status = 0 AND user_role_id = 3 AND id = 6";
                                     $result = $db->query($sql);
 
                                     // fletch data
@@ -112,8 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Delivery Charges</a></li>
-                        <li class="breadcrumb-item active">Add</li>
+                        <li class="breadcrumb-item"><a href="http://localhost/bit/system/orders/process/add.php">Process Orders</a></li>
+                        <li class="breadcrumb-item active">Order Status</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->

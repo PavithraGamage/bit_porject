@@ -80,7 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     }
 }
 
-
 // edit manufacturers
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 
@@ -110,8 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
         $price = $row['price'];
     }
 }
-
-
 
 // update the edit data
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
@@ -147,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
     }
 }
 
-// delete recode
+// change status to inactive
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
     $sql = "UPDATE `province` SET `status` = '1' WHERE id = $id;";
@@ -158,6 +155,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
     // error styles
     $error_style['success'] = "alert-danger";
+    $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
+}
+
+// change status to active
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
+
+    $sql = "UPDATE `province` SET `status` = '0' WHERE id = $id;";
+
+    $db->query($sql);
+
+    $error['delete_msg'] = "Recode Active";
+
+    // error styles
+    $error_style['success'] = "alert-success";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
 }
 ?>
@@ -249,45 +260,76 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 </div>
             </div>
             <!-- Right Section Start -->
-            <div class="col">
+            <div class="col-8">
                 <!-- Table Data Fletch -->
-                <?php
 
-                // sql query
-                $sql = "SELECT * FROM `province` WHERE status = 0;";
-
-                // fletch data
-                $result = $db->query($sql);
-
-                ?>
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Courier Status</h3>
+                        <h3 class="card-title">Delivery Charges</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" class="form-control" placeholder="Search Data" name="cus_search" value="<?php echo @$cus_search ?>">
+                                </div>
+                                <div class="col-1" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
+                                    <button type="submit" class="btn btn-primary" name="action" value="search">Search</button>
+                                </div>
+                            </div>
+                        </form>
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>ID</th>
                                     <th>Province</th>
                                     <th>Price LKR:</th>
-                                    <th style="width: 85px !important;">Edit</th>
-                                    <th style="width: 85px !important;">Delete</th>
-
-
+                                    <th>Status</th>
+                                    <th>Edit</th>
+                                    <th>Inactive</th>
+                                    <th>Active</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
 
+                                // crate variable for store dynamic query
+                                $where = null;
+
+                                // date range check
+                                if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
+
+                                    // table wide search 
+                                    if (!empty($cus_search)) {
+
+                                        $where .= "CONCAT(p.id, p.name, p.price, s.status_name) LIKE '%$cus_search%' AND ";
+                                    }
+
+                                    // remove the last 4 digits of the $where part "AND "
+                                    if (!empty($where)) {
+
+                                        $where = substr($where, 0, -4);
+
+                                        // take Mysql WHERE and take $where query parts 
+                                        $where = "WHERE $where";
+                                    }
+                                }
+                                // sql query
+                                $sql = "SELECT p.id, p.name, p.price, s.status_name
+                                FROM province p
+                                INNER JOIN status s ON s.status_id = p.status $where;";
+
+                                // fletch data
+                                $result = $db->query($sql);
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
                                 ?>
                                         <tr>
                                             <td><?php echo $row['id'] ?> </td>
                                             <td><?php echo $row['name'] ?> </td>
-                                            <td><?php echo $row['price'] ?> </td>
+                                            <td><?php echo number_format($row['price'], 2)  ?> </td>
+                                            <td><?php echo $row['status_name'] ?> </td>
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                                     <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
@@ -297,7 +339,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                                             <td>
                                                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                                                     <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
-                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fas fa-trash-alt"></i></button>
+                                                    <button type="submit" name="action" value="delete" class="btn btn-block btn-danger btn-xs"><i class="fa fa-ban" aria-hidden="true"></i></button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                                                    <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
+                                                    <button type="submit" name="action" value="active" class="btn btn-block btn-warning btn-xs"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -322,19 +370,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 <!-- Page specific script -->
 <script>
     $(function() {
-        // $("#user_list").DataTable({
-        //     "responsive": true,
-        //     "lengthChange": false,
-        //     "autoWidth": false,
-        //     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        // }).buttons().container().appendTo('#user_list_wrapper .col-md-6:eq(0)');
+
         $('#brand_list').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
+            "paging": false,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": false,
+            "info": false,
+            "autoWidth": true,
             "responsive": true,
         });
     });

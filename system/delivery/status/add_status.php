@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
         $error['courier_status'] = "Status Name Should Not Be Empty";
     }
 
-     if (empty($role)) {
+    if (empty($role)) {
         $error['status'] = "Role Name Should Not Be Empty";
     }
 
@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
     // update query
     if (empty($error)) {
-       $sql = "UPDATE `courier_status` SET `courier_status` = '$courier_status' , `user_role_id` = '$role' WHERE id = $id;";
+        $sql = "UPDATE `courier_status` SET `courier_status` = '$courier_status' , `user_role_id` = '$role' WHERE id = $id;";
 
         // run database query
         $query = $db->query($sql);
@@ -225,7 +225,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
     </div>
     <div class="container-fluid">
         <div class="row">
-            <div class="col">
+            <div class="col-4">
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title"><?php echo $form_name ?></h3>
@@ -234,7 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                     <!-- form start -->
                     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
                         <div class="card-body">
-                        <div class="form-group">
+                            <div class="form-group">
                                 <label for="exampleInputEmail1">Role Name</label>
                                 <select class="form-control select2" style="width: 100%;" name="role">
                                     <option value="">- Select User Role -</option>
@@ -271,12 +271,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                 </div>
             </div>
             <!-- Right Section Start -->
-            <div class="col">
+            <div class="col-8">
                 <!-- Table Data Fletch -->
                 <?php
 
+                // crate variable for store dynamic query
+                $where = null;
+
+                // date range check
+                if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
+
+                    // table wide search 
+                    if (!empty($cus_search)) {
+
+                        $where .= "CONCAT(cs.id, cs.courier_status, ur.role_name, s.status_name) LIKE '%$cus_search%' AND ";
+                    }
+                    
+                    // remove the last 4 digits of the $where part "AND "
+                    if (!empty($where)) {
+
+                        $where = substr($where, 0, -4);
+
+                        // take Mysql WHERE and take $where query parts 
+                        $where = "WHERE $where";
+                    }
+                }
                 // sql query
-                $sql = "SELECT cs.id, cs.courier_status, ur.role_name, s.status_name FROM courier_status cs INNER JOIN user_roles ur ON ur.user_role_id = cs.user_role_id INNER JOIN status s ON s.status_id = cs.status;";
+                $sql = "SELECT cs.id, cs.courier_status, ur.role_name, s.status_name FROM courier_status cs INNER JOIN user_roles ur ON ur.user_role_id = cs.user_role_id INNER JOIN status s ON s.status_id = cs.status $where;";
 
                 // fletch data
                 $result = $db->query($sql);
@@ -288,6 +309,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="text" class="form-control" placeholder="Search Data" name="cus_search" value="<?php echo @$cus_search ?>">
+                                </div>
+                                <div class="col-1" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
+                                    <button type="submit" class="btn btn-primary" name="action" value="search">Search</button>
+                                </div>
+                            </div>
+                        </form>
                         <table id="brand_list" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -352,11 +383,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
 <script>
     $(function() {
         $('#brand_list').DataTable({
-            "paging": true,
+            "paging": false,
             "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
+            "searching": false,
+            "ordering": false,
+            "info": false,
             "autoWidth": true,
             "responsive": true,
         });

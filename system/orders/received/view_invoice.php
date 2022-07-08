@@ -112,8 +112,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Delivery Charges</a></li>
-                        <li class="breadcrumb-item active">Add</li>
+                        <li class="breadcrumb-item"><a href="http://localhost/bit/system/orders/received/view.php">Received Orders</a></li>
+                        <li class="breadcrumb-item active">Order Status</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -329,7 +329,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
                                 <h5>Total:</h5>
                             </th>
                             <td><b>
-                                    <h5><?php echo number_format($row['grand_total'], 2); ?></h5>
+                                    <h5>LKR: <?php echo number_format($row['grand_total'], 2); ?></h5>
                                 </b></td>
                         </tr>
                     </table>
@@ -353,12 +353,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 <!-- Page specific script -->
 <script>
     $(function() {
-        // $("#user_list").DataTable({
-        //     "responsive": true,
-        //     "lengthChange": false,
-        //     "autoWidth": false,
-        //     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        // }).buttons().container().appendTo('#user_list_wrapper .col-md-6:eq(0)');
+       
         $('#brand_list').DataTable({
             "paging": true,
             "lengthChange": false,

@@ -22,7 +22,6 @@ $btn_value = "insert";
 // form button icon
 $btn_icon = '<i class="far fa-save"></i>';
 
-
 // create error variable to store error messages
 $error =  array();
 
@@ -33,7 +32,6 @@ $error_style_icon = array();
 if (empty($order_id)) {
     header('Location: http://localhost/bit/system/delivery/orders/view.php');
 }
-
 
 // insert courier
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
@@ -62,8 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
     }
 
     // advance validations
-
-    if(!$status == 16){
+    if(!$status == 6){
         if (empty($tracking_number)) {
             $error['tracking_number'] = "Tracking Number Should Not Be Empty";
         }
@@ -71,10 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'insert') {
 
     if (!empty($order_id)) {
 
+        // check the order already have company
         $sql = "SELECT * FROM `orders_company` WHERE order_id = '$order_id'";
         $result = $db->query($sql);
 
-        if ($result->num_rows > 0) {
+        if($result->num_rows > 0) {
             $error['order_id'] = "Already assign couriers service please update";
         }
     }
@@ -141,7 +139,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'edit') {
 // update the edit data
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
-
     // error styles
     $error_style['success'] = "alert-danger";
     $error_style_icon['fa-check'] = '<i class="icon fas fa-ban"></i>';
@@ -157,7 +154,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         $error['company'] = "Company Name Should Not Be Empty";
     }
 
-  
     if (empty($tracking_number)) {
         $error['tracking_number'] = "Tracking Number Should Not Be Empty";
     }
@@ -171,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
         $error['tracking_number'] = "Tracking Number not valid";
     }
 
-    if(!$status == 16){
+    if(!$status == 6){
         if (empty($status)) {
             $error['status'] = "Status Should Not Be Empty";
         }
@@ -236,6 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
         <!-- Delete -->
         <?php
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'delete') {
 
             $sql = "SELECT * FROM `orders_company` WHERE order_id = '$order_id'";
@@ -247,7 +244,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                 $row = $result->fetch_assoc();
                 $order_id = $row['order_id'];
                
-
         ?>
                 <div class="card">
                     <h5 class="card-header bg-danger">Conformation</h5>
@@ -283,7 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
 
                             <label for="exampleInputEmail1">Company <span style="color: red;">*</span></label>
                             <select class="form-control select2" style="width: 100%;" name="company">
-                                <option value="">- Select Model -</option>
+                                <option value="">- Select Company -</option>
                                 <?php
 
                                 // sql query
@@ -305,7 +301,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'confirm_delete') {
                             </select><br>
                             <label for="exampleInputEmail1">Status <span style="color: red;">*</span></label>
                             <select class="form-control select2" style="width: 100%;" name="status">
-                                <option value="">- Select Model -</option>
+                                <option value="">- Select Status -</option>
                                 <?php
 
                                 // sql query

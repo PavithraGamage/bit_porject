@@ -35,7 +35,7 @@ $db = db_con();
                 INNER JOIN province p ON p.id = o.delivery_charge
                 INNER JOIN payment_methord pm ON pm.id = o.payment_id
                 INNER JOIN courier_status cs ON cs.id = o.courier_status
-                WHERE o.user_id = $user_id ORDER BY `o`.`order_date` DESC";
+                WHERE o.user_id = $user_id ORDER BY `o`.`order_number` DESC";
 
                 // run query
                 $result = $db->query($sql);

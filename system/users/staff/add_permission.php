@@ -207,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'update') {
 
     // update query
     if (empty($error)) {
-         $sql = "UPDATE `users_modules` SET `module_id` = '$main_module' WHERE id = $id;";
+        $sql = "UPDATE `users_modules` SET `module_id` = '$main_module' WHERE id = $id;";
 
         // run database query
         $query = $db->query($sql);
@@ -457,7 +457,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                                             INNER JOIN staff s ON s.user_id = u.user_id
                                             WHERE u.status = 0  
                                             ORDER BY `u`.`user_name` ASC;";
-                                            
+
                                             $result = $db->query($sql);
 
                                             // fletch data
@@ -519,8 +519,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
             <div class="card-header">
                 <h3 class="card-title">Staff Permissions List</h3><br><br>
                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                    <label>Filter by:</label>
-                    <select class="form-control select2" style="width: 40%;" name="modules">
+                    <div class="row">
+                        <div class="col-5">
+                            <input type="text" class="form-control" placeholder="Search Data" name="cus_search" value="<?php echo @$cus_search ?>">
+                        </div>
+                        <div class="col-5">
+                        <select class="form-control select2" style="width: 40%;" name="modules">
                         <option value="">- Select Module -</option>
                         <option value="2" <?php if (@$modules == 2) {
                                                 echo "selected";
@@ -528,8 +532,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                         <option value="4" <?php if (@$modules == 4) {
                                                 echo "selected";
                                             }; ?>>Sub Module</option>
-                    </select><br>
-                    <button class="btn btn-block btn-primary btn-xs" style="width: 20%;">Filter</button>
+                    </select>
+                        </div>
+                        <div class="col-2" style="display: flex;align-content: center;flex-direction: row;flex-wrap: nowrap;align-items: center;">
+                            <button type="submit" class="btn btn-primary" name="action" value="search">Search</button>
+                        </div>
+                    </div>
                 </form>
             </div>
             <!-- /.card-header -->
@@ -551,20 +559,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
                         <?php
 
                         // null variable for query where part
-                        $q_where_part = null;
+                        $where = null;
 
-                        // check the filter is set
-                        if (!empty($modules)) {
 
-                            $q_where_part = " WHERE LENGTH(um.module_id) = $modules;";
+
+                        // crate variable for store dynamic query
+                        $where = null;
+
+                        // date range check
+                        if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'search') {
+
+                            // table wide search 
+                            if (!empty($cus_search)) {
+
+                                $where .= "CONCAT(u.user_id, u.user_name, m.description, um.module_id, um.id, s.status_name) LIKE '%$cus_search%' AND ";
+                            }
+
+                            // check the filter is set
+                            if (!empty($modules)) {
+
+                                $where .= "LENGTH(um.module_id) = $modules AND ";
+                            }
+
+                            // remove the last 4 digits of the $where part "AND "
+                            if (!empty($where)) {
+
+                                $where = substr($where, 0, -4);
+
+                                // take Mysql WHERE and take $where query parts 
+                                $where = "WHERE $where";
+                            }
                         }
 
+
                         // sql query
-                        $sql = "SELECT u.user_id, u.profile_image, u.user_name, m.description, um.module_id, um.id, s.status_name
+                    $sql = "SELECT u.user_id, u.profile_image, u.user_name, m.description, um.module_id, um.id, s.status_name
                       FROM users_modules um 
                       INNER JOIN users u ON u.user_id = um.user_id 
                       INNER JOIN modules m ON m.module_id = um.module_id
-                      INNER JOIN status s ON s.status_id = um.status $q_where_part";
+                      INNER JOIN status s ON s.status_id = um.status $where";
 
                         // fletch data
                         $result = $db->query($sql);
@@ -618,11 +651,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && @$action == 'active') {
 <script>
     $(function() {
         $('#user_list').DataTable({
-            "paging": true,
+            "paging": false,
             "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
+            "searching": false,
+            "ordering": false,
+            "info": false,
             "autoWidth": true,
             "responsive": true,
         });

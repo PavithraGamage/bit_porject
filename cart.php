@@ -48,55 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
 </head>
 
 <body>
-    <!--Navigation Start-->
-    <div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light nav_sys">
-            <div class="container-fluid">
-                <a class="navbar-brand" style="color: white;" href="http://localhost/bit/">
-                    <i class="fas fa-globe"></i> U-Star Digital
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" aria-current="page" href="http://localhost/bit/">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/shop.php">Shop</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/about.php">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/services.php">Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/contact.php">Contact</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/dashboard/dashboard.php"> <i class="fas fa-user"></i> My Account</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sys_nav_link" href="http://localhost/bit/cart.php">
-                                <i class="fas fa-cart-arrow-down"></i> Cart
-                                <?php
-
-                                if (!empty($_SESSION['cart'])) {
-
-                                    echo count(array_keys($_SESSION['cart']));
-                                }
-
-                                ?>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </div>
-    <!--Navigation End-->
+    <!-- nav -->
+    <?php include "nav.php"; ?>
+    
     <!--Hero Section End-->
     <!-- content start-->
     <div class="container">
@@ -151,7 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                                     $result = $db->query($sql);
 
                                     $row = $result->fetch_assoc();
-
+                                    
+                                    // check input stock and inventory stock
                                     if ($product['item_qty'] > $product['stock']) {
 
                                         // crate variable for stock count to show the error message 
@@ -159,8 +114,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                                         $cart_error['out_of_stock'] = "Maximum Quantity <b>$stock</b>";
 
                                         echo '<p style="color:red ;">' . @$cart_error['out_of_stock'] . '</p>';
+                                        
                                     }
 
+                                    // minimum stock validation
+                                    if($product['item_qty'] == 0 ){
+                                        
+                                        $cart_error['out_of_stock'] ="Minimum Stock 1";
+                                        echo '<p style="color:red ;">' . @$cart_error['out_of_stock'] . '</p>';
+                                    }
+                                       
                                     ?>
 
                                 </div>
@@ -189,7 +152,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && @$action == "delete_product") {
                                         echo "<h6> Sale LKR: " . number_format($amount, 2) . "</h6>";
                                         $grand_total_price += $amount;
 
-                                        
                                         // discount price calculation
                                         $amount_sale = ($product['item_price'] * $product['item_qty']) - $amount;
                                         $grand_total_sale += $amount_sale;

@@ -64,7 +64,7 @@ session_start();
                     // advance validation
                     if (empty($error)) {
 
-                        $sql = "SELECT * FROM users WHERE user_name = '$user_name' AND password = '" . sha1($password) . "' AND status = 0";
+                        $sql = "SELECT * FROM users WHERE user_name = '$user_name' AND password = '" . sha1($password) . "' AND status = 0 AND user_role IN (1,2,3,4,6)";
 
                         // call db con function
                         $db = db_con();
