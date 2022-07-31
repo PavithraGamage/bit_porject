@@ -6,9 +6,9 @@
 function data_clean($data = null)
 {
 
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
+    trim($data);
+    stripslashes($data);
+    htmlspecialchars($data);
 
     return $data;
 }
